@@ -55,7 +55,8 @@ class ExpertPrefs(BaseModel):
 
 class ExplainRequest(BaseModel):
     shoe: Dict
-    prefs: Dict          # 점수 계산에 쓴 prefs 그대로
+    prefs: Dict
+    locale: str = "ko"
 
 
 class ShoeResult(BaseModel):
@@ -223,13 +224,22 @@ def explain_shoe(req: ExplainRequest):
     shoe = req.shoe
     prefs = req.prefs
 
-    system_prompt = (
-        "당신은 러닝화 전문가입니다. "
-        "사용자의 발 유형, 러닝 스타일, 예산에 맞게 "
-        "왜 특정 신발이 잘 맞는지 3~4문장으로 친근하게 설명해 주세요. "
-        "전문 용어는 괄호로 간단히 풀어서 설명하세요. "
-        "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
-    )
+    if req.locale == "en":
+        system_prompt = (
+            "You are a running shoe expert. "
+            "Explain in 3-4 friendly sentences why this specific shoe is a great match "
+            "for the user based on their foot type, running style, and budget. "
+            "Briefly clarify technical terms in parentheses when needed. "
+            "Do not use markdown syntax (**, #, - etc). Plain text only."
+        )
+    else:
+        system_prompt = (
+            "당신은 러닝화 전문가입니다. "
+            "사용자의 발 유형, 러닝 스타일, 예산에 맞게 "
+            "왜 특정 신발이 잘 맞는지 3~4문장으로 친근하게 설명해 주세요. "
+            "전문 용어는 괄호로 간단히 풀어서 설명하세요. "
+            "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
+        )
 
     user_message = f"""
 신발 정보:
