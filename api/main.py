@@ -30,24 +30,26 @@ app.add_middleware(
 # ── 요청/응답 모델 ────────────────────────────────────────────
 class BeginnerPrefs(BaseModel):
     mode: str = "beginner"
-    frequency: str       # "이제 막 시작했어요" | "6개월 미만" | "1년 미만"
-    terrain: str         # "공원 / 도로" | "산 / 흙길"
-    pain: str            # "없음" | "무릎" | "발목" | "발바닥 (족저근막염 등)" | "여러 곳이 불편해요"
+    frequency: str
+    terrain: str
+    pain: str
     wide_foot: bool
     budget: int
+    weight_kg: Optional[int] = None   # 60 미만 / 60~80 / 80 이상
     brand_filter: List[str] = []
 
 
 class ExpertPrefs(BaseModel):
     mode: str = "expert"
-    arch: str            # "normal" | "flat" | "high"
-    pronation: str       # "neutral" | "mild_overpronation" | "overpronation"
-    terrain: str         # "로드" | "트레일"
+    arch: str
+    pronation: str
+    terrain: str
     use_case: List[str]
-    cushion: str         # "낮음" | "중간" | "높음" | "최고"
-    width: str           # "보통" | "넓음" | "좁음"
+    cushion: str
+    width: str
     weekly_km: int
     budget: int
+    weight_kg: Optional[int] = None
     brand_filter: List[str] = []
 
 
@@ -122,6 +124,17 @@ def compute_score(shoe: Dict, prefs: Dict) -> int:
     else:
         score -= 10
 
+    # 체중 → 쿠션 보정
+    weight = prefs.get("weight_kg")
+    if weight is not None:
+        shoe_cushion_val = CUSHION_ORDER.get(shoe["cushion"], 2)
+        if weight >= 80 and shoe_cushion_val >= 3:
+            score += 10
+        elif weight >= 80 and shoe_cushion_val <= 1:
+            score -= 10
+        elif weight < 60 and shoe_cushion_val <= 2:
+            score += 5
+
     return score
 
 
@@ -155,6 +168,7 @@ def map_beginner_to_prefs(data: BeginnerPrefs) -> dict:
         "width": width,
         "weekly_km": weekly_km,
         "budget": data.budget,
+        "weight_kg": data.weight_kg,
     }
 
 
@@ -195,6 +209,7 @@ def recommend_expert(data: ExpertPrefs):
         "width": data.width,
         "weekly_km": data.weekly_km,
         "budget": data.budget,
+        "weight_kg": data.weight_kg,
     }
     return run_recommendation(prefs, data.brand_filter)
 
