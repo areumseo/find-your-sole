@@ -212,7 +212,8 @@ def explain_shoe(req: ExplainRequest):
         "당신은 러닝화 전문가입니다. "
         "사용자의 발 유형, 러닝 스타일, 예산에 맞게 "
         "왜 특정 신발이 잘 맞는지 3~4문장으로 친근하게 설명해 주세요. "
-        "전문 용어는 괄호로 간단히 풀어서 설명하세요."
+        "전문 용어는 괄호로 간단히 풀어서 설명하세요. "
+        "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
     )
 
     user_message = f"""
@@ -237,7 +238,7 @@ def explain_shoe(req: ExplainRequest):
 
     response = client.messages.create(
         model="claude-haiku-4-5",
-        max_tokens=300,
+        max_tokens=500,
         system=[
             {
                 "type": "text",
