@@ -241,7 +241,28 @@ def explain_shoe(req: ExplainRequest):
             "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
         )
 
-    user_message = f"""
+    if req.locale == "en":
+        user_message = f"""
+Shoe info:
+- Name: {shoe['name']} ({shoe['brand']})
+- Cushion: {shoe['cushion']}, Drop: {shoe['drop_mm']}mm, Weight: {shoe['weight_g']}g
+- Width: {shoe['width']}, Terrain: {', '.join(shoe['terrain'])}
+- Use case: {', '.join(shoe['use_case'])}
+- Tags: {', '.join(shoe['tags'])}
+
+User info:
+- Foot arch: {prefs.get('arch', 'unknown')}
+- Pronation: {prefs.get('pronation', 'unknown')}
+- Main terrain: {prefs.get('terrain', 'unknown')}
+- Cushion preference: {prefs.get('cushion', 'unknown')}
+- Foot width: {prefs.get('width', 'unknown')}
+- Weekly km: {prefs.get('weekly_km', 0)}km
+- Budget: ₩{prefs.get('budget', 0):,}
+
+Please explain why this shoe is a great match for this user.
+"""
+    else:
+        user_message = f"""
 신발 정보:
 - 이름: {shoe['name']} ({shoe['brand']})
 - 쿠션: {shoe['cushion']}, 드롭: {shoe['drop_mm']}mm, 무게: {shoe['weight_g']}g
