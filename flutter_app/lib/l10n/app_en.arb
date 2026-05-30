@@ -17,7 +17,7 @@
   "expertModeTitle": "🏃 Expert Mode",
   "sectionFrequency": "Running experience",
   "sectionTerrain": "Where do you usually run?",
-  "sectionPain": "Any discomfort or pain?",
+  "sectionPain": "Any discomfort or pain? (multi-select)",
   "sectionWideFoot": "Do you have wide feet?",
   "wideFootYes": "Yes, wide feet",
   "wideFootNo": "Normal width",

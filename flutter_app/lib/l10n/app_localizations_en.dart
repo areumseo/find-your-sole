@@ -61,7 +61,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionTerrain => 'Where do you usually run?';
 
   @override
-  String get sectionPain => 'Any discomfort or pain?';
+  String get sectionPain => 'Any discomfort or pain? (multi-select)';
 
   @override
   String get sectionWideFoot => 'Do you have wide feet?';

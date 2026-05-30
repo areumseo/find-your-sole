@@ -203,7 +203,7 @@ abstract class AppLocalizations {
   /// No description provided for @sectionPain.
   ///
   /// In ko, this message translates to:
-  /// **'불편한 부위가 있나요?'**
+  /// **'불편한 부위가 있나요? (복수 선택 가능)'**
   String get sectionPain;
 
   /// No description provided for @sectionWideFoot.

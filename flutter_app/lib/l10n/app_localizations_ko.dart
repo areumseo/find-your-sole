@@ -60,7 +60,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sectionTerrain => '주로 어디서 뛰나요?';
 
   @override
-  String get sectionPain => '불편한 부위가 있나요?';
+  String get sectionPain => '불편한 부위가 있나요? (복수 선택 가능)';
 
   @override
   String get sectionWideFoot => '발볼이 넓은 편인가요?';

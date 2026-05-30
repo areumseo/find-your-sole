@@ -72,11 +72,13 @@ class _MainScreenState extends State<MainScreen> {
         if (v > 300) {
           if (_currentIndex == 1) setState(() => _currentIndex = 0); // 찜 → 추천
           if (_currentIndex == 2) setState(() => _currentIndex = 1); // 내 신발 → 찜
+          if (_currentIndex == 3) setState(() => _currentIndex = 2); // About → 내 신발
         }
         // 오른쪽→왼쪽 스와이프 = 앞으로
         if (v < -300) {
           if (_currentIndex == 0) setState(() => _currentIndex = 1); // 추천 → 찜
           if (_currentIndex == 1) setState(() => _currentIndex = 2); // 찜 → 내 신발
+          if (_currentIndex == 2) setState(() => _currentIndex = 3); // 내 신발 → About
         }
       },
       child: Scaffold(
