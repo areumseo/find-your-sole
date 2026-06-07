@@ -236,7 +236,7 @@ class _ShoeCardState extends State<_ShoeCard> {
                               initialName: shoe.name,
                               initialBrand: shoe.brand,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.add_circle_outline,
                               color: context.subtitleColor,
                               size: 22,
