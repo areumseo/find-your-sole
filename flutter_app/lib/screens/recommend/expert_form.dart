@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/shoe.dart';
 import '../../services/api_service.dart';
+import '../../theme/app_colors.dart';
 import 'results.dart';
 
 class ExpertFormScreen extends StatefulWidget {
@@ -74,14 +75,14 @@ class _ExpertFormScreenState extends State<ExpertFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l.expertModeTitle),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
+        
+        
+        
         leading: widget.onBack != null
             ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: widget.onBack)
             : null,
       ),
-      backgroundColor: Colors.white,
+      
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -275,7 +276,7 @@ class _ChipGroup extends StatelessWidget {
           onSelected: (_) => onSelected(value),
           selectedColor: const Color(0xFF4AABDB),
           labelStyle: TextStyle(
-            color: isSelected ? Colors.white : Colors.black87,
+            color: isSelected ? Colors.white : context.textColor,
           ),
         );
       }),

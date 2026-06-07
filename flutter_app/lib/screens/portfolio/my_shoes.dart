@@ -3,6 +3,7 @@ import '../../l10n/app_localizations.dart';
 import '../../services/shoes_db_service.dart';
 import '../../services/health_service.dart';
 import '../../data/shoes_db.dart';
+import '../../theme/app_colors.dart';
 
 class MyShoesScreen extends StatefulWidget {
   const MyShoesScreen({super.key});
@@ -172,11 +173,10 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l.myShoesTitle),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
+        
+        
+        
       ),
-      backgroundColor: const Color(0xFFF8F8F8),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
         backgroundColor: const Color(0xFF4AABDB),
@@ -190,7 +190,7 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                   const Text('👟', style: TextStyle(fontSize: 48)),
                   const SizedBox(height: 12),
                   Text(l.myShoesEmpty,
-                      style: const TextStyle(color: Colors.black45)),
+                      style: TextStyle(color: context.subtitleColor)),
                 ],
               ),
             )
@@ -202,18 +202,18 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                 final km = (shoe['km'] as num).toDouble();
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
-                  elevation: 0,
+                  
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(color: Colors.grey.shade200),
+                    side: BorderSide(color: context.borderColor),
                   ),
-                  color: Colors.white,
+                  color: context.cardBg,
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 8),
-                    leading: const CircleAvatar(
-                      backgroundColor: Color(0xFFFFF3EE),
-                      child: Text('👟'),
+                    leading: CircleAvatar(
+                      backgroundColor: context.explanationBg,
+                      child: const Text('👟'),
                     ),
                     title: Text(shoe['name'],
                         style: const TextStyle(fontWeight: FontWeight.bold)),

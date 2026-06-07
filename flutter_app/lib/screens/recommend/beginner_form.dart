@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/shoe.dart';
 import '../../services/api_service.dart';
+import '../../theme/app_colors.dart';
 import 'results.dart';
 
 class BeginnerFormScreen extends StatefulWidget {
@@ -80,14 +81,14 @@ class _BeginnerFormScreenState extends State<BeginnerFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l.beginnerModeTitle),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
+        
+        
+        
         leading: widget.onBack != null
             ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: widget.onBack)
             : null,
       ),
-      backgroundColor: Colors.white,
+      
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -241,7 +242,7 @@ class _MultiChipGroup extends StatelessWidget {
           onSelected: (_) => onSelected(i),
           selectedColor: const Color(0xFF4AABDB),
           labelStyle: TextStyle(
-            color: selectedIndices.contains(i) ? Colors.white : Colors.black87,
+            color: selectedIndices.contains(i) ? Colors.white : context.textColor,
           ),
         ),
       ),
@@ -281,7 +282,7 @@ class _ChipGroup extends StatelessWidget {
           },
           selectedColor: const Color(0xFF4AABDB),
           labelStyle: TextStyle(
-            color: selectedIndex == i ? Colors.white : Colors.black87,
+            color: selectedIndex == i ? Colors.white : context.textColor,
           ),
         ),
       ),

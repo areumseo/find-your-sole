@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/shoe.dart';
 import '../../services/favorites_service.dart';
+import '../../theme/app_colors.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -63,11 +64,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l.tabFavorites),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
+        
+        
+        
       ),
-      backgroundColor: const Color(0xFFF8F8F8),
       body: _favorites.isEmpty
           ? Center(
               child: Column(
@@ -76,7 +76,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   const Text('🤍', style: TextStyle(fontSize: 48)),
                   const SizedBox(height: 12),
                   Text(l.favoritesEmpty,
-                      style: const TextStyle(color: Colors.black45)),
+                      style: TextStyle(color: context.subtitleColor)),
                 ],
               ),
             )
@@ -90,12 +90,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
-                  elevation: 0,
+                  
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(color: Colors.grey.shade200),
+                    side: BorderSide(color: context.borderColor),
                   ),
-                  color: Colors.white,
+                  color: context.cardBg,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -116,8 +116,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(data['brand'],
-                                      style: const TextStyle(
-                                          color: Colors.black54, fontSize: 13)),
+                                      style: TextStyle(
+                                          color: context.subtitleColor, fontSize: 13)),
                                 ],
                               ),
                             ),

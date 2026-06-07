@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/shoe.dart';
 import '../../services/api_service.dart';
 import '../../services/favorites_service.dart';
+import '../../theme/app_colors.dart';
 import '../portfolio/add_shoe_dialog.dart';
 
 class ResultsScreen extends StatelessWidget {
@@ -18,14 +19,10 @@ class ResultsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.resultsTitle),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
         leading: onBack != null
             ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: onBack)
             : null,
       ),
-      backgroundColor: const Color(0xFFF8F8F8),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: shoes.length,
@@ -129,9 +126,9 @@ class _ShoeCardState extends State<_ShoeCard> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.grey.shade200),
+        side: BorderSide(color: context.borderColor),
       ),
-      color: Colors.white,
+      color: context.cardBg,
       child: Column(
         children: [
           InkWell(
@@ -159,7 +156,7 @@ class _ShoeCardState extends State<_ShoeCard> {
                         style: TextStyle(
                           color: widget.rank <= 3
                               ? Colors.white
-                              : Colors.black54,
+                              : context.subtitleColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
@@ -181,8 +178,8 @@ class _ShoeCardState extends State<_ShoeCard> {
                         const SizedBox(height: 4),
                         Text(
                           shoe.brand,
-                          style: const TextStyle(
-                              color: Colors.black54, fontSize: 13),
+                          style: TextStyle(
+                              color: context.subtitleColor, fontSize: 13),
                         ),
                         const SizedBox(height: 8),
                         Wrap(
@@ -228,7 +225,7 @@ class _ShoeCardState extends State<_ShoeCard> {
                             },
                             child: Icon(
                               _isFavorite ? Icons.favorite : Icons.favorite_border,
-                              color: _isFavorite ? const Color(0xFF4AABDB) : Colors.black38,
+                              color: _isFavorite ? const Color(0xFF4AABDB) : context.subtitleColor,
                               size: 22,
                             ),
                           ),
@@ -241,7 +238,7 @@ class _ShoeCardState extends State<_ShoeCard> {
                             ),
                             child: const Icon(
                               Icons.add_circle_outline,
-                              color: Colors.black38,
+                              color: context.subtitleColor,
                               size: 22,
                             ),
                           ),
@@ -259,7 +256,7 @@ class _ShoeCardState extends State<_ShoeCard> {
                         _expanded
                             ? Icons.keyboard_arrow_up
                             : Icons.keyboard_arrow_down,
-                        color: Colors.black38,
+                        color: context.subtitleColor,
                       ),
                     ],
                   ),
@@ -307,7 +304,7 @@ class _ShoeCardState extends State<_ShoeCard> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFF3EE),
+                        color: context.explanationBg,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -362,7 +359,7 @@ class _SpecItem extends StatelessWidget {
       child: Column(
         children: [
           Text(label,
-              style: const TextStyle(fontSize: 11, color: Colors.black45)),
+              style: TextStyle(fontSize: 11, color: context.subtitleColor)),
           const SizedBox(height: 2),
           Text(value,
               style: const TextStyle(

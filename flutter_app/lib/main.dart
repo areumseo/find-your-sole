@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'l10n/app_localizations.dart';
+import 'theme/app_colors.dart';
 import 'screens/recommend/recommend_tab.dart';
 import 'screens/portfolio/my_shoes.dart';
 import 'screens/favorites/favorites_screen.dart';
@@ -9,6 +10,36 @@ import 'screens/about/about_screen.dart';
 
 void main() {
   runApp(const FindYourSoleApp());
+}
+
+ThemeData _buildTheme(Brightness brightness) {
+  final isDark = brightness == Brightness.dark;
+  return ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: AppColors.primary,
+      brightness: brightness,
+    ),
+    useMaterial3: true,
+    scaffoldBackgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F8F8),
+    textTheme: GoogleFonts.notoSansKrTextTheme(
+      isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme,
+    ).copyWith(
+      titleLarge: GoogleFonts.notoSansKr(fontWeight: FontWeight.w900),
+      titleMedium: GoogleFonts.notoSansKr(fontWeight: FontWeight.w800),
+      titleSmall: GoogleFonts.notoSansKr(fontWeight: FontWeight.w700),
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+      foregroundColor: isDark ? Colors.white : Colors.black,
+      elevation: 0,
+      titleTextStyle: GoogleFonts.notoSansKr(
+        fontWeight: FontWeight.w800,
+        fontSize: 18,
+        color: isDark ? Colors.white : Colors.black,
+      ),
+    ),
+    cardColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+  );
 }
 
 class FindYourSoleApp extends StatelessWidget {
@@ -29,25 +60,9 @@ class FindYourSoleApp extends StatelessWidget {
         Locale('ko'),
         Locale('en'),
       ],
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4AABDB),
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        textTheme: GoogleFonts.notoSansKrTextTheme().copyWith(
-          titleLarge: GoogleFonts.notoSansKr(fontWeight: FontWeight.w900),
-          titleMedium: GoogleFonts.notoSansKr(fontWeight: FontWeight.w800),
-          titleSmall: GoogleFonts.notoSansKr(fontWeight: FontWeight.w700),
-        ),
-        appBarTheme: AppBarTheme(
-          titleTextStyle: GoogleFonts.notoSansKr(
-            fontWeight: FontWeight.w800,
-            fontSize: 18,
-            color: Colors.black,
-          ),
-        ),
-      ),
+      theme: _buildTheme(Brightness.light),
+      darkTheme: _buildTheme(Brightness.dark),
+      themeMode: ThemeMode.system,
       home: const MainScreen(),
     );
   }

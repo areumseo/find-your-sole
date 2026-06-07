@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
+import '../../theme/app_colors.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -11,11 +12,10 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(isEn ? 'About' : '앱 정보'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
+        
+        
+        
       ),
-      backgroundColor: const Color(0xFFF8F8F8),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -75,9 +75,9 @@ class _Card extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: context.borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,8 +87,8 @@ class _Card extends StatelessWidget {
                   fontWeight: FontWeight.bold, fontSize: 15)),
           const SizedBox(height: 10),
           Text(content,
-              style: const TextStyle(
-                  fontSize: 13, color: Colors.black87, height: 1.6)),
+              style: TextStyle(
+                  fontSize: 13, color: context.textColor.withOpacity(0.87), height: 1.6)),
         ],
       ),
     );

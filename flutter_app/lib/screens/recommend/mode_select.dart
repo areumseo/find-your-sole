@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
+import '../../theme/app_colors.dart';
 
 class ModeSelectScreen extends StatelessWidget {
   final VoidCallback? onBeginnerTap;
@@ -11,7 +12,7 @@ class ModeSelectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Colors.white,
+      
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -29,7 +30,7 @@ class ModeSelectScreen extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 l.modeSelectSubtitle,
-                style: const TextStyle(fontSize: 16, color: Colors.black54),
+                style: TextStyle(fontSize: 16, color: context.subtitleColor),
               ),
               const SizedBox(height: 48),
               _ModeCard(
@@ -122,9 +123,9 @@ class _ModeCard extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     description,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black54,
+                      color: context.subtitleColor,
                       height: 1.5,
                     ),
                   ),
