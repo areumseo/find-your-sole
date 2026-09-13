@@ -37,6 +37,15 @@ esac
 xcodebuild -version >/dev/null 2>&1 || fail "xcodebuild cannot run. You may need to accept the license:
        sudo xcodebuild -license accept"
 
+# Xcode 26 does not bundle the iOS platform SDK -- it is a separate download.
+# Without it, xcodebuild cannot resolve the generic/platform=iOS destination
+# and Flutter reports "No Xcode build settings have been found".
+if ! xcodebuild -showsdks 2>/dev/null | grep -q "iphoneos"; then
+  fail "The iOS platform SDK is not installed.
+       Install it with: xcodebuild -downloadPlatform iOS
+       (or Xcode > Settings > Components > iOS)"
+fi
+
 # macOS ships an ancient CocoaPods with the system Ruby. It is too old to
 # install this project's pods.
 MIN_POD="1.16.0"

@@ -72,5 +72,20 @@ even though the project is fine. The fix is to install Xcode and run:
 sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 sudo xcodebuild -runFirstLaunch
 sudo xcodebuild -license accept
+```
+
+It also checks that the iOS platform SDK is present. Xcode 26 ships without
+it, and installing Xcode alone is not enough: `xcodebuild` then cannot
+resolve the `generic/platform=iOS` destination, and Flutter reports
+
+```
+No Xcode build settings have been found. Please check possible errors above.
+```
+
+with the real cause (`iOS <version> is not installed`) buried in `-v` output.
+Install the platform with:
+
+```bash
+xcodebuild -downloadPlatform iOS
 ``` Signed builds additionally need an Apple Developer account signed
 in under Xcode > Settings > Accounts.
