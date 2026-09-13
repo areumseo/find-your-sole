@@ -20,7 +20,7 @@ fail() { printf '\033[31merror:\033[0m %s\n' "$1" >&2; exit 1; }
 step "Checking prerequisites"
 command -v flutter >/dev/null || fail "flutter not found on PATH. Install Flutter $EXPECTED_FLUTTER first."
 command -v xcodebuild >/dev/null || fail "xcodebuild not found. Install Xcode from the App Store."
-command -v pod >/dev/null || fail "CocoaPods not found. Install it with: sudo gem install cocoapods"
+command -v pod >/dev/null || fail "CocoaPods not found. Install it with: brew install cocoapods"
 
 # A Command Line Tools-only install provides xcodebuild but cannot read Xcode
 # project settings. Flutter then fails with the unhelpful "Application not
@@ -37,10 +37,20 @@ esac
 xcodebuild -version >/dev/null 2>&1 || fail "xcodebuild cannot run. You may need to accept the license:
        sudo xcodebuild -license accept"
 
+# macOS ships an ancient CocoaPods with the system Ruby. It is too old to
+# install this project's pods.
+MIN_POD="1.16.0"
+POD_VERSION="$(pod --version 2>/dev/null || echo 0)"
+if [ "$(printf '%s\n%s\n' "$MIN_POD" "$POD_VERSION" | sort -V | head -1)" != "$MIN_POD" ]; then
+  fail "CocoaPods $POD_VERSION is too old (need $MIN_POD or newer).
+       Update it with: brew install cocoapods"
+fi
+
 FLUTTER_ROOT="$(dirname "$(dirname "$(which flutter)")")"
 FLUTTER_VERSION="$(flutter --version | sed -n 's/^Flutter \([0-9.]*\).*/\1/p' | head -1)"
 echo "flutter    $FLUTTER_VERSION  ($FLUTTER_ROOT)"
 echo "xcodebuild $(xcodebuild -version | head -1 | awk '{print $2}')"
+echo "cocoapods  $POD_VERSION"
 
 if [ "$FLUTTER_VERSION" != "$EXPECTED_FLUTTER" ]; then
   echo
