@@ -1,0 +1,48 @@
+diff --git a/packages/flutter_tools/lib/src/build_system/targets/ios.dart b/packages/flutter_tools/lib/src/build_system/targets/ios.dart
+index f3f9e0dee1d..bd271541e50 100644
+--- a/packages/flutter_tools/lib/src/build_system/targets/ios.dart
++++ b/packages/flutter_tools/lib/src/build_system/targets/ios.dart
+@@ -920,11 +920,16 @@ Future<void> _createStubAppFramework(
+ }
+ 
+ Future<void> _signFramework(Environment environment, File binary, BuildMode buildMode) async {
+-  await removeExtendedAttributes(
+-    binary,
+-    ProcessUtils(processManager: environment.processManager, logger: environment.logger),
+-    environment.logger,
+-  );
++  final processUtils = ProcessUtils(processManager: environment.processManager, logger: environment.logger);
++  // Clean the binary file itself.
++  await removeExtendedAttributes(binary, processUtils, environment.logger);
++  // Also clean the parent .framework directory, which can accumulate
++  // com.apple.FinderInfo / com.apple.fileprovider.fpfs#P on macOS 26+
++  // and cause codesign to fail with "resource fork" errors.
++  final Directory frameworkDir = binary.parent;
++  if (frameworkDir.existsSync()) {
++    await removeExtendedAttributes(frameworkDir, processUtils, environment.logger);
++  }
+ 
+   String? codesignIdentity = environment.defines[kCodesignIdentity];
+   if (codesignIdentity == null || codesignIdentity.isEmpty) {
+diff --git a/packages/flutter_tools/lib/src/ios/mac.dart b/packages/flutter_tools/lib/src/ios/mac.dart
+index c2e323ca88e..00410d32197 100644
+--- a/packages/flutter_tools/lib/src/ios/mac.dart
++++ b/packages/flutter_tools/lib/src/ios/mac.dart
+@@ -759,6 +759,17 @@ Future<void> removeExtendedAttributes(
+       logger.printTrace('Failed to remove $attribute from ${projectDirectory.path}');
+     }
+   }
++
++  // Also remove com.apple.fileprovider.fpfs#P which can appear on macOS 26+ and
++  // causes codesign to fail with "resource fork, Finder information, or similar
++  // detritus not allowed". Ignore errors if the attribute doesn't exist.
++  await processUtils.exitsHappy(<String>[
++    'xattr',
++    '-r',
++    '-d',
++    'com.apple.fileprovider.fpfs#P',
++    projectDirectory.path,
++  ]);
+ }
+ 
+ Future<RunResult?> _runBuildWithRetries(
