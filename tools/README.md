@@ -36,4 +36,21 @@ grep -c "fileprovider.fpfs" packages/flutter_tools/lib/src/ios/mac.dart
 ### Machines that need it
 
 Any macOS 26+ machine that produces **signed** builds (Archive / TestFlight
-upload). Currently: `imac`, `a-mini-server`.
+upload). Currently: `imac`, `a-mini-server`, `macbook`.
+
+## setup-macos-dev.sh
+
+One-shot setup for a new macOS development machine. Checks the Flutter and
+Xcode versions, applies the codesign patch above if it is missing, then runs
+`flutter pub get` and `pod install`.
+
+```bash
+./tools/setup-macos-dev.sh
+```
+
+Safe to re-run — every step is idempotent, so it doubles as the thing to run
+after a `flutter upgrade` to restore the patch.
+
+Prerequisites it does not install for you: Flutter 3.47.4, Xcode, and
+CocoaPods. Signed builds additionally need an Apple Developer account signed
+in under Xcode > Settings > Accounts.
