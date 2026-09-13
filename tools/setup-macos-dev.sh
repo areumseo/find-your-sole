@@ -19,8 +19,23 @@ fail() { printf '\033[31merror:\033[0m %s\n' "$1" >&2; exit 1; }
 
 step "Checking prerequisites"
 command -v flutter >/dev/null || fail "flutter not found on PATH. Install Flutter $EXPECTED_FLUTTER first."
-command -v xcodebuild >/dev/null || fail "xcodebuild not found. Install Xcode and run: xcode-select --install"
+command -v xcodebuild >/dev/null || fail "xcodebuild not found. Install Xcode from the App Store."
 command -v pod >/dev/null || fail "CocoaPods not found. Install it with: sudo gem install cocoapods"
+
+# A Command Line Tools-only install provides xcodebuild but cannot read Xcode
+# project settings. Flutter then fails with the unhelpful "Application not
+# configured for iOS", so check for the real thing up front.
+XCODE_PATH="$(xcode-select -p 2>/dev/null || true)"
+case "$XCODE_PATH" in
+  *.app/Contents/Developer) ;;
+  *) fail "xcode-select points at '$XCODE_PATH', not a full Xcode install.
+       Install Xcode from the App Store, then:
+         sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+         sudo xcodebuild -runFirstLaunch
+         sudo xcodebuild -license accept" ;;
+esac
+xcodebuild -version >/dev/null 2>&1 || fail "xcodebuild cannot run. You may need to accept the license:
+       sudo xcodebuild -license accept"
 
 FLUTTER_ROOT="$(dirname "$(dirname "$(which flutter)")")"
 FLUTTER_VERSION="$(flutter --version | sed -n 's/^Flutter \([0-9.]*\).*/\1/p' | head -1)"

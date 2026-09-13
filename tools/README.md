@@ -56,5 +56,21 @@ Safe to re-run — every step is idempotent, so it doubles as the thing to run
 after a `flutter upgrade` to restore the patch.
 
 Prerequisites it does not install for you: Flutter 3.47.4, Xcode, and
-CocoaPods. Signed builds additionally need an Apple Developer account signed
+CocoaPods.
+
+It checks that `xcode-select -p` points at a full Xcode install rather than
+the Command Line Tools. With CLT only, `xcodebuild` exists but cannot read
+Xcode project settings, and Flutter fails with the misleading
+
+```
+Application not configured for iOS
+```
+
+even though the project is fine. The fix is to install Xcode and run:
+
+```bash
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -runFirstLaunch
+sudo xcodebuild -license accept
+``` Signed builds additionally need an Apple Developer account signed
 in under Xcode > Settings > Accounts.
