@@ -35,5 +35,5 @@ Release build:
 
 ```bash
 flutter build ios --no-codesign
-# Then open ios/FindYourSole.xcworkspace in Xcode and run on device
+# Then open ios/Runner.xcworkspace in Xcode and run on device
 ```
