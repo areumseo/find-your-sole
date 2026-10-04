@@ -124,6 +124,9 @@ const ko = {
   widthName: (w: string) => w,
 
   aboutTitle: '앱 정보',
+  licensesTitle: '📄 오픈소스 라이선스',
+  licensesBody: 'IBM Plex Sans KR\nCopyright © 2017 IBM Corp. with Reserved Font Name "Plex"\nSIL Open Font License 1.1',
+  licensesLink: '라이선스 전문 보기',
   aboutCards: [
     {
       title: '🔍 Find Your Sole 소개',
@@ -247,6 +250,9 @@ const en: Strings = {
   widthName: (w: string) => WIDTH_EN[w] ?? w,
 
   aboutTitle: 'About',
+  licensesTitle: '📄 Open-source licenses',
+  licensesBody: 'IBM Plex Sans KR\nCopyright © 2017 IBM Corp. with Reserved Font Name "Plex"\nSIL Open Font License 1.1',
+  licensesLink: 'View full license text',
   aboutCards: [
     {
       title: '🔍 About Find Your Sole',

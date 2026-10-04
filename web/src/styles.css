@@ -33,9 +33,13 @@ html, body { margin: 0; }
 body {
   background: var(--page);
   color: var(--ink);
-  font: 400 15px/1.5 -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
-    'Segoe UI', Roboto, sans-serif;
+  font: 400 15px/1.5 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
   -webkit-text-size-adjust: 100%;
+  /* Korean should wrap at spaces, not mid-word. overflow-wrap still breaks
+     an unbroken string (a long URL, say) that would otherwise overflow. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
   /* Reserve room for the fixed bottom tab bar on phones. */
   padding-bottom: calc(64px + env(safe-area-inset-bottom));
 }
@@ -54,7 +58,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   margin: 0 auto;
   padding: 14px 16px 6px;
 }
-.brand { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }
+.brand { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
 .brand b { color: var(--primary); }
 
 .lang {
@@ -64,7 +68,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   padding: 6px 14px;
   min-height: 36px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
@@ -89,7 +93,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   color: var(--muted);
   text-decoration: none;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
 }
 .tabs a .ico { font-size: 20px; line-height: 1; }
 .tabs a[aria-current='page'] { color: var(--primary); }
@@ -119,7 +123,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 
 /* ── Pages ─────────────────────────────────────────────── */
 .page-header { display: flex; align-items: center; gap: 8px; margin: 8px 0 18px; }
-.page-header h2 { font-size: 20px; font-weight: 800; }
+.page-header h2 { font-size: 20px; font-weight: 700; }
 .icon-btn {
   width: 40px; height: 40px;
   border: 0; background: transparent; border-radius: 50%;
@@ -143,7 +147,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 }
 .mode-card:hover { border-color: var(--primary); }
 .mode-card .emoji { font-size: 40px; }
-.mode-card h3 { font-size: 18px; font-weight: 800; }
+.mode-card h3 { font-size: 18px; font-weight: 700; }
 .mode-card .sub {
   display: inline-block; margin: 4px 0;
   padding: 1px 10px; border-radius: 999px;
@@ -201,7 +205,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .btn-outline-naver {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 44px; border: 1px solid var(--naver); border-radius: 10px;
-  color: var(--naver); text-decoration: none; font-weight: 600; font-size: 14px;
+  color: var(--naver); text-decoration: none; font-weight: 700; font-size: 14px;
 }
 
 .notice { margin: 12px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
@@ -220,15 +224,15 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .rank {
   flex: none; width: 32px; height: 32px; border-radius: 50%;
   display: grid; place-items: center;
-  background: var(--chip); color: var(--muted); font-weight: 800; font-size: 14px;
+  background: var(--chip); color: var(--muted); font-weight: 700; font-size: 14px;
 }
 .rank.top { background: var(--primary); color: var(--primary-ink); }
-.shoe-name { font-weight: 800; font-size: 16px; overflow-wrap: anywhere; }
+.shoe-name { font-weight: 700; font-size: 16px; overflow-wrap: anywhere; }
 .shoe-brand { color: var(--muted); font-size: 13px; margin: 2px 0 8px; }
 .tags { display: flex; flex-wrap: wrap; gap: 4px; }
 .tag { padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
 .side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; }
-.side .price { font-weight: 800; font-size: 14px; white-space: nowrap; }
+.side .price { font-weight: 700; font-size: 14px; white-space: nowrap; }
 .side .actions { display: flex; }
 /* Drawn with borders rather than a glyph: text chevrons render tiny and vary by font. */
 .chev {
@@ -265,9 +269,9 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 }
 .owned .info { flex: 1; min-width: 0; }
 .owned .meta { color: var(--muted); font-size: 13px; }
-.owned .km { text-align: right; font-weight: 800; color: var(--primary); }
+.owned .km { text-align: right; font-weight: 700; color: var(--primary); }
 .owned .km.worn { color: var(--danger); }
-.owned .km small { display: block; font-size: 10px; font-weight: 600; }
+.owned .km small { display: block; font-size: 10px; font-weight: 700; }
 .progress { height: 4px; margin-top: 6px; border-radius: 4px; background: var(--chip); overflow: hidden; }
 .progress > i { display: block; height: 100%; background: var(--primary); }
 .progress.worn > i { background: var(--danger); }
@@ -278,6 +282,8 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .about-card h3 { font-size: 15px; margin-bottom: 8px; }
 .about-card p { margin: 0; font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
 .about-card { padding: 16px; }
+.about-card p + p { margin-top: 8px; }
+.about-card a { color: var(--primary); font-size: 13px; }
 .version { text-align: center; color: var(--muted); font-size: 12px; margin-top: 8px; opacity: 0.7; }
 
 /* ── Dialog & toast ────────────────────────────────────── */

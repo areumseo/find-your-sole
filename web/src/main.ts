@@ -1,3 +1,4 @@
+import './fonts.css';
 import './styles.css';
 import { warmUp } from './api';
 import { h, mount } from './dom';
