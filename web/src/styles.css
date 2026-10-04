@@ -48,7 +48,12 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 
-/* ── Shell ─────────────────────────────────────────────── */
+/* ── Shell ───────────────────────────────────────────────
+   Under 900px (phones, tablets): brand + language on top, tabs fixed to the
+   bottom. From 900px: a left sidebar holds the brand, the nav and the language
+   switch. The markup is the same; only the layout changes. */
+.sidebar { display: contents; }
+
 .topbar {
   display: flex;
   align-items: center;
@@ -98,27 +103,56 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .tabs a .ico { font-size: 20px; line-height: 1; }
 .tabs a[aria-current='page'] { color: var(--primary); }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   body { padding-bottom: 0; }
+  #app { display: flex; align-items: flex-start; min-height: 100vh; }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    flex: none;
+    width: 248px;
+    height: 100vh;
+    height: 100dvh;
+    padding: 28px 16px 24px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+  }
+  /* Dissolve the top bar so the brand and language button become sidebar
+     items we can order independently. */
+  .topbar { display: contents; }
+  .brand { order: 0; padding: 0 12px 24px; font-size: 22px; }
   .tabs {
+    order: 1;
     position: static;
-    max-width: 720px;
-    margin: 0 auto;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
     border: 0;
     background: transparent;
-    gap: 8px;
-    padding: 0 16px;
   }
   .tabs a {
-    flex: 0 0 auto;
+    flex: none;
     flex-direction: row;
-    gap: 8px;
-    padding: 8px 16px;
-    min-height: 40px;
-    border-radius: 999px;
-    font-size: 14px;
+    gap: 12px;
+    padding: 10px 12px;
+    min-height: 44px;
+    border-radius: 12px;
+    font-size: 15px;
   }
-  .tabs a[aria-current='page'] { background: var(--card); box-shadow: 0 0 0 1px var(--border); }
+  .tabs a .ico { width: 24px; text-align: center; }
+  .tabs a:hover { background: var(--chip); }
+  .tabs a[aria-current='page'] {
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+  }
+  .lang { order: 2; margin-top: auto; align-self: flex-start; }
+
+  main { flex: 1; min-width: 0; max-width: 760px; margin: 0 auto; padding: 32px 32px 48px; }
+
+  /* Centre the toast over the content area rather than the whole window. */
+  .toast { bottom: 32px; left: calc(50% + 124px); }
 }
 
 /* ── Pages ─────────────────────────────────────────────── */
@@ -312,7 +346,6 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   transition: opacity 0.2s, transform 0.2s;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
-@media (min-width: 768px) { .toast { bottom: 32px; } }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
