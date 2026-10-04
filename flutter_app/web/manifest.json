@@ -1,12 +1,12 @@
 {
-    "name": "find_your_sole",
-    "short_name": "find_your_sole",
+    "name": "Find Your Sole",
+    "short_name": "Find Your Sole",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#F8F8F8",
+    "theme_color": "#4AABDB",
+    "description": "발 모양과 러닝 스타일에 맞는 러닝화를 추천받아 보세요.",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {
@@ -31,5 +31,6 @@
             "type": "image/png",
             "purpose": "maskable"
         }
-    ]
+    ],
+    "lang": "ko"
 }
