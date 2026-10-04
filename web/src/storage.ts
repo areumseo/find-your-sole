@@ -36,6 +36,11 @@ export const favorites = {
 // ── My Shoes ──────────────────────────────────────────────
 const MY_SHOES = 'fys.myShoes';
 
+/** Running shoes are generally worn out somewhere around 500 km. */
+export const REPLACE_KM = 500;
+/** Start warning a little before that. */
+export const SOON_KM = 400;
+
 export const myShoes = {
   all(): OwnedShoe[] {
     return read<OwnedShoe[]>(MY_SHOES, []).sort((a, b) =>

@@ -53,7 +53,13 @@ export function slider(opts: {
   label: string;
   onInput: (value: number) => void;
 }): HTMLInputElement {
-  return h('input', {
+  // The filled part of the track is drawn from --fill, which has to be kept in
+  // sync by hand because CSS cannot style the "elapsed" half of a range input
+  // consistently across browsers.
+  const paint = (el: HTMLInputElement, value: number) =>
+    el.style.setProperty('--fill', `${((value - opts.min) / (opts.max - opts.min)) * 100}%`);
+
+  const el = h('input', {
     type: 'range',
     class: 'slider',
     min: opts.min,
@@ -61,8 +67,14 @@ export function slider(opts: {
     step: opts.step,
     value: opts.value,
     'aria-label': opts.label,
-    onInput: (e) => opts.onInput(Number((e.target as HTMLInputElement).value)),
+    onInput: (e) => {
+      const value = Number((e.target as HTMLInputElement).value);
+      paint(e.target as HTMLInputElement, value);
+      opts.onInput(value);
+    },
   });
+  paint(el, opts.value);
+  return el;
 }
 
 export function pageHeader(title: string, onBack?: () => void): HTMLElement {

@@ -1,19 +1,16 @@
 import { h } from '../dom';
 import { t } from '../i18n';
-import { myShoes } from '../storage';
-import { openForm, pageHeader, toast } from '../ui';
+import { REPLACE_KM, myShoes } from '../storage';
+import { openForm, toast } from '../ui';
 
-/** Running shoes are generally worn out somewhere around 500 km. */
-const REPLACE_KM = 500;
-
-export function renderMyShoes(rerender: () => void): HTMLElement {
+/** The user's shoe collection, shown as a section of the My Page screen. */
+export function myShoesSection(rerender: () => void): HTMLElement {
   const s = t();
   const shoes = myShoes.all();
 
   const addButton = h('button', {
     type: 'button',
-    class: 'btn btn-primary',
-    style: 'margin-left:auto;padding:8px 16px;min-height:40px;font-size:14px',
+    class: 'btn btn-primary btn-small',
     onClick: () =>
       openForm(
         s.addShoe,
@@ -31,13 +28,10 @@ export function renderMyShoes(rerender: () => void): HTMLElement {
       ),
   }, `＋ ${s.addShoe}`);
 
-  const header = pageHeader(s.myShoesTitle);
-  header.append(addButton);
-
-  return h('div', {},
-    header,
+  return h('section', { class: 'block' },
+    h('div', { class: 'section-head' }, h('h2', {}, s.myShoesTitle), addButton),
     shoes.length
-      ? h('div', {}, ...shoes.map((shoe) => {
+      ? h('div', { class: 'cards-grid' }, ...shoes.map((shoe) => {
           const worn = shoe.km > REPLACE_KM;
           const pct = Math.min(100, (shoe.km / REPLACE_KM) * 100);
           return h('article', { class: 'card owned' },

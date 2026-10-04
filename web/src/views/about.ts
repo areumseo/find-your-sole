@@ -4,7 +4,7 @@ import { pageHeader } from '../ui';
 
 export function renderAbout(): HTMLElement {
   const s = t();
-  return h('div', {},
+  return h('div', { class: 'page-narrow' },
     pageHeader(s.aboutTitle),
     ...s.aboutCards.map((c) => h('article', { class: 'card about-card' }, h('h3', {}, c.title), h('p', {}, c.body))),
     h('article', { class: 'card about-card' },
