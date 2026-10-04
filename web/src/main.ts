@@ -97,7 +97,10 @@ function render(): void {
   const s = t();
 
   mount(topbar,
-    h('div', { class: 'brand' }, 'Find Your ', h('b', {}, 'Sole')),
+    h('div', { class: 'brand' },
+      h('img', { class: 'brand-logo', src: '/logo.svg', alt: '', width: 34, height: 34 }),
+      h('span', {}, 'Find Your ', h('b', {}, 'Sole')),
+    ),
     h('button', {
       type: 'button', class: 'lang', 'aria-label': s.langToggleLabel,
       onClick: () => setLocale(getLocale() === 'ko' ? 'en' : 'ko'),
