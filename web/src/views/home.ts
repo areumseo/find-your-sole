@@ -40,7 +40,6 @@ export function renderHome(go: (path: string) => void): HTMLElement {
 
   return h('div', { class: 'dashboard' },
     h('section', { class: 'hero' },
-      h('img', { class: 'hero-mascot', src: '/logo.svg', alt: '', width: 112, height: 112 }),
       h('h1', {}, s.homeGreeting),
       h('p', {}, s.homeSubtitle),
       modeCards(go),

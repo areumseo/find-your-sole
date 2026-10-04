@@ -98,8 +98,9 @@ function render(): void {
 
   mount(topbar,
     h('div', { class: 'brand' },
-      h('img', { class: 'brand-logo', src: '/logo.svg', alt: '', width: 34, height: 34 }),
-      h('span', {}, 'Find Your ', h('b', {}, 'Sole')),
+      h('img', { class: 'brand-logo', src: '/logo.svg', alt: '', width: 40, height: 40 }),
+      // Two lines beside the mascot. The <br> keeps the text reading as "Find Your Sole".
+      h('span', { class: 'brand-name' }, 'Find Your ', h('br'), h('b', {}, 'Sole')),
     ),
     h('button', {
       type: 'button', class: 'lang', 'aria-label': s.langToggleLabel,

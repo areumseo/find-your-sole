@@ -63,8 +63,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   margin: 0 auto;
   padding: 14px 16px 6px;
 }
-.brand { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-.brand-logo { width: 34px; height: 34px; flex: none; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-logo { width: 40px; height: 40px; flex: none; }
+/* Two lines beside the mascot: "Find Your" over a blue "Sole". */
+.brand-name { font-size: 18px; font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; }
 .brand b { color: var(--primary); }
 
 .lang {
@@ -126,7 +128,9 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   /* Dissolve the top bar so the brand and language button become sidebar
      items we can order independently. */
   .topbar { display: contents; }
-  .brand { order: 0; padding: 0 12px 24px; font-size: 22px; }
+  .brand { order: 0; gap: 12px; padding: 0 8px 28px; }
+  .brand-logo { width: 52px; height: 52px; }
+  .brand-name { font-size: 20px; }
   .tabs {
     order: 1;
     position: static;
@@ -431,14 +435,7 @@ noscript p { padding: 24px 16px; text-align: center; }
   border-radius: var(--radius);
   background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 14%, var(--card)), var(--card) 70%);
 }
-.hero { position: relative; }
 .hero h1 { font-size: 24px; letter-spacing: -0.02em; }
-/* Decorative mascot beside the heading; hidden on phones where space is tight. */
-.hero-mascot { display: none; position: absolute; top: 14px; right: 24px; width: 112px; height: 112px; pointer-events: none; }
-@media (min-width: 640px) {
-  .hero-mascot { display: block; }
-  .hero h1, .hero > p { max-width: calc(100% - 150px); }
-}
 .hero > p { margin: 6px 0 20px; color: var(--muted); }
 .hero .mode-card { background: var(--card); }
 

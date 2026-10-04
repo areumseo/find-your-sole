@@ -1,25 +1,32 @@
 #!/usr/bin/env python3
-"""Builds the favicon and app icons in public/ from public/logo.svg (the Soli mascot).
+"""Builds the site logo, favicon and app icons in public/ from the Soli mascot.
 
     npm run icons        # needs: pip install cairosvg pillow
 
+The single source of truth is design/soli/soli-default.svg. It is copied verbatim to
+public/logo.svg (what the site loads), so edit the design file, not the copy.
+
 Outputs:
+  logo.svg              copy of design/soli/soli-default.svg
   favicon.svg           the logo cropped tight so it fills a browser tab
   favicon-32.png        PNG fallback for the tab icon
   apple-touch-icon.png  180px, full-bleed (iOS rounds the corners itself)
   icon-192.png, icon-512.png            "any" icons for the web manifest
   icon-maskable-512.png                 the same artwork with a larger safe margin
 
-Re-run after editing logo.svg.
+Re-run after editing design/soli/soli-default.svg.
 """
 import io
 import re
+import shutil
 from pathlib import Path
 
 import cairosvg
 from PIL import Image, ImageDraw
 
-PUBLIC = Path(__file__).resolve().parent.parent / "public"
+ROOT = Path(__file__).resolve().parent.parent
+PUBLIC = ROOT / "public"
+DESIGN = ROOT / "design/soli/soli-default.svg"
 LOGO = PUBLIC / "logo.svg"
 
 # Brand-blue tile behind the mascot on the square icons. A touch of vertical
@@ -47,6 +54,7 @@ def tile(size: int, mascot_scale: float) -> Image.Image:
 
 
 def main() -> None:
+    shutil.copyfile(DESIGN, LOGO)
     # Favicon: same drawing, viewBox cropped to the artwork.
     svg = LOGO.read_text()
     (PUBLIC / "favicon.svg").write_text(re.sub(r'viewBox="[^"]+"', 'viewBox="6 6 108 108"', svg, count=1))
