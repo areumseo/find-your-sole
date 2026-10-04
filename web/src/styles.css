@@ -129,7 +129,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
      items we can order independently. */
   .topbar { display: contents; }
   .brand { order: 0; gap: 12px; padding: 0 8px 28px; }
-  .brand-logo { width: 52px; height: 52px; }
+  .brand-logo { width: 44px; height: 44px; }
   .brand-name { font-size: 20px; }
   .tabs {
     order: 1;
