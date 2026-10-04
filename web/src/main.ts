@@ -40,6 +40,7 @@ const TABS: { tab: Tab; href: string; icon: string; label: () => string }[] = [
 
 const topbar = h('header', { class: 'topbar' });
 const tabs = h('nav', { class: 'tabs', 'aria-label': 'Main' });
+const sidebar = h('aside', { class: 'sidebar' }, topbar, tabs);
 const main = h('main', { id: 'content' });
 
 function render(): void {
@@ -72,7 +73,7 @@ function render(): void {
 function boot(): void {
   document.documentElement.lang = getLocale();
   document.title = t().pageTitle;
-  document.getElementById('app')!.replaceChildren(topbar, tabs, main);
+  document.getElementById('app')!.replaceChildren(sidebar, main);
 
   window.addEventListener('hashchange', () => {
     render();
