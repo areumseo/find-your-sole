@@ -15,7 +15,8 @@ A personalized running shoe recommendation iOS app. Answer a few questions about
 
 ## Tech Stack
 
-- **Frontend**: Flutter (iOS)
+- **iOS app**: Flutter (`flutter_app/`)
+- **Web app**: Vite + TypeScript, no framework (`web/`) — responsive, works on desktop and mobile browsers
 - **Backend**: FastAPI (hosted on Render)
 - **AI**: Anthropic Claude (`claude-haiku-4-5`)
 - **Local storage**: SQLite (sqflite) + shared_preferences
@@ -23,6 +24,21 @@ A personalized running shoe recommendation iOS app. Answer a few questions about
 ## Backend
 
 API endpoint: `https://find-your-sole.onrender.com`
+
+## Web app
+
+A static site in `web/`, deployed to Render as `find-your-sole-web` (see `render.yaml`). It uses the same backend as the iOS app. The bundle is ~10 KB gzipped, so it loads quickly on mobile networks.
+
+```bash
+cd web
+npm install
+npm run dev          # http://localhost:5173, talks to the production API
+npm run build        # typecheck + production build into web/dist
+```
+
+To develop against a local backend, copy `web/.env.example` to `web/.env.local`, set `VITE_API_URL=http://localhost:8000`, and run `uvicorn main:app` from `api/`.
+
+Favorites and My Shoes are stored in the browser's `localStorage`, so they are per-device and are not shared with the iOS app. Routing uses `#/…` hashes, so no server rewrite rules are needed.
 
 ## Getting Started
 

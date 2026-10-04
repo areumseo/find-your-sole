@@ -9,3 +9,20 @@ services:
       - key: ANTHROPIC_API_KEY
         sync: false
     healthCheckPath: /health
+
+  # Static frontend. Built from web/ and served from Render's CDN; it talks to
+  # the API service above over HTTPS (see VITE_API_URL in web/.env.example).
+  - type: web
+    name: find-your-sole-web
+    runtime: static
+    rootDir: web
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    headers:
+      # Vite fingerprints everything under /assets, so it is safe to cache forever.
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

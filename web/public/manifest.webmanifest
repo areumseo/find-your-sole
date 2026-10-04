@@ -1,0 +1,16 @@
+{
+  "name": "Find Your Sole",
+  "short_name": "Find Your Sole",
+  "description": "발 모양과 러닝 스타일에 맞는 러닝화를 추천받아 보세요.",
+  "lang": "ko",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f8f8",
+  "theme_color": "#4aabdb",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
