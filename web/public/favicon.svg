@@ -1,41 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 16 110 92" role="img" aria-label="Find Your Sole">
-  <title>Find Your Sole</title>
-  <!-- ground shadow -->
-  <ellipse cx="60" cy="103" rx="40" ry="4.5" fill="#12384f" opacity="0.1"/>
-
-  <!-- sprout on the collar -->
-  <path d="M45 34 C44 26 49 20 58 20 C58 28 53 33 45 34 Z" fill="#56c786" stroke="#1f5f86" stroke-width="3.5" stroke-linejoin="round"/>
-
-  <!-- upper: the body of the character -->
-  <path d="M15 86 C13 62 21 38 39 34 C46 32.5 51.5 35 55.5 41 C61.5 50 73.5 54 90 59 C103 63 108 74 106 86 Z"
-        fill="#4aabdb" stroke="#1f5f86" stroke-width="3.5" stroke-linejoin="round"/>
-  <!-- soft highlight along the heel -->
-  <path d="M25 48 C28 41 33 38 38 38" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/>
-
-  <!-- laces -->
-  <g stroke="#ffffff" stroke-width="3.2" stroke-linecap="round">
-    <path d="M60 46 l-3.5 7"/>
-    <path d="M70 51 l-3.5 7"/>
-    <path d="M80 55.5 l-3.5 7"/>
-  </g>
-
-  <!-- midsole -->
-  <path d="M11 86 H107 Q113 86 113 92 Q113 100 103 100 H21 Q9 100 9 92 Q9 86 11 86 Z"
-        fill="#ffffff" stroke="#1f5f86" stroke-width="3.5" stroke-linejoin="round"/>
-  <path d="M19 93.5 H101" stroke="#bfe6f7" stroke-width="3" stroke-linecap="round"/>
-
-  <!-- face (kept large so it still reads at favicon size) -->
-  <g fill="#12384f">
-    <ellipse cx="43" cy="68" rx="5.4" ry="6.6"/>
-    <ellipse cx="65" cy="68" rx="5.4" ry="6.6"/>
-  </g>
-  <g fill="#ffffff">
-    <circle cx="44.8" cy="65.6" r="2.1"/>
-    <circle cx="66.8" cy="65.6" r="2.1"/>
-  </g>
-  <path d="M49.5 76 Q54 81.5 58.5 76" fill="none" stroke="#12384f" stroke-width="3.4" stroke-linecap="round"/>
-  <g fill="#ff9db0" opacity="0.9">
-    <ellipse cx="34.5" cy="76" rx="5.2" ry="3.4"/>
-    <ellipse cx="73.5" cy="76" rx="5.2" ry="3.4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 6 108 108" role="img" aria-label="솔이, Find Your Sole 마스코트">
+  <title>솔이 · Find Your Sole</title>
+  <g transform="translate(3.7 2.2) scale(0.1895)">
+    <!-- shoes first: the hem of the body overlaps their tops so they peek out from under it -->
+    <g transform="translate(296 468) rotate(-3) scale(-0.95 0.95)"><path d="M10 84 C-8 34 16 -14 68 -16 C118 -18 152 10 180 38 C202 60 206 72 198 84 Z" fill="#4ba4d8" stroke="#142b37" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M2 80 H196 Q206 80 206 90 Q206 112 182 112 H24 Q2 114 2 92 Q2 80 12 80 Z" fill="#fbf8f2" stroke="#142b37" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+<g stroke="#fff" stroke-width="9" stroke-linecap="round"><path d="M56 30 l16 -10"/><path d="M90 28 l16 -9"/></g></g>
+    <g transform="translate(318 470) rotate(2) scale(0.95 0.95)"><path d="M10 84 C-8 34 16 -14 68 -16 C118 -18 152 10 180 38 C202 60 206 72 198 84 Z" fill="#4ba4d8" stroke="#142b37" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M2 80 H196 Q206 80 206 90 Q206 112 182 112 H24 Q2 114 2 92 Q2 80 12 80 Z" fill="#fbf8f2" stroke="#142b37" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+<g stroke="#fff" stroke-width="9" stroke-linecap="round"><path d="M56 30 l16 -10"/><path d="M90 28 l16 -9"/></g></g>
+    <path d="M100 452 C78 440 52 420 50 385 C48 360 62 345 80 330 C105 308 112 285 112 262 C112 150 160 62 262 42 C330 28 395 40 428 100 C448 140 452 195 458 232 C478 205 515 198 530 222 C545 248 515 292 462 328 C452 380 445 420 438 462 C405 472 372 454 340 462 C300 472 270 454 232 466 C180 480 130 472 100 452 Z" fill="#fbf8f2" stroke="#142b37" stroke-width="15" stroke-linejoin="round" stroke-linecap="round"/>
+    <g fill="#142b37"><ellipse cx="257" cy="214" rx="15" ry="21" transform="rotate(-6 257 214)"/><ellipse cx="371" cy="193" rx="14" ry="22" transform="rotate(-6 371 193)"/></g>
+<path d="M296 249 C312 264 334 260 348 243" fill="none" stroke="#142b37" stroke-width="12" stroke-linecap="round"/>
   </g>
 </svg>

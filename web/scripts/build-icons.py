@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds the favicon and app icons in public/ from public/logo.svg.
+"""Builds the favicon and app icons in public/ from public/logo.svg (the Soli mascot).
 
     npm run icons        # needs: pip install cairosvg pillow
 
@@ -22,8 +22,9 @@ from PIL import Image, ImageDraw
 PUBLIC = Path(__file__).resolve().parent.parent / "public"
 LOGO = PUBLIC / "logo.svg"
 
-# Soft brand-tinted tile behind the mascot on the square icons.
-BG_TOP, BG_BOTTOM = (244, 250, 253), (205, 234, 248)
+# Brand-blue tile behind the mascot on the square icons. A touch of vertical
+# gradient keeps it from looking flat.
+BG_TOP, BG_BOTTOM = (88, 176, 224), (66, 158, 212)
 
 
 def render(size: int) -> Image.Image:
@@ -40,28 +41,26 @@ def tile(size: int, mascot_scale: float) -> Image.Image:
         draw.line([(0, y), (size, y)], fill=tuple(round(a + (b - a) * t) for a, b in zip(BG_TOP, BG_BOTTOM)) + (255,))
     m = round(size * mascot_scale)
     mascot = render(m)
-    # The artwork is not centred in its viewBox: it spans y=20..104 of 120, so
-    # nudge it so its visual middle sits at the tile's middle.
-    offset_y = round(m * (60 - 62) / 120)
-    bg.alpha_composite(mascot, ((size - m) // 2, (size - m) // 2 + offset_y))
+    # logo.svg is centred in its viewBox, so no extra nudge is needed.
+    bg.alpha_composite(mascot, ((size - m) // 2, (size - m) // 2))
     return bg
 
 
 def main() -> None:
     # Favicon: same drawing, viewBox cropped to the artwork.
     svg = LOGO.read_text()
-    (PUBLIC / "favicon.svg").write_text(re.sub(r'viewBox="[^"]+"', 'viewBox="6 16 110 92"', svg, count=1))
+    (PUBLIC / "favicon.svg").write_text(re.sub(r'viewBox="[^"]+"', 'viewBox="6 6 108 108"', svg, count=1))
 
     cairosvg.svg2png(
         bytestring=(PUBLIC / "favicon.svg").read_bytes(), write_to=str(PUBLIC / "favicon-32.png"),
         output_width=32, output_height=32,
     )
-    tile(180, 0.82).convert("RGB").save(PUBLIC / "apple-touch-icon.png", optimize=True)
-    tile(192, 0.82).convert("RGB").save(PUBLIC / "icon-192.png", optimize=True)
-    tile(512, 0.82).convert("RGB").save(PUBLIC / "icon-512.png", optimize=True)
+    tile(180, 0.8).convert("RGB").save(PUBLIC / "apple-touch-icon.png", optimize=True)
+    tile(192, 0.8).convert("RGB").save(PUBLIC / "icon-192.png", optimize=True)
+    tile(512, 0.8).convert("RGB").save(PUBLIC / "icon-512.png", optimize=True)
     # Maskable icons are cropped to a circle of 80% of the size on some
     # platforms, so keep the artwork well inside it.
-    tile(512, 0.62).convert("RGB").save(PUBLIC / "icon-maskable-512.png", optimize=True)
+    tile(512, 0.6).convert("RGB").save(PUBLIC / "icon-maskable-512.png", optimize=True)
     print("icons written to", PUBLIC)
 
 
