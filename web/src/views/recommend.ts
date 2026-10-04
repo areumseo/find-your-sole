@@ -7,6 +7,14 @@ import type { Prefs, Shoe } from '../types';
 
 export type Step = 'mode' | 'beginner' | 'expert' | 'results';
 
+/** Hash paths for each step of the search flow. */
+export const SEARCH = '/search';
+const PATH = {
+  beginner: '/search/beginner',
+  expert: '/search/expert',
+  results: '/search/results',
+} as const;
+
 // The backend matches on these exact Korean/English strings, so they are
 // fixed values separate from the translated labels shown to the user.
 const FREQ_API = ['이제 막 시작했어요', '6개월 미만', '1년 미만'];
@@ -71,7 +79,8 @@ export function renderRecommend(step: Step, go: (path: string) => void): HTMLEle
 }
 
 // ── Mode select ───────────────────────────────────────────
-function modeSelect(go: (path: string) => void): HTMLElement {
+/** The two entry cards, shared by the Search page and the Home dashboard. */
+export function modeCards(go: (path: string) => void): HTMLElement {
   const s = t();
   const card = (emoji: string, title: string, sub: string, desc: string, path: string) =>
     h('button', { type: 'button', class: 'mode-card', onClick: () => go(path) },
@@ -83,10 +92,18 @@ function modeSelect(go: (path: string) => void): HTMLElement {
       ),
       h('span', { class: 'go', 'aria-hidden': 'true' }, '›'),
     );
-  return h('div', {},
+  return h('div', { class: 'mode-grid' },
+    card('🌱', s.beginnerTitle, s.beginnerSubtitle, s.beginnerDescription, PATH.beginner),
+    card('🏃', s.expertTitle, s.expertSubtitle, s.expertDescription, PATH.expert),
+  );
+}
+
+function modeSelect(go: (path: string) => void): HTMLElement {
+  const s = t();
+  return h('div', { class: 'page-narrow' },
+    pageHeader(s.searchTitle),
     h('p', { class: 'lead' }, s.heroSubtitle),
-    card('🌱', s.beginnerTitle, s.beginnerSubtitle, s.beginnerDescription, '/beginner'),
-    card('🏃', s.expertTitle, s.expertSubtitle, s.expertDescription, '/expert'),
+    modeCards(go),
   );
 }
 
@@ -171,11 +188,12 @@ function beginnerForm(go: (path: string) => void): HTMLElement {
     });
     results = shoes;
     resultPrefs = { terrain: first(st.terrain) === 0 ? '로드' : '트레일', budget: st.budget };
-    go('/results');
+    go(PATH.results);
   });
 
-  return h('div', {},
-    pageHeader(s.beginnerModeTitle, () => go('/')),
+  return h('div', { class: 'page-wide' },
+    pageHeader(s.beginnerModeTitle, () => go(SEARCH)),
+    h('div', { class: 'form-grid' },
     section(s.sectionFrequency, chips({
       options: s.freq, selected: st.freq, onChange: (n) => (st.freq = n),
     })),
@@ -199,8 +217,8 @@ function beginnerForm(go: (path: string) => void): HTMLElement {
     section(s.sectionWideFoot, h('div', { class: 'switch-row' }, wideSwitch, wideLabel)),
     weightField(st),
     budgetField(st),
-    button,
-    note,
+    h('div', { class: 'form-actions' }, button, note),
+    ),
   );
 }
 
@@ -235,11 +253,12 @@ function expertForm(go: (path: string) => void): HTMLElement {
     });
     results = shoes;
     resultPrefs = { arch, pronation, terrain, cushion, width, weekly_km: st.weeklyKm, budget: st.budget };
-    go('/results');
+    go(PATH.results);
   });
 
-  return h('div', {},
-    pageHeader(s.expertModeTitle, () => go('/')),
+  return h('div', { class: 'page-wide' },
+    pageHeader(s.expertModeTitle, () => go(SEARCH)),
+    h('div', { class: 'form-grid' },
     section(s.sectionArch, chips({ options: s.arch, selected: st.arch, onChange: (n) => (st.arch = n) })),
     section(s.sectionPronation, chips({
       options: s.pronation, selected: st.pronation, onChange: (n) => (st.pronation = n),
@@ -261,8 +280,8 @@ function expertForm(go: (path: string) => void): HTMLElement {
     section(kmTitle, kmSlider),
     weightField(st),
     budgetField(st),
-    button,
-    note,
+    h('div', { class: 'form-actions' }, button, note),
+    ),
   );
 }
 
@@ -270,9 +289,9 @@ function expertForm(go: (path: string) => void): HTMLElement {
 function resultsView(go: (path: string) => void): HTMLElement {
   const s = t();
   return h('div', {},
-    pageHeader(s.resultsTitle, () => go(`/${lastForm}`)),
+    pageHeader(s.resultsTitle, () => go(PATH[lastForm])),
     results.length
-      ? h('div', {}, ...results.map((shoe, i) => shoeCard({ shoe, rank: i + 1, prefs: resultPrefs })))
+      ? h('div', { class: 'cards-grid' }, ...results.map((shoe, i) => shoeCard({ shoe, rank: i + 1, prefs: resultPrefs })))
       : h('p', { class: 'empty' }, s.noResults),
   );
 }

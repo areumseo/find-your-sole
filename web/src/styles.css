@@ -63,7 +63,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   margin: 0 auto;
   padding: 14px 16px 6px;
 }
-.brand { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-logo { width: 40px; height: 40px; flex: none; }
+/* Two lines beside the mascot: "Find Your" over a blue "Sole". */
+.brand-name { font-size: 18px; font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; }
 .brand b { color: var(--primary); }
 
 .lang {
@@ -102,6 +105,8 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 }
 .tabs a .ico { font-size: 20px; line-height: 1; }
 .tabs a[aria-current='page'] { color: var(--primary); }
+/* Some entries belong to only one of the two layouts. */
+.tabs a.wide-only { display: none; }
 
 @media (min-width: 900px) {
   body { padding-bottom: 0; }
@@ -123,7 +128,9 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   /* Dissolve the top bar so the brand and language button become sidebar
      items we can order independently. */
   .topbar { display: contents; }
-  .brand { order: 0; padding: 0 12px 24px; font-size: 22px; }
+  .brand { order: 0; gap: 12px; padding: 0 8px 28px; }
+  .brand-logo { width: 52px; height: 52px; }
+  .brand-name { font-size: 20px; }
   .tabs {
     order: 1;
     position: static;
@@ -143,13 +150,15 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
     font-size: 15px;
   }
   .tabs a .ico { width: 24px; text-align: center; }
+  .tabs a.wide-only { display: flex; }
+  .tabs a.narrow-only { display: none; }
   .tabs a:hover { background: var(--chip); }
   .tabs a[aria-current='page'] {
     background: color-mix(in srgb, var(--primary) 14%, transparent);
   }
   .lang { order: 2; margin-top: auto; align-self: flex-start; }
 
-  main { flex: 1; min-width: 0; max-width: 760px; margin: 0 auto; padding: 32px 32px 48px; }
+  main { flex: 1; min-width: 0; max-width: 1200px; margin: 0 auto; padding: 32px 32px 48px; }
 
   /* Centre the toast over the content area rather than the whole window. */
   .toast { bottom: 32px; left: calc(50% + 124px); }
@@ -174,7 +183,6 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   width: 100%;
   text-align: left;
   padding: 20px;
-  margin-bottom: 14px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -211,7 +219,35 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   font-weight: 700;
 }
 
-.slider { width: 100%; accent-color: var(--primary); height: 32px; }
+.slider {
+  --fill: 0%;
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--primary) var(--fill), var(--border) var(--fill));
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px; margin-top: -8px;
+  border: 3px solid var(--card); border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+.slider::-moz-range-track { height: 6px; border-radius: 999px; background: var(--border); }
+.slider::-moz-range-progress { height: 6px; border-radius: 999px; background: var(--primary); }
+.slider::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border: 3px solid var(--card); border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
 
 .switch-row { display: flex; align-items: center; gap: 12px; }
 .switch {
@@ -303,7 +339,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 }
 .owned .info { flex: 1; min-width: 0; }
 .owned .meta { color: var(--muted); font-size: 13px; }
-.owned .km { text-align: right; font-weight: 700; color: var(--primary); }
+.owned .km { min-width: 64px; text-align: right; font-weight: 700; color: var(--primary); }
 .owned .km.worn { color: var(--danger); }
 .owned .km small { display: block; font-size: 10px; font-weight: 700; }
 .progress { height: 4px; margin-top: 6px; border-radius: 4px; background: var(--chip); overflow: hidden; }
@@ -353,3 +389,78 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 }
 
 noscript p { padding: 24px 16px; text-align: center; }
+
+/* ── Layout helpers ────────────────────────────────────── */
+.page-narrow { max-width: 760px; margin-inline: auto; }
+.page-wide { max-width: 1000px; margin-inline: auto; }
+
+.mode-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .mode-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.cards-grid { display: grid; gap: 12px; align-items: start; grid-template-columns: 1fr; }
+.cards-grid .card { margin: 0; }
+@media (min-width: 900px) {
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); }
+}
+
+/* Forms use the width: two columns of fields once there is room. */
+.form-grid { display: block; }
+.form-actions { max-width: 420px; }
+@media (min-width: 1100px) {
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-items: start; }
+  .form-actions { grid-column: 1 / -1; }
+}
+
+.btn { display: inline-block; text-align: center; text-decoration: none; }
+.btn-small { padding: 8px 16px; min-height: 40px; font-size: 14px; }
+.block { margin-bottom: 32px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.section-head h2 { font-size: 18px; }
+.empty .hint { font-size: 13px; margin: 4px 0 18px; }
+.notice-card {
+  margin: 0 0 24px; padding: 12px 16px;
+  background: var(--chip); border-radius: 12px;
+  color: var(--muted); font-size: 13px; line-height: 1.6;
+}
+.card.menu-row { display: flex; align-items: center; gap: 14px; padding: 16px; color: inherit; text-decoration: none; }
+.menu-row .ico { font-size: 20px; width: 28px; text-align: center; }
+.menu-row .label { flex: 1; font-weight: 700; }
+.menu-row .go { color: var(--muted); }
+
+/* ── Home dashboard ────────────────────────────────────── */
+.hero {
+  padding: 24px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 14%, var(--card)), var(--card) 70%);
+}
+.hero h1 { font-size: 24px; letter-spacing: -0.02em; }
+.hero > p { margin: 6px 0 20px; color: var(--muted); }
+.hero .mode-card { background: var(--card); }
+
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-bottom: 16px; }
+@media (min-width: 700px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+.tile { padding: 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.tile-label { color: var(--muted); font-size: 12px; font-weight: 700; }
+.tile-value { margin-top: 6px; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+.tile-sub { margin-top: 2px; color: var(--danger); font-size: 12px; font-weight: 700; }
+
+.widgets { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 900px) { .widgets { grid-template-columns: 1fr 1fr; } }
+.widget { padding: 18px 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.widget-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.widget-head h2 { font-size: 16px; }
+.widget-head a { color: var(--primary); font-size: 13px; font-weight: 700; text-decoration: none; }
+.rows { list-style: none; margin: 0; padding: 0; }
+.row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--border); }
+.row:first-child { border-top: 0; }
+.row-main { flex: 1; min-width: 0; }
+.row-title { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row-sub { color: var(--muted); font-size: 13px; }
+.row-end { flex: none; min-width: 72px; text-align: right; font-weight: 700; font-size: 14px; }
+.row-end small { display: block; font-size: 11px; color: var(--danger); }
+.row-end.danger { color: var(--danger); }
+.row .progress { margin-top: 8px; }
+.widget-empty { padding: 20px 0 8px; text-align: center; color: var(--muted); }
+.widget-empty p { margin: 0 0 14px; }
