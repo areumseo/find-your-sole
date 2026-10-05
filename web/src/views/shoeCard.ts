@@ -1,3 +1,4 @@
+import { track } from '../analytics';
 import { h, safeUrl } from '../dom';
 import { explainShoe } from '../api';
 import { getLocale, t } from '../i18n';
@@ -88,6 +89,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   };
   favBtn.addEventListener('click', () => {
     favorites.toggle(shoe);
+    track(favorites.has(shoe.id) ? 'favorite_add' : 'favorite_remove', {shoe_id: shoe.id});
     paintFav();
     onFavoriteChange?.();
   });
@@ -128,6 +130,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
 
   async function loadExplanation(): Promise<void> {
     if (!prefs || explanation || loading) return;
+    track('explanation_open', {shoe_id: shoe.id, mode: String(prefs.mode)});
     loading = true;
     renderExplain();
     try {
@@ -166,7 +169,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   );
   if (naver) {
     detail.append(
-      h('a', { class: 'btn-outline-naver', href: naver, target: '_blank', rel: 'noopener noreferrer' },
+      h('a', { class: 'btn-outline-naver', onClick: () => track('shopping_click', {shoe_id: shoe.id}), href: naver, target: '_blank', rel: 'noopener noreferrer' },
         `🛒 ${s.naverShopping}`),
     );
   }
