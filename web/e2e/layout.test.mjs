@@ -39,7 +39,7 @@ check('데스크톱: 긴 페이지에서도 사이드바 고정(sticky)', await 
 })());
 await d.click('.tabs a:has-text("홈")');
 await d.click('.mode-card >> nth=0'); await d.click('.btn-primary'); await d.waitForSelector('article.card');
-await d.click('article.card >> nth=0 >> button[aria-label="저장하기"]');
+await d.click('article.card >> nth=0 >> button[aria-label="저장"]');
 await d.click('article.card >> nth=0 >> button[aria-label="내 신발에 추가"]'); await d.waitForSelector('dialog[open]'); await d.click('dialog .btn-primary');
 await d.waitForSelector('.toast.show');
 const toast = await box(d, '.toast');

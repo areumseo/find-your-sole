@@ -120,7 +120,7 @@ const ko = {
   terrainMatch: (terrain: string) => `${terrain}용`,
   cushionFact: (cushion: string) => `쿠션 ${cushion}`,
   withinBudget: '국내 정가 기준 예산 이내',
-  addFavorite: '저장하기',
+  addFavorite: '저장',
   removeFavorite: '저장 해제',
   addToMyShoes: '내 신발에 추가',
   toggleDetails: '자세히 보기',

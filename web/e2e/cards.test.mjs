@@ -47,7 +47,7 @@ ok((await cards.nth(1).locator('.price-note').count()) === 0, 'a Korean list pri
 await p.setViewportSize({ width: 1280, height: 800 });
 const heart = cards.nth(0).locator('button[aria-pressed]');
 const plus = cards.nth(0).locator('.icon-btn').nth(1);
-ok((await heart.getAttribute('data-tip')) === '저장하기' && (await plus.getAttribute('data-tip')) === '내 신발에 추가', 'icon buttons carry their tooltip text');
+ok((await heart.getAttribute('data-tip')) === '저장' && (await plus.getAttribute('data-tip')) === '내 신발에 추가', 'icon buttons carry their tooltip text');
 await plus.hover();
 const tip = await plus.evaluate((el) => getComputedStyle(el, '::after').content);
 ok(tip.includes('내 신발에 추가'), 'the tooltip shows on hover', tip);

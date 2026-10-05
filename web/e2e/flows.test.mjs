@@ -90,7 +90,7 @@ await page.waitForFunction(() => document.querySelectorAll('.explain').length >=
 check('설명 API 실패 시 에러 문구', (await page.locator('.explain').nth(1).textContent()).includes('설명을 불러오지 못했어요'));
 
 // ── 찜 ──
-await page.click('article.card >> nth=0 >> button[aria-label="저장하기"]');
+await page.click('article.card >> nth=0 >> button[aria-label="저장"]');
 check('저장 토글 aria-pressed', (await page.getAttribute('article.card >> nth=0 >> .actions button >> nth=0', 'aria-pressed')) === 'true');
 const favName = await page.textContent('article.card >> nth=0 >> .shoe-name');
 
