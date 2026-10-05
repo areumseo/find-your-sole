@@ -8,7 +8,7 @@
 <text x="48" y="66" font-family="'IBM Plex Sans KR','Noto Sans KR',sans-serif" font-size="20" font-weight="700" fill="#142b37" text-anchor="start" style="letter-spacing:0.18em">SOL-E / 02</text>
 <text x="1552" y="66" font-family="'IBM Plex Sans KR','Noto Sans KR',sans-serif" font-size="18" font-weight="400" fill="#5b6b76" text-anchor="end" >몸통·얼굴·신발은 동일, 팔 자세만 다릅니다</text>
 <text x="48" y="130" font-family="'IBM Plex Sans KR','Noto Sans KR',sans-serif" font-size="32" font-weight="700" fill="#142b37" text-anchor="start" >기본형</text>
-<text x="48" y="164" font-family="'IBM Plex Sans KR','Noto Sans KR',sans-serif" font-size="20" font-weight="400" fill="#5b6b76" text-anchor="start" >어서 와, 같이 골라보자</text>
+<text x="48" y="164" font-family="'IBM Plex Sans KR','Noto Sans KR',sans-serif" font-size="20" font-weight="400" fill="#5b6b76" text-anchor="start" >나는 솔이. 같이 골라보자</text>
 <rect x="48" y="188" width="740" height="420" rx="28" fill="#ffffff" stroke="#e6e0d8"/>
 <text x="74" y="224" font-family="'IBM Plex Sans KR','Noto Sans KR',sans-serif" font-size="15" font-weight="400" fill="#5b6b76" text-anchor="start" >밝은 배경</text>
 <use xlink:href="#sol-e-default" transform="translate(268 212) scale(2.5)"/>
