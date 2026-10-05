@@ -27,7 +27,7 @@ ok(first[0] === (await p.locator('.pick-name').textContent()) && first[1] === (a
 
 // English switches the copy and refetches the pick in English.
 await p.click('.lang');
-await p.waitForFunction(() => /cushioning/.test(document.querySelector('.pick-reason')?.textContent ?? ''));
+await p.waitForFunction(() => /cushioning|specs are not confirmed/i.test(document.querySelector('.pick-reason')?.textContent ?? ''));
 ok((await p.locator('.col-side .widget h2').first().textContent()) === 'SOL-E’s Daily Pick', 'english titles');
 
 // If the pick endpoint is down, the tip still shows and nothing breaks.

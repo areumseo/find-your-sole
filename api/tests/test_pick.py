@@ -34,7 +34,7 @@ def test_pick_endpoint_shape_and_locale():
     assert {"name", "brand", "price", "reason", "naver_url"} <= ko.keys()
     assert ko["naver_url"].startswith("https://search.shopping.naver.com/")
     en = client.get("/pick?locale=en").json()
-    assert en["name"] == ko["name"] and "cushioning" in en["reason"]
+    assert en["name"] == ko["name"] and ("cushioning" in en["reason"] or "not confirmed" in en["reason"])
     assert client.get("/pick").headers["cache-control"] == "public, max-age=1800"
 
 

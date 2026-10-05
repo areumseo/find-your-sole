@@ -10,7 +10,7 @@ This file is read by every coding agent (Claude Code, Codex). `CLAUDE.md` points
 |---|---|
 | `web/` | Vite + TypeScript web app, no framework (tiny `h()` DOM helper). Deployed as a Render Static Site. |
 | `api/` | FastAPI backend (Render web service). Rule-based scoring, Claude Haiku explanations, news, feedback. |
-| `shoes_data.json` | The shoe catalogue (64 shoes). Single source of truth, read by `api/main.py`. |
+| `shoes_data.json` | The shoe catalogue (74 shoes). Single source of truth, read by `api/main.py`. |
 | `flutter_app/` | The iOS app. Do not touch unless asked. |
 | `web/e2e/` | Playwright browser tests. `tools/validate_shoes.py` validates the catalogue. |
 
@@ -74,12 +74,19 @@ Always run the tests that cover what you changed before pushing, and say honestl
 
 ## Data rules (shoes)
 
-- Every shoe has `categories` (list of `running` / `walking` / `daily`) and a `price` in KRW.
+- Every shoe has `categories` (list of `running` / `walking` / `daily`) and a `price` in KRW. New walking models have `source_url`, `specs_checked_at` and a weight measurement basis; unknown drop/weight may be null, and unverified cushion/width are `미확인`. Do not infer missing specs.
 - `price_source` is `kr_list` (a Korean list price was found, e.g. KREAM 발매가) or `estimate`.
   Estimated prices must carry `price_usd` (overseas list price); the UI then shows the USD price instead of a made-up KRW range.
 - Never invent specs or prices. If you cannot confirm a value, mark it `estimate` and say so in the PR.
 - Budget logic only trusts `kr_list` prices. API results carry `budget_status` (`within` / `unknown` / `over`) and are ordered in that sequence, then by score; `over_budget` is true only for confirmed Korean prices. Unknown prices are never a claim of affordability.
 - Run `python tools/validate_shoes.py` after touching `shoes_data.json`.
+
+## Catalogue updates
+
+- `python -m api.catalog_sync` is the daily official-store price job; see `docs/catalog-updates.md`.
+- PostgreSQL holds `shoe_catalog` (reviewed JSON mirror), `shoe_price_history`, and `shoe_review_queue`. Cron never overwrites reviewed specs or budget prices.
+- API reads recent observations only when `CATALOG_PRICES_ENABLED=1`. Missing DB/tables falls back to reviewed JSON.
+- Sale prices are supplementary information, never proof of list-price affordability. New adapters need exact model/variant matching and tests.
 
 ## Backend rules
 

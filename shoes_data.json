@@ -1370,5 +1370,355 @@
     "score_base": 79,
     "url": "https://www.adidas.co.kr",
     "image_url": ""
+  },
+  {
+    "id": 65,
+    "name": "르무통 워크 / LeMouton Walk",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 181,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=325",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_325",
+    "source_product_name": "르무통 워크 발 편한 메리노울 메쉬 운동화"
+  },
+  {
+    "id": 66,
+    "name": "르무통 메이트 / LeMouton Mate",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 215,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=130",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_130",
+    "source_product_name": "르무통 메이트 발 편한 메리노울 운동화"
+  },
+  {
+    "id": 67,
+    "name": "르무통 버디 / LeMouton Buddy",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 228,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=209",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_209",
+    "source_product_name": "르무통 버디 발 편한 메리노울 운동화"
+  },
+  {
+    "id": 68,
+    "name": "르무통 포레스트 / LeMouton Forest",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 185,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=189",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_189",
+    "source_product_name": "르무통 포레스트 발 편한 메리노울 운동화"
+  },
+  {
+    "id": 69,
+    "name": "르무통 스타일2 / LeMouton Style 2",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 156,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=227",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_227",
+    "source_product_name": "르무통 스타일2 발 편한 메리노울 운동화"
+  },
+  {
+    "id": 70,
+    "name": "르무통 클래식2 / LeMouton Classic 2",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 163,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=219",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_219",
+    "source_product_name": "르무통 클래식2 발 편한 메리노울 운동화"
+  },
+  {
+    "id": 71,
+    "name": "르무통 왈라비 / LeMouton Wallaby",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 218,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=131",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_131",
+    "source_product_name": "르무통 왈라비 발 편한 메리노울 운동화"
+  },
+  {
+    "id": 72,
+    "name": "르무통 업 / LeMouton Up",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 181,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=277",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_277",
+    "source_product_name": "르무통 업 발 편한 메리노울 운동화"
+  },
+  {
+    "id": 73,
+    "name": "르무통 에브리데이 / LeMouton Everyday",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 181,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=312",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_312",
+    "source_product_name": "르무통 에브리데이 발 편한 메리노울 로퍼 운동화"
+  },
+  {
+    "id": 74,
+    "name": "르무통 이지 / LeMouton Easy",
+    "brand": "LeMouton",
+    "categories": [
+      "walking",
+      "daily"
+    ],
+    "price": 149000,
+    "price_source": "kr_list",
+    "weight_g": 181,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "메리노울 소재"
+    ],
+    "score_base": 65,
+    "url": "https://www.lemouton.co.kr",
+    "image_url": "",
+    "source_url": "https://www.lemouton.co.kr/product/detail.html?product_no=318",
+    "specs_checked_at": "2026-10-05",
+    "weight_note": "230mm 기준",
+    "source_product_id": "cafe24_lemouton_1_318",
+    "source_product_name": "르무통 이지 발 편한 메리노울 로퍼 운동화"
   }
 ]
