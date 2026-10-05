@@ -35,7 +35,7 @@ export const onLocaleChange = (fn: () => void): void => {
 };
 
 const ko = {
-  pageTitle: 'Find Your Sole — 내 발에 맞는 한 켤레',
+  pageTitle: 'Find Your Sole — 내 발에 딱 맞는 한 켤레',
   navHome: '홈',
   navSearch: '검색',
   navSaved: '저장',
