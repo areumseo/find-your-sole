@@ -41,7 +41,7 @@ async function open(w, route, seed) {
   await page.screenshot({ path: process.argv[2] + '/news-desktop.png', fullPage: true });
   // 영어로 전환하면 제목/날짜도 영어
   await page.click('.lang');
-  check('① 영어 전환: 제목 "Shoe launch news", 날짜 영어', (await page.locator('.widget.news h2').textContent()) === 'Soli’s New Arrivals Radar' && /today/.test(await page.locator('.widget.news .row-sub').first().textContent()));
+  check('① 영어 전환: 제목 "Shoe launch news", 날짜 영어', (await page.locator('.widget.news h2').textContent()) === 'SOL-E’s New Arrivals Radar' && /today/.test(await page.locator('.widget.news .row-sub').first().textContent()));
   check('① 영어 홈: 뉴스가 한국어 기사라는 안내', (await page.locator('.widget.news .widget-foot').textContent()).includes('Articles are in Korean'));
   await page.click('.lang');
   check('① 한국어 홈에는 그 안내가 없음', !(await page.locator('.widget.news .widget-foot').textContent()).includes('Articles are in Korean'));

@@ -5,7 +5,7 @@ let fail = 0;
 const ok = (c, m, extra = '') => { if (!c) fail++; console.log(c ? 'ok  ' : 'FAIL', m, c ? '' : extra); };
 
 const shoe = (id, name, extra = {}) => ({
-  id, name, brand: 'Brand', price: 179000, weight_g: 277, drop_mm: 8, cushion: '높음', terrain: ['로드'], arch: ['normal'],
+  id, name, brand: 'Brand', price_source: 'kr_list', price: 179000, weight_g: 277, drop_mm: 8, cushion: '높음', terrain: ['로드'], arch: ['normal'],
   pronation: ['neutral'], use_case: ['데일리'], weekly_km: '20이상', width: '보통', tags: [], score: 90,
   naver_url: 'https://search.shopping.naver.com/search/all?query=x', ...extra,
 });
@@ -34,7 +34,7 @@ const names = await cards.locator('.card-head h3, .card-head .name, .card-head s
 const nameBox = await cards.nth(0).locator('text=Hoka Clifton 10').first().boundingBox();
 ok(nameBox.width > 140 && nameBox.height < 60, 'a long overseas price does not squeeze the shoe name', JSON.stringify(nameBox));
 const priceTexts = await p.locator('.side .price').allTextContents();
-ok(priceTexts[0] === '해외 $150' && priceTexts[1] === '15~20만원대', 'card header shows the short price', priceTexts.join('|'));
+ok(priceTexts[0] === '해외 $150' && priceTexts[1] === '179,000원', 'card header shows the short price', priceTexts.join('|'));
 
 // The full explanation is in the expanded card.
 await cards.nth(0).locator('.card-head').click();

@@ -30,6 +30,22 @@ interface CardOptions {
   onFavoriteChange?: () => void;
 }
 
+/** Facts from the catalogue compared with the answers, not another AI request. */
+function matchSummary(shoe: Shoe, prefs: Prefs): string {
+  const s = t();
+  const facts: string[] = [];
+  if (prefs.mode === 'comfort') facts.push(s.cushionFact(s.cushionName(shoe.cushion)));
+  if (shoe.width === prefs.width) facts.push(s.widthMatch);
+  if (shoe.cushion === prefs.cushion) facts.push(s.cushionMatch);
+  if (prefs.mode !== 'comfort' && shoe.terrain.includes(String(prefs.terrain))) {
+    const terrain = getLocale() === 'en' ? (prefs.terrain === '트레일' ? 'Trail' : 'Road') : String(prefs.terrain);
+    facts.push(s.terrainMatch(terrain));
+  }
+  if (!facts.length) facts.push(s.cushionFact(s.cushionName(shoe.cushion)));
+  if (shoe.price_source === 'kr_list' && shoe.price <= Number(prefs.budget)) facts.push(s.withinBudget);
+  return s.matchSummary(facts.slice(0, 3));
+}
+
 export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): HTMLElement {
   const s = t();
   let explanation: string | undefined;
@@ -38,6 +54,10 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   const card = h('article', { class: 'card' });
   const detail = h('div', { class: 'detail', hidden: true });
   const chev = h('span', { class: 'chev', 'aria-hidden': 'true' });
+  const detailsButton = h('button', {
+    type: 'button', class: 'detail-toggle', 'aria-label': s.toggleDetails, 'aria-expanded': 'false',
+    onClick: () => toggle.click(),
+  }, chev);
 
   const favBtn = h('button', { type: 'button', class: 'icon-btn' });
   const paintFav = () => {
@@ -135,6 +155,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       detail.hidden = !open;
       card.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', String(open));
+      detailsButton.setAttribute('aria-expanded', String(open));
       if (open) void loadExplanation();
     },
   },
@@ -150,10 +171,13 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       h('div', { class: 'side' },
         h('div', { class: 'actions' }, favBtn, addBtn),
         h('div', { class: 'price' }, s.priceBrief(shoe)),
-        shoe.over_budget ? h('span', { class: 'over-budget' }, s.overBudget) : null,
-        chev,
+        shoe.price_source !== 'kr_list' && shoe.price_usd
+          ? h('span', { class: 'price-unconfirmed' }, s.priceUnconfirmed)
+          : shoe.price_source === 'kr_list' && shoe.over_budget ? h('span', { class: 'over-budget' }, s.overBudget) : null,
+        detailsButton,
       ),
     ),
+    ...(prefs && rank !== undefined && rank <= 3 ? [h('p', { class: 'match-summary' }, matchSummary(shoe, prefs))] : []),
     detail,
   );
   return card;

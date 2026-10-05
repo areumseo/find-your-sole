@@ -15,7 +15,7 @@ const open = async (width) => {
   const ctx = await b.newContext({ viewport: { width, height: 800 }, locale: 'ko-KR' });
   const page = await ctx.newPage();
   await page.goto(BASE);
-  await page.waitForSelector('.fab');
+  await page.waitForSelector('.fab', { state: 'attached' });
   return page;
 };
 const adminList = async (page) => (await page.request.get(`${API}/admin/feedback`, { headers: { Authorization: `Bearer ${TOKEN}` } })).json();
@@ -46,10 +46,12 @@ const box = await desktop.locator('.fab').boundingBox();
 ok(box.x + box.width > 1200 && box.y + box.height > 700, 'desktop: bottom-right corner', JSON.stringify(box));
 
 const mobile = await open(390);
-const fab = await mobile.locator('.fab').boundingBox();
-const tabs = await mobile.locator('.tabs').boundingBox();
-ok(fab.y + fab.height <= tabs.y, 'mobile: the button sits above the tab bar', JSON.stringify({ fab, tabs }));
-ok(!(await mobile.locator('.fab-label').isVisible()), 'mobile: icon only');
+ok(!(await mobile.locator('.fab').isVisible()), 'mobile: no floating button covers the content');
+await mobile.goto(BASE + '#/more');
+await mobile.click('.feedback-entry');
+await mobile.waitForSelector('dialog[open] textarea');
+ok(await mobile.locator('dialog textarea').isVisible(), 'mobile feedback is available from More');
+await mobile.keyboard.press('Escape');
 
 // ── Sending ──
 await desktop.goto(BASE + '#/saved');

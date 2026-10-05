@@ -26,7 +26,7 @@ ok(first[0] === (await p.locator('.pick-name').textContent()) && first[1] === (a
 // English switches the copy and refetches the pick in English.
 await p.click('.lang');
 await p.waitForFunction(() => /cushioning/.test(document.querySelector('.pick-reason')?.textContent ?? ''));
-ok((await p.locator('.col-side .widget h2').first().textContent()) === 'Soli’s Daily Pick', 'english titles');
+ok((await p.locator('.col-side .widget h2').first().textContent()) === 'SOL-E’s Daily Pick', 'english titles');
 
 // If the pick endpoint is down, the tip still shows and nothing breaks.
 const errors = [];
@@ -53,7 +53,7 @@ await est.unroute('**/pick*');
 await est.route('**/pick*', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: pickBody({ price_source: 'kr_list', price_usd: null }) }));
 await est.reload();
 await est.waitForSelector('.pick');
-ok((await est.locator('.pick .row-sub').textContent()).includes('15~20만원대'), 'a Korean list price keeps the KRW range');
+ok((await est.locator('.pick .row-sub').textContent()).includes('179,000원'), 'a Korean list price shows the same exact amount as the explanation');
 
 // Saved shoes keep the label rules too: an estimated shoe shows its USD price, an old entry without the fields keeps the range.
 const saved = await (await b.newContext({ viewport: { width: 1280, height: 900 }, locale: 'ko-KR' })).newPage();
@@ -64,7 +64,7 @@ await saved.addInitScript(() => localStorage.setItem('fys.favorites', JSON.strin
 await saved.goto(BASE);
 await saved.waitForSelector('.widget .row');
 const rows = await saved.locator('.widget .row-end').allTextContents();
-ok(rows.join('|') === '해외 $150|10~15만원대', 'saved widget: USD for estimates, range for old entries', rows.join('|'));
+ok(rows.join('|') === '해외 $150|국내 가격 확인 필요', 'saved widget: USD for estimates, unknown price for old entries without a source', rows.join('|'));
 
 await b.close();
 process.exit(fail ? 1 : 0);

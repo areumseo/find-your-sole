@@ -40,7 +40,7 @@ npm run build        # typecheck + production build into web/dist
 
 To develop against a local backend, copy `web/.env.example` to `web/.env.local`, set `VITE_API_URL=http://localhost:8000`, and run `uvicorn main:app` from `api/`.
 
-The mascot, Soli, is in `web/design/soli/` as editable vector SVGs: the default pose, a "found the right pair" pose with both arms up, and a presentation board. `design/soli/soli-default.svg` is the single source for the logo; `npm run icons` copies it to `public/logo.svg` and regenerates the favicon and app icons (needs `pip install cairosvg pillow`).
+The mascot, SOL-E (솔이), is in `web/design/soli/` as editable vector SVGs: the default pose, a "found the right pair" pose with both arms up, and a presentation board. `design/soli/soli-default.svg` is the single source for the logo; `npm run icons` copies it to `public/logo.svg` and regenerates the favicon and app icons (needs `pip install cairosvg pillow`).
 
 The font is [IBM Plex Sans KR](https://github.com/IBM/plex) (SIL Open Font License; the notice is in the About tab and the license text ships at `/licenses/`). `npm run fonts` rebuilds `web/src/fonts/` from the `@ibm/plex-sans-kr` package, keeping the 2,350 everyday Hangul syllables of KS X 1001 plus Latin and symbols. Anything outside that falls back to a system font. It needs `pip install fonttools brotli`, and only has to be rerun when the character set or weights change.
 
@@ -59,6 +59,12 @@ Release build:
 flutter build ios --no-codesign
 # Then open ios/Runner.xcworkspace in Xcode and run on device
 ```
+
+## Recommendation prices and summaries
+
+Results show the top three candidates first; the remaining candidates are available under “See more options”. The first three cards compare catalogue facts with the user's answers without extra AI requests. Expanding a card still requests the full AI explanation.
+
+Only `price_source: "kr_list"` counts as a known Korean list price. Price scoring and budget checks exclude estimates or missing sources. API results carry `budget_status` (`within`, `unknown`, `over`) and are sorted in that order, then by score. `over_budget` remains available for clients and is true only for confirmed over-budget Korean prices. Unknown prices are not a claim of affordability. The web shows exact Korean list prices (the same amount given to the AI), or the overseas USD price with a local-price check notice. Actual store prices may vary.
 
 ## Shoe launch news (API)
 
@@ -79,7 +85,7 @@ It needs Python with the API requirements installed (`pip install -r api/require
 
 ## Feedback
 
-A round feedback button floats on every page of the web app. People write a note (up to 2000 characters) and can attach one screenshot, which the browser shrinks to a JPEG under 1.5 MB. There are no accounts, so nothing identifies the sender; the page they were on is recorded as context.
+On desktop, a feedback button floats on every page. On mobile and tablet layouts (below 900px), feedback is available in More so it does not overlap forms or results. People write a note (up to 2000 characters) and can attach one screenshot, which the browser shrinks to a JPEG under 1.5 MB. There are no accounts, so nothing identifies the sender; the page they were on is recorded as context.
 
 - **Endpoints** (`api/feedback.py`): `POST /feedback`, and for the admin `GET /admin/feedback` (newest first, no screenshot data), `GET /admin/feedback/{id}/screenshot`, `POST /admin/feedback/{id}/resolve` (toggles).
 - **Abuse limits:** 5 notes per IP per 10 minutes and 200 per day overall (`FEEDBACK_PER_CLIENT`, `FEEDBACK_WINDOW_SECONDS`, `FEEDBACK_DAILY_CAP`), a hidden honeypot field, magic-byte checks on the image (the declared type is never trusted) and a 413 over 1.5 MB.
