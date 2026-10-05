@@ -110,5 +110,24 @@ for (const [width, wide] of [[1280, true], [1000, true], [900, true], [899, fals
   }
 }
 
+// Home card descriptions and the form button use the "find / see results" wording, and still fit on phones.
+for (const [width, locale] of [[360, 'ko-KR'], [390, 'ko-KR'], [1280, 'ko-KR'], [390, 'en-US']]) {
+  const page = await (await b.newContext({ viewport: { width, height: 800 }, locale })).newPage();
+  await page.goto(BASE);
+  await page.waitForSelector('.hero .mode-card');
+  const label = `${width}px ${locale}`;
+  const texts = (await page.locator('.hero .mode-card p').allTextContents()).map((x) => x.trim());
+  if (locale === 'ko-KR') {
+    ok(texts.join('|') === '전문 용어 없이 쉽게 찾아 보세요|발 유형부터 훈련 스타일까지 꼼꼼히 살펴볼 수 있어요|오래 서 있어도, 많이 걸어도 편한 신발을 추천해 드려요', `${label}: card descriptions`, texts.join('|'));
+  } else {
+    ok(texts.length === 3 && !texts.some((x) => /[가-힣]/.test(x)), `${label}: English descriptions are untouched and Korean-free`, texts.join('|'));
+  }
+  const overflow = await page.evaluate(() => [...document.querySelectorAll('.hero .mode-card')].some((c) => c.scrollWidth > c.clientWidth + 1));
+  ok(!overflow && (await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)), `${label}: the cards do not overflow`);
+  await page.locator('.mode-card').first().click();
+  const btn = (await page.textContent('.form-actions .btn-primary')).trim();
+  ok(btn === (locale === 'ko-KR' ? '결과 보기' : 'See results'), `${label}: submit button says "${btn}"`);
+}
+
 await b.close();
 process.exit(fail ? 1 : 0);

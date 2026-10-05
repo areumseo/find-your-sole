@@ -142,7 +142,10 @@ for (const [scheme, locale, label] of [['light', 'ko-KR', '내 조건과 비교:
   await popup.close();
   ok((await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded')) === 'false', 'clicking the brand link does not expand the card');
   // Clicking the name or the tags toggles it.
-  await card.nth(0).locator('.tags .tag').first().click();
+  // A real tap on the tag: Playwright's own click refuses because the stretched button layer
+  // sits on top of the tag, so click the tag's position with the mouse like a finger would.
+  const tagBox = await card.nth(0).locator('.tags .tag').first().boundingBox();
+  await page.mouse.click(tagBox.x + tagBox.width / 2, tagBox.y + tagBox.height / 2);
   const afterTag = await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded');
   await card.nth(0).locator('.name-toggle').click();
   const afterName = await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded');
