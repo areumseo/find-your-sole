@@ -500,9 +500,9 @@ noscript p { padding: 24px 16px; text-align: center; }
 }
 .hero h1 { font-size: 24px; letter-spacing: -0.02em; color: var(--title-sky); }
 .hero > p { margin: 6px 0 20px; color: var(--muted); }
-/* Soli with a speech bubble above the greeting. */
-.soli-row { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 14px; }
-.soli-row .soli { width: 92px; height: 92px; flex: none; }
+/* SOL-E with a speech bubble above the greeting. */
+.sol-e-row { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 14px; }
+.sol-e-row .sol-e { width: 92px; height: 92px; flex: none; }
 .hero .bubble {
   position: relative; margin: 0 0 18px; padding: 10px 14px; border-radius: 16px;
   background: var(--card); border: 1px solid var(--border); color: var(--ink); font-weight: 700; line-height: 1.4;
@@ -511,10 +511,10 @@ noscript p { padding: 24px 16px; text-align: center; }
   content: ''; position: absolute; left: -7px; bottom: 14px; width: 12px; height: 12px; background: var(--card);
   border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); transform: rotate(45deg);
 }
-@media (max-width: 599px) { .soli-row .soli { width: 80px; height: 80px; } }
+@media (max-width: 599px) { .sol-e-row .sol-e { width: 80px; height: 80px; } }
 /* Results page: the arms-up SOL-E with a short bubble above the cards. */
 .found-row { display: flex; align-items: flex-end; gap: 10px; margin: -6px 0 12px; }
-.found-row .soli { width: 72px; height: 72px; flex: none; }
+.found-row .sol-e { width: 72px; height: 72px; flex: none; }
 .found-row .bubble {
   position: relative; margin: 0 0 14px; padding: 8px 12px; border-radius: 14px;
   background: var(--card); border: 1px solid var(--border); color: var(--ink); font-weight: 700; font-size: 14px; line-height: 1.4;
@@ -541,7 +541,7 @@ noscript p { padding: 24px 16px; text-align: center; }
 .col-main:empty { display: none; }
 .pick-name { font-size: 17px; font-weight: 700; color: var(--name-gray); }
 .pick-reason, .tip-a { margin: 8px 0 12px; line-height: 1.6; font-size: 14px; }
-/* Soli's comments (pick and tip) sit in the same tinted box, like the explanation on a result card. */
+/* SOL-E's comments (pick and tip) sit in the same tinted box, like the explanation on a result card. */
 .pick-reason, .tip-a { padding: 10px 12px; background: var(--explain); border-radius: 12px; font-size: 13px; }
 .tip-q { margin: 0; font-weight: 700; color: var(--name-gray); }
 .tip-a { margin-bottom: 0; }

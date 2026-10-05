@@ -66,19 +66,19 @@ await saved.waitForSelector('.widget .row');
 const rows = await saved.locator('.widget .row-end').allTextContents();
 ok(rows.join('|') === '해외 $150|국내 가격 확인 필요', 'saved widget: USD for estimates, unknown price for old entries without a source', rows.join('|'));
 
-// Soli greets from the hero with a speech bubble, on phones and desktops, in both languages and both themes.
+// SOL-E greets from the hero with a speech bubble, on phones and desktops, in both languages and both themes.
 for (const [width, locale, scheme] of [[390, 'ko-KR', 'light'], [360, 'en-US', 'dark'], [1280, 'ko-KR', 'dark'], [768, 'en-US', 'light']]) {
   const page = await (await b.newContext({ viewport: { width, height: 800 }, locale, colorScheme: scheme })).newPage();
   await page.goto(BASE);
   await page.waitForSelector('.hero .bubble');
-  const img = await page.locator('.hero .soli').boundingBox();
+  const img = await page.locator('.hero .sol-e').boundingBox();
   const bubble = await page.locator('.hero .bubble').boundingBox();
   const hero = await page.locator('.hero').boundingBox();
   const label = `${width}px ${locale} ${scheme}`;
-  ok((await page.locator('.hero .soli').getAttribute('alt')) === '', `${label}: Soli is decoration (empty alt)`);
-  ok((await page.textContent('.hero .bubble')) === (locale === 'ko-KR' ? '어서 와, 같이 골라보자!' : 'Come on in, let’s pick together!'), `${label}: the bubble carries Soli's line`);
-  ok(bubble.x > img.x + img.width - 1 && bubble.x + bubble.width <= hero.x + hero.width, `${label}: the bubble sits beside Soli inside the hero`, JSON.stringify({ img, bubble, hero }));
-  ok(img.width >= 80 && img.y >= hero.y, `${label}: Soli is large and inside the hero`, JSON.stringify(img));
+  ok((await page.locator('.hero .sol-e').getAttribute('alt')) === '', `${label}: SOL-E is decoration (empty alt)`);
+  ok((await page.textContent('.hero .bubble')) === (locale === 'ko-KR' ? '어서 와, 같이 골라보자!' : 'Come on in, let’s pick together!'), `${label}: the bubble carries SOL-E's line`);
+  ok(bubble.x > img.x + img.width - 1 && bubble.x + bubble.width <= hero.x + hero.width, `${label}: the bubble sits beside SOL-E inside the hero`, JSON.stringify({ img, bubble, hero }));
+  ok(img.width >= 80 && img.y >= hero.y, `${label}: SOL-E is large and inside the hero`, JSON.stringify(img));
   ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: nothing overflows`);
   const bg = await page.locator('.hero .bubble').evaluate((e) => getComputedStyle(e).backgroundColor);
   ok(bg !== 'rgba(0, 0, 0, 0)', `${label}: the bubble has a background`, bg);

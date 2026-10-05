@@ -361,7 +361,7 @@ function resultsView(go: (path: string) => void): HTMLElement {
     // SOL-E celebrates (arms up) only when there is something to show.
     results.length
       ? h('div', { class: 'found-row' },
-        h('img', { class: 'soli', src: '/soli-complete.svg', alt: '', width: 72, height: 72 }),
+        h('img', { class: 'sol-e', src: '/sol-e-complete.svg', alt: '', width: 72, height: 72 }),
         h('p', { class: 'bubble' }, s.foundBubble),
       )
       : null,
