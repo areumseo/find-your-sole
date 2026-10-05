@@ -27,7 +27,7 @@ async function open(w, route, seed) {
   await page.waitForSelector('.widget.news');
   const w = page.locator('.widget.news');
   check('① 뉴스 위젯 표시, 제목 "솔이의 신상 레이더"', (await w.locator('h2').textContent()) === '솔이의 신상 레이더');
-  check('① 최대 5건만 표시(6번째 숨김)', (await w.locator('.row').count()) === 5 && !(await w.textContent()).includes('여섯 번째'));
+  check('① 최대 3건만 표시(4번째부터 숨김)', (await w.locator('.row').count()) === 3 && !(await w.textContent()).includes('뉴발란스 새 러닝화'));
   const first = w.locator('.row').first();
   check('① 최신 기사가 맨 위', (await first.textContent()).includes('페가수스 43'));
   check('① 출처와 상대 날짜 표시("오늘")', (await first.locator('.row-sub').textContent()) === 'sportsnews.co.kr · 오늘', await first.locator('.row-sub').textContent());
@@ -42,6 +42,9 @@ async function open(w, route, seed) {
   // 영어로 전환하면 제목/날짜도 영어
   await page.click('.lang');
   check('① 영어 전환: 제목 "Shoe launch news", 날짜 영어', (await page.locator('.widget.news h2').textContent()) === 'Soli’s New Arrivals Radar' && /today/.test(await page.locator('.widget.news .row-sub').first().textContent()));
+  check('① 영어 홈: 뉴스가 한국어 기사라는 안내', (await page.locator('.widget.news .widget-foot').textContent()).includes('Articles are in Korean'));
+  await page.click('.lang');
+  check('① 한국어 홈에는 그 안내가 없음', !(await page.locator('.widget.news .widget-foot').textContent()).includes('Articles are in Korean'));
 }
 
 // ② 모바일

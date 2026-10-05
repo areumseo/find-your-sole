@@ -22,7 +22,7 @@ function formatStamp(iso: string): string {
 function newsWidget(items: NewsItem[], updatedAt?: string): HTMLElement {
   const s = t();
   const el = widget(s.widgetNews, null,
-    h('ul', { class: 'rows' }, ...items.slice(0, 5).map((item) => {
+    h('ul', { class: 'rows' }, ...items.slice(0, 3).map((item) => {
       const href = safeUrl(item.url);
       const meta = [item.source, relativeDate(item.published_at)].filter(Boolean).join(' · ');
       return h('li', { class: 'row' },
@@ -34,7 +34,7 @@ function newsWidget(items: NewsItem[], updatedAt?: string): HTMLElement {
         ),
       );
     })),
-    h('p', { class: 'widget-foot' }, [updatedAt ? s.newsUpdated(formatStamp(updatedAt)) : '', s.newsCredit].filter(Boolean).join(' · ')),
+    h('p', { class: 'widget-foot' }, [updatedAt ? s.newsUpdated(formatStamp(updatedAt)) : '', s.newsCredit, s.newsLanguageNote].filter(Boolean).join(' · ')),
   );
   el.classList.add('news');
   return el;

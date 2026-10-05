@@ -35,6 +35,8 @@ SHOE_WORDS = ("신발", "운동화", "러닝화", "런닝화", "스니커즈", "
 LAUNCH_WORDS = ("출시", "신제품", "공개", "선보", "신상", "런칭", "론칭", "발매", "첫선", "새 모델")
 # Sale and promo posts match the queries but are not launch news.
 PROMO_WORDS = ("할인", "특가", "쿠폰", "최저가", "세일", "이벤트", "증정", "프로모션", "행사", "마감")
+# Not about choosing running/walking shoes: kids' shoes, fashion collabs and lookbooks, apparel, other sports.
+OFF_TOPIC_WORDS = ("아동", "키즈", "어린이", "주니어", "화보", "룩북", "컬렉션", "콜라보", "협업", "패딩", "다운", "의류", "아우터", "축구화", "골프화", "등산화")
 
 MAX_AGE = timedelta(days=60)
 MAX_ITEMS = 8
@@ -80,6 +82,7 @@ def parse_items(raw: List[dict], now: datetime) -> List[NewsItem]:
             or not any(w in lowered for w in SHOE_WORDS)
             or not any(w in lowered for w in LAUNCH_WORDS)
             or any(w in lowered for w in PROMO_WORDS)
+            or any(w in lowered for w in OFF_TOPIC_WORDS)
             or now - published > MAX_AGE
             or published > now + timedelta(days=1)  # bad clocks in feeds
         ):
