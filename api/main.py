@@ -304,11 +304,16 @@ def pick_of_the_day(now: Optional[datetime] = None) -> Dict:
     return ordered[(today.toordinal() * 7919) % len(ordered)]
 
 
+CUSHION_EN = {"낮음": "Low", "중간": "Medium", "높음": "High", "최고": "Max"}
+
+
 def pick_reason(shoe: Dict, locale: str) -> str:
     """Plain data-driven sentence; used when the AI comment is unavailable."""
-    tag = shoe["tags"][0] if shoe.get("tags") else ""
     if locale == "en":
-        return f"{shoe['cushion']} cushioning at {shoe['weight_g']}g" + (f", known for: {tag}." if tag else ".")
+        # Tags are Korean in the data, so the English sentence sticks to numbers and mapped words.
+        cushion = CUSHION_EN.get(shoe["cushion"], "")
+        return f"{cushion + ' c' if cushion else 'C'}ushioning at {shoe['weight_g']}g, {shoe['drop_mm']}mm drop."
+    tag = shoe["tags"][0] if shoe.get("tags") else ""
     return f"쿠션은 {shoe['cushion']}, 무게는 {shoe['weight_g']}g" + (f", 특징은 \"{tag}\"이에요." if tag else "이에요.")
 
 
