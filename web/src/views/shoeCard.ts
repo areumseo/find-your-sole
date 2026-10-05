@@ -23,6 +23,8 @@ function tagChips(useCase: string[]): HTMLElement {
   );
 }
 
+let disclosureId = 0;
+
 interface CardOptions {
   shoe: Shoe;
   rank?: number;
@@ -68,12 +70,15 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   const s = t();
   let explanation: string | undefined;
   let loading = false;
+  let errorText = '';
+  let commentOpen = false;
+  const initialOpen = !!prefs && rank !== undefined && rank <= 3;
 
-  const card = h('article', { class: 'card' });
-  const detail = h('div', { class: 'detail', hidden: true });
+  const card = h('article', { class: initialOpen ? 'card open' : 'card' });
+  const detail = h('div', { class: 'detail', hidden: !initialOpen });
   const chev = h('span', { class: 'chev', 'aria-hidden': 'true' });
   const detailsButton = h('button', {
-    type: 'button', class: 'detail-toggle', 'aria-label': s.toggleDetails, 'aria-expanded': 'false',
+    type: 'button', class: 'detail-toggle', 'aria-label': s.toggleDetails, 'aria-expanded': String(initialOpen),
     onClick: () => toggle.click(),
   }, chev);
 
@@ -117,13 +122,26 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       ),
   }, '⊕');
 
-  const explainBox = h('div');
+  const commentId = `shoe-comment-${++disclosureId}`;
+  const explainBox = h('div', { id: commentId, class: 'comment-body', hidden: true });
+  const commentToggle = h('button', {
+    type: 'button', class: 'comment-toggle', 'aria-expanded': 'false', 'aria-controls': commentId,
+    onClick: () => {
+      commentOpen = !commentOpen;
+      explainBox.hidden = !commentOpen;
+      commentToggle.setAttribute('aria-expanded', String(commentOpen));
+      commentLabel.textContent = commentOpen ? s.aiComment : s.aiCommentShow;
+      if (commentOpen) void loadExplanation();
+    },
+  }, h('span', { 'aria-hidden': 'true' }, '🤖'));
+  const commentLabel = h('span', {}, s.aiCommentShow);
+  commentToggle.append(commentLabel, h('span', { class: 'comment-chevron', 'aria-hidden': 'true' }));
   const renderExplain = () => {
     explainBox.replaceChildren(
       ...(loading
-        ? [h('div', { class: 'spinner', role: 'status', 'aria-label': 'Loading' })]
-        : explanation
-          ? [h('div', { class: 'explain' }, h('span', { 'aria-hidden': 'true' }, '🤖'), h('p', {}, explanation))]
+        ? [h('p', { class: 'comment-loading', role: 'status' }, s.aiCommentLoading)]
+        : explanation || errorText
+          ? [h('div', { class: 'explain', role: errorText ? 'status' : undefined }, h('p', {}, explanation || errorText))]
           : []),
     );
   };
@@ -132,11 +150,13 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     if (!prefs || explanation || loading) return;
     track('explanation_open', {shoe_id: shoe.id, mode: String(prefs.mode)});
     loading = true;
+    errorText = '';
     renderExplain();
     try {
       explanation = await explainShoe(shoe, prefs, getLocale());
+      if (!explanation) errorText = s.explanationError;
     } catch (e) {
-      explanation = e instanceof Error && e.message === 'HTTP 429' ? s.explanationBusy : s.explanationError;
+      errorText = e instanceof Error && e.message === 'HTTP 429' ? s.explanationBusy : s.explanationError;
     } finally {
       loading = false;
       renderExplain();
@@ -145,8 +165,6 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
 
   const naver = safeUrl(shoe.naver_url);
   detail.append(
-    // The header only has room for the short price; spell out the overseas list price here.
-    ...(shoe.price_source === 'estimate' && shoe.price_usd ? [h('p', { class: 'price-note' }, s.priceLabel(shoe)), h('p', { class: 'price-note' }, s.overseasPriceNote)] : []),
     h('dl', { class: 'specs' },
       ...(
         [
@@ -165,28 +183,34 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
           shoe.sale_available === false ? s.soldOutObserved : s.saleObserved(
             `₩${shoe.sale_price?.toLocaleString()}${shoe.sale_price_max && shoe.sale_price_max !== shoe.sale_price ? `–₩${shoe.sale_price_max.toLocaleString()}` : ''}`,
             shoe.sale_checked_at.slice(0, 10))))] : []),
-    explainBox,
   );
   if (naver) {
     detail.append(
-      h('a', { class: 'btn-outline-naver', onClick: () => track('shopping_click', {shoe_id: shoe.id}), href: naver, target: '_blank', rel: 'noopener noreferrer' },
-        `🛒 ${s.naverShopping}`),
+      h('a', { class: 'btn-outline-naver card-shopping', onClick: () => track('shopping_click', {shoe_id: shoe.id}), href: naver, target: '_blank', rel: 'noopener noreferrer' },
+        h('span', { class: 'naver-name' }, s.naverName), s.naverAction, h('span', { 'aria-hidden': 'true' }, ' ↗')),
     );
   }
+
+  if (prefs) detail.append(h('div', { class: 'comment-section' }, commentToggle, explainBox));
+
+  const helpId = `shoe-price-help-${disclosureId}`;
+  const priceHelp = h('p', { id: helpId, class: 'price-help', hidden: true }, s.overseasPriceInfo);
+  const priceInfo = h('button', { type: 'button', class: 'price-info', 'aria-controls': helpId, title: s.overseasPriceInfo, 'aria-label': s.overseasPriceInfo, 'aria-expanded': 'false',
+    onClick: () => { priceHelp.hidden = !priceHelp.hidden; priceInfo.setAttribute('aria-expanded', String(!priceHelp.hidden)); }
+  }, 'ⓘ');
 
   // The name is the real button; its ::after stretches over the whole text block so a tap anywhere
   // toggles the card. The brand link sits above that layer, so it is a real link, not a nested button.
   const toggle = h('button', {
     type: 'button',
     class: 'name-toggle',
-    'aria-expanded': 'false',
+    'aria-expanded': String(initialOpen),
     onClick: () => {
       const open = detail.hidden;
       detail.hidden = !open;
       card.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', String(open));
       detailsButton.setAttribute('aria-expanded', String(open));
-      if (open) void loadExplanation();
     },
   }, h('span', { class: 'shoe-name' }, shoe.name));
   const brandHref = shoe.brand_url ? safeUrl(shoe.brand_url) : null;
@@ -206,10 +230,9 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
         h('div', { class: 'actions' }, favBtn, addBtn),
         h('div', { class: 'price' }, s.priceBrief(shoe),
           shoe.price_source === 'estimate' && shoe.price_usd
-            ? h('span', { class: 'price-info', title: s.overseasPriceInfo, 'aria-label': s.overseasPriceInfo, role: 'img' }, ' ⓘ') : null),
-        shoe.price_source !== 'kr_list' && shoe.price_usd
-          ? h('span', { class: 'price-unconfirmed' }, s.priceUnconfirmed)
-          : shoe.price_source === 'kr_list' && shoe.over_budget ? h('span', { class: 'over-budget' }, s.overBudget) : null,
+            ? priceInfo : null),
+        ...(shoe.price_source === 'estimate' && shoe.price_usd ? [priceHelp] : []),
+        shoe.price_source === 'kr_list' && shoe.over_budget ? h('span', { class: 'over-budget' }, s.overBudget) : null,
         detailsButton,
       ),
     ),

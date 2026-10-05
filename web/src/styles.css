@@ -5,6 +5,7 @@
   --title-sky: #1b7fb3; /* primary darkened to stay readable on light cards */
   --primary-ink: #fff;
   --naver: #03c75a;
+  --naver-text: #008a3d;
   --danger: #d93025;
   --page: #f8f8f8;
   --card: #fff;
@@ -30,11 +31,13 @@
     --explain: #1a2a33;
     --chip: #2a2a2a;
     --title-sky: #6cc0ec;
+    --naver-text: #65df98;
     --good: #5fd08a;
     --name-gray: #b4bfca;
   }
 }
 :root[data-theme='dark'] {
+  --naver-text: #65df98;
   --page: #121212;
   --card: #1e1e1e;
   --border: #2c2c2c;
@@ -671,3 +674,16 @@ noscript p { padding: 24px 16px; text-align: center; }
 .empty-state .empty-title { margin: 0; color: var(--text); font-size: 1.15rem; }
 .empty-state p { margin: 0; }
 .empty-state .btn { margin-top: 8px; }
+
+/* One compact shopping action; AI comments are a separate disclosure row. */
+.card-shopping { width: min(100%, 340px); margin: 14px auto; padding: 10px 14px; gap: 0; flex-wrap: wrap; text-align: center; border: 0; background: color-mix(in srgb, var(--naver) 8%, var(--card)); color: var(--ink); font-weight: 400; }
+.naver-name { color: var(--naver-text); font-weight: 700; text-decoration: underline; }
+.comment-section { margin-top: 20px; border-top: 1px solid var(--border); }
+.comment-toggle { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 48px; padding: 12px 0; border: 0; background: transparent; color: var(--title-sky); font-size: 13px; font-weight: 700; text-align: left; }
+.comment-chevron { width: 8px; height: 8px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); margin: 0 4px 4px auto; }
+.comment-toggle[aria-expanded='true'] .comment-chevron { transform: rotate(-135deg); margin-bottom: 0; }
+.comment-body .explain { margin: 8px 0 0; }
+.comment-loading { color: var(--muted); font-size: 13px; }
+.price-info { border: 0; background: transparent; color: var(--muted); padding: 4px 8px; min-width: 32px; min-height: 32px; }
+.price-help { font-size: 12px; color: var(--muted); white-space: normal; max-width: 260px; margin: 0; }
+.cards-grid { align-items: start; }
