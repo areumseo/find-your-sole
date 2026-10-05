@@ -126,3 +126,10 @@ def test_english_fallback_sentence_has_no_korean():
         assert not re.search(r"[가-힣]", text), text
         assert str(shoe["weight_g"]) in text
     assert main.pick_reason(main.SHOES[0], "en").startswith(("Low", "Medium", "High", "Max"))
+
+
+def test_pick_response_carries_the_brand_site():
+    from fastapi.testclient import TestClient
+
+    body = TestClient(main.app).get("/pick").json()
+    assert body["brand_url"].startswith("https://")

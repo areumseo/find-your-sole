@@ -409,6 +409,7 @@ def pick(response: Response, locale: str = "ko"):
     return {
         "name": shoe["name"],
         "brand": shoe["brand"],
+        "brand_url": shoe.get("url"),
         "price": shoe["price"],
         "price_source": shoe.get("price_source"),
         "price_usd": shoe.get("price_usd"),
