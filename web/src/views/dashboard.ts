@@ -53,7 +53,7 @@ export function savedWidget(hideWhenEmpty = false): HTMLElement | null {
               h('div', { class: 'row-title' }, shoe.name),
               h('div', { class: 'row-sub' }, shoe.brand),
             ),
-            h('div', { class: 'row-end' }, s.priceRange(shoe.price)),
+            h('div', { class: 'row-end' }, s.priceBrief(shoe)),
           ),
         ))
       : empty(s.savedWidgetEmpty, { href: '#/search', label: s.savedWidgetEmptyCta }),
