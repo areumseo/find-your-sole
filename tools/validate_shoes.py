@@ -16,6 +16,8 @@ for s in shoes:
     cats = s.get("categories")
     if not isinstance(cats, list) or not cats or not set(cats) <= CATEGORIES:
         errors.append(f"{label}: categories must be a non-empty list from {sorted(CATEGORIES)}")
+    if "price_source" in s and s["price_source"] not in ("kr_list", "estimate"):
+        errors.append(f"{label}: price_source must be 'kr_list' or 'estimate'")
     if s.get("id") in ids:
         errors.append(f"{label}: duplicate id {s.get('id')}")
     ids.add(s.get("id"))
