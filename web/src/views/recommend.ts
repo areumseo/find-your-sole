@@ -8,7 +8,8 @@ import type { Prefs, Shoe } from '../types';
 export type Step = 'mode' | 'beginner' | 'expert' | 'comfort' | 'results';
 
 /** Hash paths for each step of the search flow. */
-export const SEARCH = '/search';
+/** The finder cards are on Home, so the forms' back button goes there. */
+export const SEARCH = '/';
 const PATH = {
   beginner: '/search/beginner',
   expert: '/search/expert',
@@ -87,7 +88,7 @@ export function renderRecommend(step: Step, go: (path: string) => void): HTMLEle
     case 'expert': lastForm = 'expert'; return expertForm(go);
     case 'comfort': lastForm = 'comfort'; return comfortForm(go);
     case 'results': return resultsView(go);
-    default: return modeSelect(go);
+    default: return comfortForm(go);
   }
 }
 
@@ -109,15 +110,6 @@ export function modeCards(go: (path: string) => void): HTMLElement {
     card('🌱', s.beginnerTitle, s.beginnerSubtitle, s.beginnerDescription, PATH.beginner),
     card('🏃', s.expertTitle, s.expertSubtitle, s.expertDescription, PATH.expert),
     card('🚶', s.comfortTitle, s.comfortSubtitle, s.comfortDescription, PATH.comfort),
-  );
-}
-
-function modeSelect(go: (path: string) => void): HTMLElement {
-  const s = t();
-  return h('div', { class: 'page-narrow' },
-    pageHeader(s.searchTitle),
-    h('p', { class: 'lead' }, s.heroSubtitle),
-    modeCards(go),
   );
 }
 
