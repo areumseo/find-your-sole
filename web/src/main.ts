@@ -41,7 +41,7 @@ function parseRoute(): Route {
 
   switch (page) {
     case 'search': {
-      const step: Step = sub === 'beginner' || sub === 'expert' || sub === 'results' ? sub : 'mode';
+      const step: Step = sub === 'beginner' || sub === 'expert' || sub === 'comfort' || sub === 'results' ? sub : 'mode';
       // Results only exist in memory; a reload or shared link has none to show.
       if (step === 'results' && !hasResults()) return { page: 'search', step: 'mode' };
       return { page: 'search', step };

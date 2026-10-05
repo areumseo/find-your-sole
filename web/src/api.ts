@@ -89,6 +89,18 @@ export interface ExpertRequest {
   brand_filter: string[];
 }
 
+export interface ComfortRequest {
+  where: string;
+  hours: string;
+  pain: string[];
+  wide_foot: boolean;
+  budget: number;
+  brand_filter: string[];
+}
+
+export const recommendComfort = (req: ComfortRequest) =>
+  post<Shoe[]>('/recommend/comfort', req);
+
 export const recommendBeginner = (req: BeginnerRequest) =>
   post<Shoe[]>('/recommend/beginner', req);
 
