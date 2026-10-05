@@ -374,6 +374,15 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .progress > i { display: block; height: 100%; background: var(--primary); }
 .progress.worn > i { background: var(--danger); }
 .owned .menu { display: flex; flex-direction: column; gap: 2px; }
+/* On phones the name, distance and the two actions do not fit on one row: the name gets the
+   full middle column and the actions drop to their own row below. */
+@media (max-width: 480px) {
+  .owned { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: 'avatar info km' 'menu menu menu'; gap: 8px 12px; }
+  .owned .avatar { grid-area: avatar; }
+  .owned .info { grid-area: info; }
+  .owned .km { grid-area: km; }
+  .owned .menu { grid-area: menu; flex-direction: row; justify-content: flex-end; gap: 16px; }
+}
 .link-btn { border: 0; background: none; color: var(--muted); font-size: 12px; padding: 6px 4px; min-height: 32px; }
 .link-btn.danger { color: var(--danger); }
 
