@@ -12,7 +12,7 @@ export function renderSaved(rerender: () => void): HTMLElement {
     shoes.length
       ? h('div', { class: 'cards-grid' }, ...shoes.map((shoe) => shoeCard({ shoe, onFavoriteChange: rerender })))
       : h('div', { class: 'empty' },
-          h('p', {}, s.savedEmpty),
+          h('p', { class: 'empty-title' }, s.savedEmpty),
           h('p', { class: 'hint' }, s.savedHint),
           h('a', { class: 'btn btn-primary', href: '#/search' }, s.savedWidgetEmptyCta),
         ),
