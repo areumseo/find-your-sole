@@ -8,7 +8,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from shoe_news import router as news_router
+try:  # started from api/ (`uvicorn main:app`)
+    from shoe_news import router as news_router
+except ModuleNotFoundError:  # started from the repo root (`uvicorn api.main:app`)
+    from api.shoe_news import router as news_router
 
 # ── 데이터 로드 ─────────────────────────────────────────────
 SHOES = json.loads(
