@@ -462,5 +462,12 @@ noscript p { padding: 24px 16px; text-align: center; }
 .row-end small { display: block; font-size: 11px; color: var(--danger); }
 .row-end.danger { color: var(--danger); }
 .row .progress { margin-top: 8px; }
+.widget.wide { grid-column: 1 / -1; }
+.news-title {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  color: inherit; font-weight: 700; text-decoration: none;
+}
+.news-title:hover { color: var(--primary); text-decoration: underline; }
+.widget-foot { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
 .widget-empty { padding: 20px 0 8px; text-align: center; color: var(--muted); }
 .widget-empty p { margin: 0 0 14px; }

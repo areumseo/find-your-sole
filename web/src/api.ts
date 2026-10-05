@@ -1,4 +1,4 @@
-import type { Prefs, Shoe } from './types';
+import type { NewsItem, Prefs, Shoe } from './types';
 
 const BASE_URL: string =
   (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ||
@@ -23,6 +23,39 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   } finally {
     clearTimeout(timer);
   }
+}
+
+async function get<T>(path: string, timeoutMs: number): Promise<T> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, { signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as T;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// News is a nice-to-have: any failure resolves to an empty list (the widget just
+// stays hidden) instead of an error. A good result is reused for a few minutes so
+// moving between tabs does not refetch; an empty one is retried after a minute,
+// since the backend may simply have been asleep.
+const NEWS_REUSE_MS = 10 * 60_000;
+const NEWS_RETRY_MS = 60_000;
+let news: { at: number; items: Promise<NewsItem[]> } | null = null;
+
+export function fetchNews(): Promise<NewsItem[]> {
+  if (news && Date.now() - news.at < NEWS_REUSE_MS) return news.items;
+  const items = get<NewsItem[]>('/news', 20_000)
+    .then((list) => (Array.isArray(list) ? list : []))
+    .catch(() => [] as NewsItem[]);
+  const entry = { at: Date.now(), items };
+  news = entry;
+  void items.then((list) => {
+    if (!list.length && news === entry) entry.at = Date.now() - NEWS_REUSE_MS + NEWS_RETRY_MS;
+  });
+  return items;
 }
 
 /**

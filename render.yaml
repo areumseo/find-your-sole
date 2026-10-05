@@ -8,6 +8,11 @@ services:
     envVars:
       - key: ANTHROPIC_API_KEY
         sync: false
+      # Shoe launch news (optional): without these, /news returns an empty list.
+      - key: NAVER_CLIENT_ID
+        sync: false
+      - key: NAVER_CLIENT_SECRET
+        sync: false
     healthCheckPath: /health
 
   # Static frontend. Built from web/ and served from Render's CDN; it talks to
