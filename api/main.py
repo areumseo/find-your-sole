@@ -487,18 +487,29 @@ Please explain why this shoe is a great match for this user.
 이 신발이 이 사용자에게 왜 잘 맞는지 설명해 주세요.
 """
 
-    response = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=500,
-        system=[
-            {
-                "type": "text",
-                "text": system_prompt,
-                "cache_control": {"type": "ephemeral"},  # 시스템 프롬프트 캐싱
-            }
-        ],
-        messages=[{"role": "user", "content": user_message}],
-    )
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5",
+            max_tokens=500,
+            system=[
+                {
+                    "type": "text",
+                    "text": system_prompt,
+                    "cache_control": {"type": "ephemeral"},  # 시스템 프롬프트 캐싱
+                }
+            ],
+            messages=[{"role": "user", "content": user_message}],
+        )
+    except anthropic.APIStatusError as exc:
+        # Log why (status + Anthropic's error type, never the key) so a bad key,
+        # missing credit or wrong model name shows up in the Render logs.
+        detail = getattr(exc, "body", None)
+        kind = detail.get("error", {}).get("type") if isinstance(detail, dict) and isinstance(detail.get("error"), dict) else ""
+        print(f"explain failed: Anthropic HTTP {exc.status_code} {kind}")
+        raise HTTPException(status_code=502, detail="The explanation service is unavailable right now.")
+    except anthropic.APIError as exc:
+        print(f"explain failed: {type(exc).__name__}")
+        raise HTTPException(status_code=502, detail="The explanation service is unavailable right now.")
 
     explanation = next(
         (block.text for block in response.content if block.type == "text"), ""

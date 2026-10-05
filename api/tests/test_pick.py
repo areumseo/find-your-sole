@@ -65,6 +65,24 @@ def test_price_source_and_usd_reach_the_clients():
     assert isinstance(est["price_usd"], int)
 
 
+def test_explain_reports_anthropic_failures_as_502_with_a_log(monkeypatch, capsys):
+    import anthropic
+    import httpx
+
+    def fail(*args, **kwargs):
+        request = httpx.Request("POST", "https://api.anthropic.com/v1/messages")
+        response = httpx.Response(401, request=request, json={"error": {"type": "authentication_error"}})
+        raise anthropic.AuthenticationError("bad key", response=response, body={"error": {"type": "authentication_error"}})
+
+    monkeypatch.setattr(main, "explain_limiter", main.ExplainLimiter(per_client=100))
+    monkeypatch.setattr(main.client.messages, "create", fail)
+    body = {"shoe": {"name": "x", "brand": "b", "cushion": "중간", "drop_mm": 8, "weight_g": 250, "width": "보통",
+                     "terrain": ["로드"], "use_case": ["데일리"], "tags": []}, "prefs": {}}
+    res = TestClient(main.app).post("/explain", json=body)
+    assert res.status_code == 502
+    assert "401" in capsys.readouterr().out
+
+
 def test_pick_only_comes_from_everyday_road_shoes():
     start = datetime(2026, 10, 1, 12, tzinfo=KST)
     for d in range(120):
