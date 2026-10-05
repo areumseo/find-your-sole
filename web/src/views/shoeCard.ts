@@ -30,20 +30,37 @@ interface CardOptions {
   onFavoriteChange?: () => void;
 }
 
+type FactKind = 'match' | 'good' | 'info';
+interface Fact { text: string; kind: FactKind }
+
 /** Facts from the catalogue compared with the answers, not another AI request. */
-function matchSummary(shoe: Shoe, prefs: Prefs): string {
+function matchFacts(shoe: Shoe, prefs: Prefs): Fact[] {
   const s = t();
-  const facts: string[] = [];
-  if (prefs.mode === 'comfort') facts.push(s.cushionFact(s.cushionName(shoe.cushion)));
-  if (shoe.width === prefs.width) facts.push(s.widthMatch);
-  if (shoe.cushion === prefs.cushion) facts.push(s.cushionMatch);
+  const facts: Fact[] = [];
+  if (prefs.mode === 'comfort') facts.push({ text: s.cushionFact(s.cushionName(shoe.cushion)), kind: 'info' });
+  if (shoe.width === prefs.width) facts.push({ text: s.widthMatch, kind: 'match' });
+  if (shoe.cushion === prefs.cushion) facts.push({ text: s.cushionMatch, kind: 'match' });
   if (prefs.mode !== 'comfort' && shoe.terrain.includes(String(prefs.terrain))) {
     const terrain = getLocale() === 'en' ? (prefs.terrain === '트레일' ? 'Trail' : 'Road') : String(prefs.terrain);
-    facts.push(s.terrainMatch(terrain));
+    facts.push({ text: s.terrainMatch(terrain), kind: 'match' });
   }
-  if (!facts.length) facts.push(s.cushionFact(s.cushionName(shoe.cushion)));
-  if (shoe.price_source === 'kr_list' && shoe.price <= Number(prefs.budget)) facts.push(s.withinBudget);
-  return s.matchSummary(facts.slice(0, 3));
+  if (!facts.length) facts.push({ text: s.cushionFact(s.cushionName(shoe.cushion)), kind: 'info' });
+  // Budget is the fact people care about most, so it always makes the cut.
+  if (shoe.price_source === 'kr_list' && shoe.price <= Number(prefs.budget)) {
+    return [...facts.slice(0, 2), { text: s.withinBudget, kind: 'good' }];
+  }
+  return facts.slice(0, 3);
+}
+
+/** "Compared with your answers": a gray label, then one chip per fact. Color carries the meaning:
+ *  blue = matches an answer, green = within budget, gray = plain information. */
+function matchSummary(shoe: Shoe, prefs: Prefs): HTMLElement {
+  const s = t();
+  return h('div', { class: 'match-summary' },
+    h('span', { class: 'match-label' }, `${s.matchLabel}:`),
+    ...matchFacts(shoe, prefs).map((f) =>
+      h('span', { class: `fact fact-${f.kind}` }, f.kind === 'info' ? f.text : `✓ ${f.text}`)),
+  );
 }
 
 export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): HTMLElement {
@@ -177,7 +194,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
         detailsButton,
       ),
     ),
-    ...(prefs && rank !== undefined && rank <= 3 ? [h('p', { class: 'match-summary' }, matchSummary(shoe, prefs))] : []),
+    ...(prefs && rank !== undefined && rank <= 3 ? [matchSummary(shoe, prefs)] : []),
     detail,
   );
   return card;

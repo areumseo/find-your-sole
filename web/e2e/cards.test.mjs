@@ -96,5 +96,26 @@ await none.click('.btn-primary');
 await none.waitForSelector('.hero');
 ok((await none.locator('.found-row').count()) === 0, 'no celebration when nothing was found (the app stays on a page without results)');
 
+// "Compared with your answers": one chip per fact, with color carrying the meaning.
+for (const [scheme, locale, label] of [['light', 'ko-KR', '내 조건과 비교:'], ['dark', 'en-US', 'Compared with your answers:']]) {
+  const page = await (await b.newContext({ viewport: { width: 390, height: 844 }, locale, colorScheme: scheme })).newPage();
+  await page.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' },
+    body: JSON.stringify([shoe(1, 'Cheap Match', { price: 129000, price_source: 'kr_list' })]) }));
+  await page.goto(BASE);
+  await page.locator('.mode-card').nth(2).click();
+  await page.click('.btn-primary');
+  await page.waitForSelector('.match-summary');
+  const where = `${scheme}/${locale}`;
+  ok((await page.textContent('.match-label')) === label, `${where}: gray label "${label}"`);
+  const kinds = await page.locator('.match-summary .fact').evaluateAll((els) => els.map((e) => e.className.replace('fact ', '')));
+  ok(kinds.length >= 2 && kinds.length <= 3 && kinds.includes('fact-info') && kinds.includes('fact-match') && kinds.includes('fact-good'), `${where}: info, match and within-budget chips`, kinds.join(','));
+  ok(kinds[kinds.length - 1] === 'fact-good', `${where}: within-budget is always shown, last`);
+  const colors = await page.locator('.match-summary .fact').evaluateAll((els) => els.map((e) => getComputedStyle(e).color));
+  ok(new Set(colors).size === colors.length, `${where}: every kind has its own text color`, colors.join(' | '));
+  const texts = await page.locator('.match-summary .fact').allTextContents();
+  ok(texts.filter((x) => x.startsWith('✓')).length === kinds.filter((k) => k !== 'fact-info').length, `${where}: matches and budget carry a check mark, plain info does not`, texts.join('|'));
+  ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${where}: nothing overflows`);
+}
+
 await b.close();
 process.exit(fail ? 1 : 0);
