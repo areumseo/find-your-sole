@@ -92,8 +92,8 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     renderExplain();
     try {
       explanation = await explainShoe(shoe, prefs, getLocale());
-    } catch {
-      explanation = s.explanationError;
+    } catch (e) {
+      explanation = e instanceof Error && e.message === 'HTTP 429' ? s.explanationBusy : s.explanationError;
     } finally {
       loading = false;
       renderExplain();

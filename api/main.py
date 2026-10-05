@@ -4,13 +4,15 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import anthropic
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 try:  # started from api/ (`uvicorn main:app`)
+    from rate_limit import ExplainLimiter
     from shoe_news import router as news_router
 except ModuleNotFoundError:  # started from the repo root (`uvicorn api.main:app`)
+    from api.rate_limit import ExplainLimiter
     from api.shoe_news import router as news_router
 
 # ── 데이터 로드 ─────────────────────────────────────────────
@@ -51,6 +53,16 @@ app.add_middleware(
 )
 
 app.include_router(news_router)
+
+explain_limiter = ExplainLimiter.from_env()
+
+
+def client_ip(request: Request) -> str:
+    # Behind Render's proxy the caller is the first X-Forwarded-For entry.
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
 
 
 # ── 요청/응답 모델 ────────────────────────────────────────────
@@ -298,11 +310,19 @@ def recommend_expert(data: ExpertPrefs):
 
 
 @app.post("/explain")
-def explain_shoe(req: ExplainRequest):
+def explain_shoe(req: ExplainRequest, request: Request):
     """
     왜 이 신발이 나한테 맞는지 Claude Haiku가 자연어로 설명.
     사용자가 직접 탭할 때만 호출 → 비용 최소화.
     """
+    allowed, retry_after = explain_limiter.check(client_ip(request))
+    if not allowed:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many explanation requests. Please try again later.",
+            headers={"Retry-After": str(retry_after)},
+        )
+
     shoe = req.shoe
     prefs = req.prefs
 
