@@ -5,7 +5,7 @@ import { BASE, launch } from './helpers.mjs';
 const response = await fetch(BASE);
 assert.equal(response.status, 200);
 const html = await response.text();
-assert.match(html, /<title>Find Your Sole — 내 발에 맞는 한 켤레<\/title>/);
+assert.match(html, /<title>Find Your Sole — 내 발에 딱 맞는 한 켤레<\/title>/);
 assert.match(html, /property="og:image" content="https:\/\/findyoursole.app\/social-preview.png"/);
 assert.match(html, /name="twitter:card" content="summary_large_image"/);
 const image = await fetch(new URL('social-preview.png', BASE));
@@ -23,7 +23,7 @@ try {
   await page.route('**/pick*', route => route.fulfill({json:{}}));
   await page.goto(BASE);
   await page.getByRole('button', {name:'Switch to English', exact:true}).waitFor();
-  assert.equal(await page.title(), 'Find Your Sole — 내 발에 맞는 한 켤레');
+  assert.equal(await page.title(), 'Find Your Sole — 내 발에 딱 맞는 한 켤레');
   await page.getByRole('button', {name:'Switch to English', exact:true}).click();
   assert.equal(await page.title(), 'Find Your Sole — Find Your Fit');
 } finally { await browser.close(); }
