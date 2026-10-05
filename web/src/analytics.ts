@@ -14,7 +14,8 @@ function init(): boolean {
   if (!started) {
     started = true;
     analyticsWindow.dataLayer = analyticsWindow.dataLayer || [];
-    analyticsWindow.gtag = (...args: unknown[]) => { analyticsWindow.dataLayer!.push(args); };
+    // gtag.js consumes Arguments commands; plain arrays are data-layer method calls.
+    analyticsWindow.gtag = function () { analyticsWindow.dataLayer!.push(arguments); };
     analyticsWindow.gtag('js', new Date());
     analyticsWindow.gtag('config', ID, { send_page_view: false, allow_google_signals: false,
       allow_ad_personalization_signals: false, page_location: location.origin + '/', page_referrer: safeReferrer()
