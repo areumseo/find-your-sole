@@ -15,7 +15,7 @@ try {
     const summary = await p.locator('.match-summary').innerText();
     assert.ok(!summary.includes('쿠션') && !summary.includes('cushioning'));
     assert.ok(!summary.includes('발볼') && !summary.includes('width'));
-    await p.locator('.detail-toggle').click();
+    await p.locator('.comment-toggle').click();
     await p.locator('.explain').waitFor();
     const specs = await p.locator('.specs').innerText();
     assert.ok(!specs.includes('null') && !specs.includes('0mm'));

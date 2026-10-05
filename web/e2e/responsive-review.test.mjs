@@ -36,7 +36,8 @@ try {
       assert.equal(await page.locator('article.card:visible').count(), 3, 'three candidates initially visible');
       assert.equal(await page.locator('.match-summary').count(), 3);
       assert.equal(explanations, 0, 'summaries do not consume AI requests');
-      assert.equal(await page.locator('.price-unconfirmed').count(), 1);
+      assert.equal(await page.locator('.price-unconfirmed').count(), 0);
+      assert.equal(await page.locator('article.card.open:visible').count(), 3);
       assert(!(await page.locator('article.card').nth(2).textContent()).includes(locale === 'ko-KR' ? '국내 정가 기준 예산 이내' : 'Within budget'));
       if (width < 600) {
         const name = await page.locator('.shoe-name').first().boundingBox();
@@ -46,6 +47,8 @@ try {
       await page.locator('.more-results > summary').click();
       assert.equal(await page.locator('article.card:visible').count(), 5, 'remaining candidates accessible');
       await page.locator('article.card .detail-toggle').last().click();
+      assert.equal(explanations, 0);
+      await page.locator('article.card .comment-toggle').last().click();
       await page.waitForSelector('.explain');
       assert.equal(explanations, 1);
       assert.equal(await page.locator('article.card .name-toggle').last().getAttribute('aria-expanded'), 'true');

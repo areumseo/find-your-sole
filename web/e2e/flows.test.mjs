@@ -74,7 +74,7 @@ check(`결과 카드 렌더 (${n}개, 최대 10)`, n > 0 && n <= 10);
 check('1~3위 강조 클래스', (await page.locator('.rank.top').count()) === Math.min(3, n));
 
 // ── 카드 펼침 + 설명(HTML 주입 방어) ──
-await page.click('article.card >> nth=0 >> .name-toggle');
+await page.click('article.card >> nth=0 >> .comment-toggle');
 await page.waitForSelector('.explain');
 const explainHtml = await page.innerHTML('.explain p');
 check('설명 텍스트 표시', (await page.textContent('.explain p')).includes('쿠션이 좋아요'));
@@ -85,7 +85,7 @@ check('네이버 링크 https + noopener', naver?.startsWith('http') && (await p
 check('aria-expanded 갱신', (await page.getAttribute('article.card >> nth=0 >> .name-toggle', 'aria-expanded')) === 'true');
 
 // 두 번째 카드: 실제 백엔드 실패(키 없음) → 에러 문구
-await page.click('article.card >> nth=1 >> .name-toggle');
+await page.click('article.card >> nth=1 >> .comment-toggle');
 await page.waitForFunction(() => document.querySelectorAll('.explain').length >= 2, null, { timeout: 15000 });
 check('설명 API 실패 시 에러 문구', (await page.locator('.explain').nth(1).textContent()).includes('설명을 불러오지 못했어요'));
 
@@ -266,7 +266,7 @@ if (SHOTS) {
   await page.screenshot({ path: `${SHOTS}/1-mode-mobile.png` });
   await page.click('.mode-card >> nth=0'); await page.click('.btn-primary');
   await page.waitForSelector('article.card');
-  await page.click('article.card >> nth=0 >> .name-toggle');
+  await page.click('article.card >> nth=0 >> .comment-toggle');
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${SHOTS}/2-results-mobile.png` });
   await page.emulateMedia({ colorScheme: 'dark' });

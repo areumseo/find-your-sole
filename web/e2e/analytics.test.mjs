@@ -30,7 +30,7 @@ try {
   await p.locator('.mode-card').nth(2).click();
   await p.locator('.btn-primary').click();
   await p.waitForSelector('article.card');
-  await p.locator('.detail-toggle').click();
+  await p.locator('.comment-toggle').click();
   await p.locator('.explain').waitFor();
   await p.locator('article .icon-btn').first().click();
   await p.locator('article .icon-btn').first().click();

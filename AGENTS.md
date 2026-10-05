@@ -62,7 +62,7 @@ Always run the tests that cover what you changed before pushing, and say honestl
 
 - Scope: running + walking/everyday comfort shoes. No fashion sneakers.
 - Home has three finder cards (beginner runner, experienced runner, comfort shoes). There is no Search menu.
-- Results show the top three candidates first with a one-line comparison to the person's answers (no extra AI call); the rest are under "See more options". The AI explanation is requested only when a card is expanded.
+- Results show the top three candidates first with a one-line comparison to the person's answers (no extra AI call); the rest are under "See more options". The first three result cards start expanded; other cards start collapsed. AI comments have a separate disclosure row and are requested only when that row is opened, never by expanding the card.
 - Prices are shown as exact Korean list prices (`kr_list`) or the overseas USD price with a "check local price" note; never as a KRW range or a guessed amount.
 - On phones the feedback entry is in the More menu (a floating button would cover forms); on wide screens it floats at the bottom right.
 - No login. Saved shoes and "my shoes" live in the browser (`localStorage`). Feedback and the admin inbox work without accounts.

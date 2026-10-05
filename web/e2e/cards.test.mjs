@@ -34,19 +34,17 @@ const names = await cards.locator('.card-head h3, .card-head .name, .card-head s
 const nameBox = await cards.nth(0).locator('text=Hoka Clifton 10').first().boundingBox();
 ok(nameBox.width > 140 && nameBox.height < 60, 'a long overseas price does not squeeze the shoe name', JSON.stringify(nameBox));
 const priceTexts = await p.locator('.side .price').allTextContents();
-ok(priceTexts[0] === '해외 정가 US$150 ⓘ' && priceTexts[1] === '179,000원', 'card header shows the short price', priceTexts.join('|'));
+ok(priceTexts[0] === '해외 정가 US$150ⓘ' && priceTexts[1] === '179,000원', 'card header shows the short price', priceTexts.join('|'));
 
 // The full explanation is in the expanded card.
-await cards.nth(0).locator('.name-toggle').click();
-await p.waitForSelector('.price-note');
-ok((await p.textContent('.price-note')).includes('해외 정가 US$150 · 국내 판매가는 판매처에서 확인해 주세요'), 'the full overseas price is in the details');
-ok((await cards.nth(0).innerText()).includes('해외 정가는 참고용이며, 국내 판매가와 다를 수 있어요.'), 'overseas price is explicitly reference-only');
-ok((await cards.nth(0).locator('.price-unconfirmed').textContent()) === '국내 판매가 확인 필요', 'unknown Korean price stays explicit');
-ok((await cards.nth(0).locator('.btn-outline-naver').textContent()).includes('네이버에서 국내 판매가 확인'), 'shopping button explains the domestic-price check');
-ok((await cards.nth(0).locator('.price-info').getAttribute('aria-label')).includes('참고용'), 'price info has accessible context');
-await cards.nth(1).locator('.name-toggle').click();
-ok((await cards.nth(1).locator('.price-note').count()) === 0, 'a Korean list price has no overseas note');
-
+ok(await cards.nth(0).locator('.detail').isVisible(), 'first card is expanded by default');
+ok(await cards.nth(1).locator('.detail').isVisible(), 'second card is expanded by default');
+ok((await cards.nth(0).locator('.price-note').count()) === 0, 'overseas price is not repeated in details');
+ok((await cards.nth(0).locator('.price-unconfirmed').count()) === 0, 'duplicate price badge removed');
+ok((await cards.nth(0).locator('.btn-outline-naver').textContent()).includes('네이버쇼핑에서 국내 판매가 확인하기'), 'shopping button explains the domestic-price check');
+await cards.nth(0).locator('.price-info').click();
+ok((await cards.nth(0).locator('.price-help').textContent()).includes('참고용'), 'price info explains reference-only price');
+ok((await cards.nth(1).locator('.price-note').count()) === 0, 'Korean list price has no overseas note');
 // Tooltips on the two icon buttons.
 await p.setViewportSize({ width: 1280, height: 800 });
 const heart = cards.nth(0).locator('button[aria-pressed]');
@@ -149,7 +147,7 @@ for (const [scheme, locale, label] of [['light', 'ko-KR', '내 조건과 비교:
   // Clicking the link opens a new tab and does NOT toggle the card.
   const [popup] = await Promise.all([ctx.waitForEvent('page'), link.click()]);
   await popup.close();
-  ok((await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded')) === 'false', 'clicking the brand link does not expand the card');
+  ok((await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded')) === 'true', 'clicking the brand link leaves expansion unchanged');
   // Clicking the name or the tags toggles it.
   // A real tap on the tag: Playwright's own click refuses because the stretched button layer
   // sits on top of the tag, so click the tag's position with the mouse like a finger would.
@@ -158,7 +156,7 @@ for (const [scheme, locale, label] of [['light', 'ko-KR', '내 조건과 비교:
   const afterTag = await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded');
   await card.nth(0).locator('.name-toggle').click();
   const afterName = await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded');
-  ok(afterTag === 'true' && afterName === 'false', 'clicking the tags expands the card and clicking the name collapses it', `${afterTag} -> ${afterName}`);
+  ok(afterTag === 'false' && afterName === 'true', 'clicking tags collapses the card and clicking the name expands it', `${afterTag} -> ${afterName}`);
   // Keyboard: Tab reaches the name button, then the brand link, as separate stops.
   await page.keyboard.press('Escape');
   await card.nth(1).locator('.name-toggle').focus();
@@ -179,9 +177,9 @@ await enPage.locator('.btn-primary').click();
 await enPage.waitForSelector('article.card');
 const enCard = enPage.locator('article.card').first();
 ok((await enCard.locator('.price').textContent()).includes('Overseas list US$150'), 'English header identifies overseas list price');
-await enCard.locator('.detail-toggle').click();
-ok((await enCard.innerText()).includes('The overseas list price is for reference'), 'English reference-price explanation');
-ok((await enCard.locator('.btn-outline-naver').textContent()).includes('Check Korean selling price on Naver'), 'English domestic-price action');
+await enCard.locator('.price-info').click();
+ok((await enCard.innerText()).includes('Overseas list price for reference'), 'English reference-price explanation');
+ok((await enCard.locator('.btn-outline-naver').textContent()).includes('Check Korean price'), 'English domestic-price action');
 ok(await enPage.evaluate(()=>document.documentElement.scrollWidth <= innerWidth), 'English price context fits phone width');
 await enPage.screenshot({path:'price-context-en.png',fullPage:true});
 await p.screenshot({path:'price-context-ko.png',fullPage:true});
