@@ -78,7 +78,7 @@ Always run the tests that cover what you changed before pushing, and say honestl
 - `price_source` is `kr_list` (a Korean list price was found, e.g. KREAM 발매가) or `estimate`.
   Estimated prices must carry `price_usd` (overseas list price); the UI then shows the USD price instead of a made-up KRW range.
 - Never invent specs or prices. If you cannot confirm a value, mark it `estimate` and say so in the PR.
-- Budget logic only trusts `kr_list` prices. API results carry `budget_status` (`within` / `unknown` / `over`) and are ordered in that sequence, then by score; `over_budget` is true only for confirmed Korean prices. Unknown prices are never a claim of affordability.
+- Budget logic only trusts `kr_list` prices. API results carry `budget_status` (`within` / `unknown` / `over`) and rank confirmed-affordable and price-unknown candidates together by fit score, with confirmed-over-budget candidates last; equal scores prefer confirmed affordability, then stable shoe ID; `over_budget` is true only for confirmed Korean prices. Unknown prices are never a claim of affordability.
 - Run `python tools/validate_shoes.py` after touching `shoes_data.json`.
 
 ## Catalogue updates
