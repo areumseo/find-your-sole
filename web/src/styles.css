@@ -676,8 +676,8 @@ noscript p { padding: 24px 16px; text-align: center; }
 .empty-state .btn { margin-top: 8px; }
 
 /* One compact shopping action; AI comments are a separate disclosure row. */
-.card-shopping { width: min(100%, 340px); margin: 14px auto; padding: 10px 14px; gap: 0; flex-wrap: wrap; text-align: center; border: 0; background: color-mix(in srgb, var(--naver) 8%, var(--card)); color: var(--ink); font-weight: 400; }
-.naver-name { color: var(--naver-text); font-weight: 700; text-decoration: underline; }
+.card-shopping { width: min(100%, 340px); margin: 14px auto; padding: 10px 14px; gap: 8px; flex-wrap: nowrap; text-align: center; border: 0; background: color-mix(in srgb, var(--naver) 8%, var(--card)); color: var(--ink); font-weight: 400; }
+.naver-name { color: var(--naver-text); font-weight: 700; text-decoration: none; }
 .comment-section { margin-top: 20px; border-top: 1px solid var(--border); }
 .comment-toggle { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 48px; padding: 12px 0; border: 0; background: transparent; color: var(--title-sky); font-size: 13px; font-weight: 700; text-align: left; }
 .comment-chevron { width: 8px; height: 8px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); margin: 0 4px 4px auto; }
@@ -687,3 +687,6 @@ noscript p { padding: 24px 16px; text-align: center; }
 .price-info { border: 0; background: transparent; color: var(--muted); padding: 4px 8px; min-width: 32px; min-height: 32px; }
 .price-help { font-size: 12px; color: var(--muted); white-space: normal; max-width: 260px; margin: 0; }
 .cards-grid { align-items: start; }
+
+.naver-logo { width: 18px; height: 18px; flex: none; }
+.shopping-label { min-width: 0; }

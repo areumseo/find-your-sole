@@ -187,7 +187,8 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   if (naver) {
     detail.append(
       h('a', { class: 'btn-outline-naver card-shopping', onClick: () => track('shopping_click', {shoe_id: shoe.id}), href: naver, target: '_blank', rel: 'noopener noreferrer' },
-        h('span', { class: 'naver-name' }, s.naverName), s.naverAction, h('span', { 'aria-hidden': 'true' }, ' ↗')),
+        h('img', { class: 'naver-logo', src: '/naver-n.svg', alt: '', width: 18, height: 18 }),
+        h('span', { class: 'shopping-label' }, h('span', { class: 'naver-name' }, s.naverName), s.naverAction)),
     );
   }
 
