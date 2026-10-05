@@ -256,8 +256,8 @@ def map_comfort_to_prefs(data: ComfortPrefs) -> dict:
 
 
 def is_comfort_candidate(shoe: Dict) -> bool:
-    """Walking/daily shoes, plus running shoes that work as everyday trainers."""
-    return shoe.get("category") in ("walking", "daily") or "데일리" in shoe.get("use_case", [])
+    """Shoes tagged for walking or everyday wear (a running shoe can be both)."""
+    return bool({"walking", "daily"} & set(shoe.get("categories", [])))
 
 
 def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[List[Dict]] = None) -> List[ShoeResult]:
