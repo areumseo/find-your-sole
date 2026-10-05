@@ -1,4 +1,4 @@
-import { HttpError, adminList, adminResolve, adminScreenshot, type FeedbackItem } from '../api';
+import { HttpError, adminList, adminResolve, adminScreenshot, adminStatus, type FeedbackItem } from '../api';
 import { h } from '../dom';
 import { getLocale, t } from '../i18n';
 import { pageHeader } from '../ui';
@@ -111,7 +111,22 @@ function inbox(redraw: () => void): HTMLElement {
     note.textContent = err instanceof HttpError && err.status === 404 ? s.adminOff : s.adminError;
   });
 
+  // Server checks: shows at a glance whether the keys and the database are working.
+  const status = h('section', { class: 'card admin-status', hidden: true });
+  void adminStatus(token).then((checks) => {
+    const rows = Object.entries(checks).map(([name, c]) =>
+      h('li', { class: c.ok === false ? 'bad' : c.ok ? 'good' : 'idle' },
+        h('span', { class: 'status-ico', 'aria-hidden': 'true' }, c.ok === false ? '✕' : c.ok ? '✓' : '–'),
+        h('strong', {}, s.adminStatusNames[name] ?? name),
+        h('span', { class: 'status-detail' }, c.detail),
+      ));
+    if (!rows.length) return;
+    status.replaceChildren(h('h3', {}, s.adminStatusTitle), h('ul', {}, ...rows));
+    status.hidden = false;
+  }).catch(() => { /* the inbox still works without it */ });
+
   return h('div', {},
+    status,
     h('div', { class: 'admin-bar' }, count, h('label', { class: 'admin-hide' }, hide, ` ${s.adminHideResolved}`), logout),
     note, box,
   );

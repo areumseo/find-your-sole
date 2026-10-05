@@ -182,6 +182,16 @@ export async function adminList(token: string): Promise<FeedbackItem[]> {
   return (await (await call('/admin/feedback', { token })).json()) as FeedbackItem[];
 }
 
+export interface ServerCheck {
+  ok: boolean | null;
+  detail: string;
+}
+
+/** Result of the checks the server runs at startup (keys, database, admin token). */
+export async function adminStatus(token: string): Promise<Record<string, ServerCheck>> {
+  return (await (await call('/admin/status', { token })).json()) as Record<string, ServerCheck>;
+}
+
 export async function adminScreenshot(token: string, id: number): Promise<Blob> {
   return (await call(`/admin/feedback/${id}/screenshot`, { token })).blob();
 }
