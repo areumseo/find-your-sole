@@ -309,11 +309,12 @@ def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[Lis
                                     "over_budget": over, "budget_status": status,
                                     "brand_url": shoe.get("url")}))
 
-    # Shoes within the budget come first (best score first); shoes above it follow, flagged,
-    # so a 150,000 KRW budget does not open with 200,000 KRW shoes.
-    # Estimates cannot establish affordability: keep them separate from confirmed prices.
-    order = {"within": 0, "unknown": 1, "over": 2}
-    results.sort(key=lambda x: (order[x.budget_status], -x.score))
+    # Rank fit across confirmed-affordable and unpriced candidates together.
+    # An unknown local price is neither an affordability claim nor a reason to
+    # bury a substantially better fit. Confirmed over-budget shoes remain last.
+    # At equal scores prefer the confirmed-affordable option, then stable ID.
+    results.sort(key=lambda x: (x.over_budget, -x.score,
+                                x.budget_status != "within", x.id))
     return results[:10]
 
 

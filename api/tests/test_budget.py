@@ -13,11 +13,10 @@ def run(budget, shoes=None):
     return main.run_recommendation(prefs, [], shoes)
 
 
-def test_shoes_within_budget_come_first_then_flagged_ones():
+def test_fit_first_with_confirmed_over_budget_last():
     results = run(150_000)
-    order = {"within": 0, "unknown": 1, "over": 2}
-    assert [(order[r.budget_status], -r.score) for r in results] == sorted(
-        (order[r.budget_status], -r.score) for r in results)
+    assert [(r.over_budget, -r.score, r.budget_status != "within", r.id) for r in results] == sorted(
+        (r.over_budget, -r.score, r.budget_status != "within", r.id) for r in results)
     assert all(r.price_source == "kr_list" and r.price <= 150_000
                for r in results if r.budget_status == "within")
     assert all(r.price_source == "kr_list" and r.price > 150_000
@@ -63,3 +62,34 @@ def test_results_carry_the_brands_official_site():
     assert results and all(r.brand_url and r.brand_url.startswith("https://") for r in results)
     by_id = {s["id"]: s for s in main.SHOES}
     assert all(r.brand_url == by_id[r.id]["url"] for r in results)
+
+
+def test_better_fit_with_unknown_price_beats_confirmed_affordable_model():
+    base = dict(main.SHOES[0])
+    known = {**base, "id": 910, "price_source": "kr_list", "price": 120000, "score_base": 60}
+    unknown = {**base, "id": 911, "price_source": "estimate", "price": 999999, "score_base": 90}
+    over = {**base, "id": 912, "price_source": "kr_list", "price": 160000, "score_base": 100}
+    results = run(150000, [known, over, unknown])
+    assert [r.id for r in results] == [911, 910, 912]
+    assert results[0].budget_status == "unknown" and not results[0].over_budget
+    assert results[1].budget_status == "within"
+    assert results[2].over_budget
+
+
+def test_equal_scores_prefer_confirmed_price_then_stable_id():
+    base = dict(main.SHOES[0])
+    known = {**base, "id": 920, "price_source": "kr_list", "price": 120000, "score_base": 60}
+    unknown = {**base, "id": 921, "price_source": "estimate", "score_base": 65}
+    other = {**unknown, "id": 922, "brand": "Other"}
+    results = run(150000, [other, unknown, known])
+    assert len({r.score for r in results}) == 1
+    assert [r.id for r in results] == [920, 921, 922]
+
+
+def test_fifteen_man_budget_does_not_bury_better_fit_in_both_running_modes():
+    beginner = main.recommend_beginner(main.BeginnerPrefs(frequency="이제 막 시작했어요", terrain="공원 / 도로", pain="없음", wide_foot=False, budget=150000))
+    expert = main.recommend_expert(main.ExpertPrefs(arch="normal", pronation="neutral", terrain="로드", use_case=["데일리"], cushion="중간", width="보통", weekly_km=30, budget=150000))
+    for results in [beginner, expert]:
+        assert results[0].name != "Saucony Kinvara 14"
+        assert all(r.score >= 125 for r in results[:3])
+        assert results[0].budget_status == "unknown"
