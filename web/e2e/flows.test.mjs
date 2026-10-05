@@ -74,7 +74,7 @@ check(`결과 카드 렌더 (${n}개, 최대 10)`, n > 0 && n <= 10);
 check('1~3위 강조 클래스', (await page.locator('.rank.top').count()) === Math.min(3, n));
 
 // ── 카드 펼침 + 설명(HTML 주입 방어) ──
-await page.click('article.card >> nth=0 >> .main');
+await page.click('article.card >> nth=0 >> .name-toggle');
 await page.waitForSelector('.explain');
 const explainHtml = await page.innerHTML('.explain p');
 check('설명 텍스트 표시', (await page.textContent('.explain p')).includes('쿠션이 좋아요'));
@@ -82,10 +82,10 @@ check('설명에 HTML 주입 안 됨 (img/b 태그 없음)', !/<img|<b>/i.test(e
 check('스펙 4개 표시', (await page.locator('article.card >> nth=0 >> .spec').count()) === 4);
 const naver = await page.getAttribute('article.card >> nth=0 >> .btn-outline-naver', 'href');
 check('네이버 링크 https + noopener', naver?.startsWith('http') && (await page.getAttribute('article.card >> nth=0 >> .btn-outline-naver', 'rel')).includes('noopener'), String(naver));
-check('aria-expanded 갱신', (await page.getAttribute('article.card >> nth=0 >> .main', 'aria-expanded')) === 'true');
+check('aria-expanded 갱신', (await page.getAttribute('article.card >> nth=0 >> .name-toggle', 'aria-expanded')) === 'true');
 
 // 두 번째 카드: 실제 백엔드 실패(키 없음) → 에러 문구
-await page.click('article.card >> nth=1 >> .main');
+await page.click('article.card >> nth=1 >> .name-toggle');
 await page.waitForFunction(() => document.querySelectorAll('.explain').length >= 2, null, { timeout: 15000 });
 check('설명 API 실패 시 에러 문구', (await page.locator('.explain').nth(1).textContent()).includes('설명을 불러오지 못했어요'));
 
@@ -115,7 +115,7 @@ await page.click('.tabs a:has-text("저장")');
 await page.waitForSelector('article.card');
 check('저장 탭에 항목 표시', (await page.textContent('article.card .shoe-name')) === favName);
 const callsBefore = explainCalls;
-await page.click('article.card >> .main');
+await page.click('article.card >> .name-toggle');
 await page.waitForTimeout(500);
 check('저장 카드 펼쳐도 설명 박스 없음', (await page.locator('.explain').count()) === 0);
 check('저장 카드 펼쳐도 /explain 호출 안 함', explainCalls === callsBefore, `${callsBefore} -> ${explainCalls}`);
@@ -266,7 +266,7 @@ if (SHOTS) {
   await page.screenshot({ path: `${SHOTS}/1-mode-mobile.png` });
   await page.click('.mode-card >> nth=0'); await page.click('.btn-primary');
   await page.waitForSelector('article.card');
-  await page.click('article.card >> nth=0 >> .main');
+  await page.click('article.card >> nth=0 >> .name-toggle');
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${SHOTS}/2-results-mobile.png` });
   await page.emulateMedia({ colorScheme: 'dark' });

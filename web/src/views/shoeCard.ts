@@ -163,9 +163,11 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     );
   }
 
+  // The name is the real button; its ::after stretches over the whole text block so a tap anywhere
+  // toggles the card. The brand link sits above that layer, so it is a real link, not a nested button.
   const toggle = h('button', {
     type: 'button',
-    class: 'main',
+    class: 'name-toggle',
     'aria-expanded': 'false',
     onClick: () => {
       const open = detail.hidden;
@@ -175,16 +177,20 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       detailsButton.setAttribute('aria-expanded', String(open));
       if (open) void loadExplanation();
     },
-  },
-    h('div', { class: 'shoe-name' }, shoe.name),
-    h('div', { class: 'shoe-brand' }, shoe.brand),
-    tagChips(shoe.use_case),
-  );
+  }, h('span', { class: 'shoe-name' }, shoe.name));
+  const brandHref = shoe.brand_url ? safeUrl(shoe.brand_url) : null;
+  const brandEl = brandHref
+    ? h('a', {
+        class: 'shoe-brand brand-link', href: brandHref, target: '_blank', rel: 'noopener noreferrer',
+        'aria-label': s.officialSite(shoe.brand), title: s.officialSite(shoe.brand),
+      }, `${shoe.brand} ↗`)
+    : h('div', { class: 'shoe-brand' }, shoe.brand);
+  const main = h('div', { class: 'main' }, toggle, brandEl, tagChips(shoe.use_case));
 
   card.append(
     h('div', { class: 'card-head' },
       rank !== undefined ? h('div', { class: rank <= 3 ? 'rank top' : 'rank' }, String(rank)) : null,
-      toggle,
+      main,
       h('div', { class: 'side' },
         h('div', { class: 'actions' }, favBtn, addBtn),
         h('div', { class: 'price' }, s.priceBrief(shoe)),

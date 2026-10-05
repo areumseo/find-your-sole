@@ -7,6 +7,8 @@ export interface Shoe {
   price_source?: string | null;
   /** Overseas list price in USD, present when the KRW price is an estimate. */
   price_usd?: number | null;
+  /** The brand's official site, linked from the brand name. */
+  brand_url?: string | null;
   weight_g: number;
   drop_mm: number;
   cushion: string;

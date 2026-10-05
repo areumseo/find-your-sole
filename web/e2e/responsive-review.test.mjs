@@ -48,10 +48,10 @@ try {
       await page.locator('article.card .detail-toggle').last().click();
       await page.waitForSelector('.explain');
       assert.equal(explanations, 1);
-      assert.equal(await page.locator('article.card .main').last().getAttribute('aria-expanded'), 'true');
+      assert.equal(await page.locator('article.card .name-toggle').last().getAttribute('aria-expanded'), 'true');
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'results fit viewport');
       if (width === 360 || width === 1280) {
-        await page.locator('article.card .main').last().click();
+        await page.locator('article.card .name-toggle').last().click();
         await page.locator('.more-results > summary').click();
         await page.evaluate(() => scrollTo(0, 0));
         await page.screenshot({ path: `review-${width}-${locale}-light.png`, fullPage: true });
