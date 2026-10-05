@@ -352,6 +352,7 @@ function resultsView(go: (path: string) => void): HTMLElement {
   const s = t();
   return h('div', {},
     pageHeader(s.resultsTitle, () => go(PATH[lastForm])),
+    results.some((r) => r.over_budget) ? h('p', { class: 'notice-card', role: 'note' }, s.overBudgetNote) : null,
     results.length
       ? h('div', { class: 'cards-grid' }, ...results.map((shoe, i) => shoeCard({ shoe, rank: i + 1, prefs: resultPrefs })))
       : h('p', { class: 'empty' }, s.noResults),

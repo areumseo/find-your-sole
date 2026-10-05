@@ -142,6 +142,7 @@ class ShoeResult(BaseModel):
     width: str
     tags: List[str]
     score: int
+    over_budget: bool = False  # the price is above the budget the user set
     naver_url: str
 
 
@@ -287,9 +288,12 @@ def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[Lis
         score = compute_score(shoe, prefs)
         from urllib.parse import quote
         naver_url = f"https://search.shopping.naver.com/search/all?query={quote(shoe['name'])}"
-        results.append(ShoeResult(**{**shoe, "score": score, "naver_url": naver_url}))
+        over = shoe["price"] > prefs["budget"]
+        results.append(ShoeResult(**{**shoe, "score": score, "naver_url": naver_url, "over_budget": over}))
 
-    results.sort(key=lambda x: x.score, reverse=True)
+    # Shoes within the budget come first (best score first); shoes above it follow, flagged,
+    # so a 150,000 KRW budget does not open with 200,000 KRW shoes.
+    results.sort(key=lambda x: (x.over_budget, -x.score))
     return results[:10]
 
 

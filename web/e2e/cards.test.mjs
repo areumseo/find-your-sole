@@ -54,5 +54,21 @@ ok(tip.includes('내 신발에 추가'), 'the tooltip shows on hover', tip);
 await heart.click();
 ok((await heart.getAttribute('data-tip')) === '저장 해제', 'the heart tooltip follows its state');
 
+// Over-budget shoes are marked and explained once at the top of the results.
+const over = await (await b.newContext({ viewport: { width: 390, height: 844 }, locale: 'ko-KR' })).newPage();
+await over.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' },
+  body: JSON.stringify([shoe(1, 'In Budget Shoe', { price: 129000 }), shoe(2, 'Pricey Shoe', { price: 219000, over_budget: true })]) }));
+await over.goto(BASE);
+await over.locator('.mode-card').nth(2).click();
+await over.click('.btn-primary');
+await over.waitForSelector('article.card');
+ok((await over.locator('.over-budget').count()) === 1 && (await over.locator('article.card').nth(1).locator('.over-budget').count()) === 1, 'only the over-budget card carries the badge');
+ok((await over.textContent('.notice-card')).includes('예산 안의 신발을 먼저'), 'a note explains the order');
+await over.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify([shoe(1, 'Only Shoe')]) }));
+await over.goBack();
+await over.click('.btn-primary');
+await over.waitForSelector('article.card');
+ok((await over.locator('.notice-card').count()) === 0, 'no note when everything is within budget');
+
 await b.close();
 process.exit(fail ? 1 : 0);

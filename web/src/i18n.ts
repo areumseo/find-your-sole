@@ -110,6 +110,8 @@ const ko = {
   errorRecommend: (e: string) => `오류가 발생했어요: ${e}`,
   wakingServer: '서버를 깨우는 중이에요. 처음에는 최대 1분 정도 걸릴 수 있어요…',
   noResults: '조건에 맞는 신발을 찾지 못했어요',
+  overBudget: '예산 초과',
+  overBudgetNote: '예산 안의 신발을 먼저 보여드려요. 예산을 넘는 신발은 뒤쪽에 "예산 초과"로 표시했어요.',
   addFavorite: '저장하기',
   removeFavorite: '저장 해제',
   addToMyShoes: '내 신발에 추가',
@@ -343,6 +345,8 @@ const en: Strings = {
   noResults: 'No matching shoes found',
   addFavorite: 'Save',
   removeFavorite: 'Remove from saved',
+  overBudget: 'Over budget',
+  overBudgetNote: 'Shoes within your budget come first. Shoes above it follow, marked "Over budget".',
   addToMyShoes: 'Add to My Shoes',
   toggleDetails: 'Show details',
 

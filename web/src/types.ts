@@ -18,6 +18,8 @@ export interface Shoe {
   width: string;
   tags: string[];
   score: number;
+  /** The price is above the budget the person set. */
+  over_budget?: boolean;
   naver_url: string;
 }
 

@@ -150,6 +150,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       h('div', { class: 'side' },
         h('div', { class: 'actions' }, favBtn, addBtn),
         h('div', { class: 'price' }, s.priceBrief(shoe)),
+        shoe.over_budget ? h('span', { class: 'over-budget' }, s.overBudget) : null,
         chev,
       ),
     ),
