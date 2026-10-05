@@ -43,7 +43,12 @@ function parseRoute(): Route {
     case 'search': {
       const step: Step = sub === 'beginner' || sub === 'expert' || sub === 'comfort' || sub === 'results' ? sub : 'mode';
       // Results only exist in memory; a reload or shared link has none to show.
-      if (step === 'results' && !hasResults()) return { page: 'search', step: 'mode' };
+      // The finder cards live on Home, so the bare search address (and results
+      // that no longer exist after a reload) just go there.
+      if (step === 'mode' || (step === 'results' && !hasResults())) {
+        history.replaceState(null, '', '#/');
+        return { page: 'home', step: 'mode' };
+      }
       return { page: 'search', step };
     }
     case 'saved':
@@ -80,8 +85,7 @@ interface NavItem {
 // Compare is planned but needs the full shoe catalogue from the API, so it is
 // left out until that exists rather than shipping an empty screen.
 const NAV: NavItem[] = [
-  { href: '#/', icon: '🏠', label: () => t().navHome, pages: ['home'], show: 'all' },
-  { href: '#/search', icon: '🔍', label: () => t().navSearch, pages: ['search'], show: 'all' },
+  { href: '#/', icon: '🏠', label: () => t().navHome, pages: ['home', 'search'], show: 'all' },
   { href: '#/saved', icon: '♡', label: () => t().navSaved, pages: ['saved'], show: 'all' },
   { href: '#/me', icon: '👤', label: () => t().navMe, pages: ['me'], show: 'wide' },
   { href: '#/about', icon: 'ℹ︎', label: () => t().navAbout, pages: ['about'], show: 'wide' },
