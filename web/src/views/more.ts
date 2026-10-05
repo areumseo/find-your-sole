@@ -15,6 +15,7 @@ export function renderMore(): HTMLElement {
     );
   return h('div', { class: 'page-narrow' },
     pageHeader(s.moreTitle),
+    row('↔', s.navCompare, '#/compare'),
     row('👤', s.navMe, '#/me'),
     row('ℹ︎', s.navAbout, '#/about'),
     h('button', { type: 'button', class: 'card menu-row feedback-entry', onClick: openFeedback },

@@ -1,3 +1,5 @@
+import { comparison } from './compare';
+import { renderCompare } from './views/compare';
 import { trackPage } from './analytics';
 import './fonts.css';
 import './styles.css';
@@ -14,7 +16,7 @@ import { renderMore } from './views/more';
 import { hasResults, renderRecommend, type Step } from './views/recommend';
 import { renderSaved } from './views/saved';
 
-type Page = 'home' | 'search' | 'saved' | 'me' | 'about' | 'more' | 'admin';
+type Page = 'home' | 'search' | 'saved' | 'me' | 'about' | 'more' | 'admin' | 'compare';
 
 interface Route {
   page: Page;
@@ -54,6 +56,7 @@ function parseRoute(): Route {
       }
       return { page: 'search', step };
     }
+    case 'compare':
     case 'saved':
     case 'me':
     case 'about':
@@ -86,14 +89,13 @@ interface NavItem {
   show: 'all' | 'wide' | 'narrow';
 }
 
-// Compare is planned but needs the full shoe catalogue from the API, so it is
-// left out until that exists rather than shipping an empty screen.
 const NAV: NavItem[] = [
   { href: '#/', icon: '🏠', label: () => t().navHome, pages: ['home', 'search'], show: 'all' },
   { href: '#/saved', icon: '♡', label: () => t().navSaved, pages: ['saved'], show: 'all' },
+  { href: '#/compare', icon: '↔', label: () => t().navCompare, pages: ['compare'], show: 'wide' },
   { href: '#/me', icon: '👤', label: () => t().navMe, pages: ['me'], show: 'wide' },
   { href: '#/about', icon: 'ℹ︎', label: () => t().navAbout, pages: ['about'], show: 'wide' },
-  { href: '#/more', icon: '⋯', label: () => t().navMore, pages: ['more', 'me', 'about'], show: 'narrow' },
+  { href: '#/more', icon: '⋯', label: () => t().navMore, pages: ['more', 'me', 'about', 'compare'], show: 'narrow' },
 ];
 
 const topbar = h('header', { class: 'topbar' });
@@ -103,6 +105,7 @@ const main = h('main', { id: 'content' });
 
 function render(): void {
   const route = parseRoute();
+  paintComparisonBar(route.page);
   trackPage(route.page === 'admin' ? '/admin' : route.page === 'home' ? '/' : route.page === 'search' ? `/search/${route.step}` : `/${route.page}`);
   const s = t();
 
@@ -133,6 +136,7 @@ function render(): void {
   ));
 
   switch (route.page) {
+    case 'compare': mount(main, renderCompare()); break;
     case 'search': mount(main, renderRecommend(route.step, go)); break;
     case 'saved': mount(main, renderSaved(render)); break;
     case 'me': mount(main, renderMe(render)); break;
@@ -142,6 +146,26 @@ function render(): void {
     default: mount(main, renderHome(go));
   }
 }
+
+const compareBar = h('aside', {class: 'compare-selection-bar', hidden: true});
+function paintComparisonBar(page: Page): void {
+  const entries = comparison.all(), s = t();
+  const visible = entries.length > 0 && page !== 'admin' && page !== 'compare';
+  compareBar.hidden = !visible;
+  document.body.classList.toggle('has-compare-bar', visible);
+  compareBar.replaceChildren(h('span', {class:'compare-bar-hint'}, entries.length === 1 ? s.compareNeedTwo : s.navCompare),
+    h('button', {type:'button',class:'btn compare-bar-button',disabled:entries.length<2,onClick:()=>go('/compare')},s.compareBar(entries.length)));
+  document.querySelectorAll<HTMLButtonElement>('[data-compare-id]').forEach(button => {
+    const selected = comparison.has(Number(button.dataset.compareId));
+    button.setAttribute('aria-pressed', String(selected));
+    button.textContent = selected ? s.compareAdded : s.compareAdd;
+  });
+}
+comparison.subscribe(() => {
+  const route = parseRoute();
+  paintComparisonBar(route.page);
+  if (route.page === 'compare') mount(main, renderCompare());
+});
 
 /** The floating feedback button lives outside the page content so it survives navigation. */
 let fab: HTMLElement | null = null;
@@ -155,6 +179,7 @@ function boot(): void {
   document.documentElement.lang = getLocale();
   document.title = t().pageTitle;
   document.getElementById('app')!.replaceChildren(sidebar, main);
+  document.body.append(compareBar);
 
   window.addEventListener('hashchange', () => {
     render();

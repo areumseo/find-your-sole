@@ -19,7 +19,7 @@ let d = await open(1280, 800);
 const side = await box(d, '.sidebar'), main = await box(d, 'main'), tabs = await box(d, '.tabs');
 check('데스크톱: 사이드바가 왼쪽 248px, 전체 높이', side.x === 0 && Math.round(side.width) === 248 && Math.round(side.height) === 800, JSON.stringify(side));
 check('데스크톱: 탭이 하단 고정이 아님(static)', (await css(d, '.tabs', 'position')) === 'static');
-check('데스크톱: 사이드바 메뉴 4개가 세로 배치(홈/저장/마이페이지/앱 정보)', (await d.locator('.tabs a:visible').evaluateAll((els) => new Set(els.map((e) => Math.round(e.getBoundingClientRect().top))).size)) === 4);
+check('데스크톱: 사이드바 메뉴 5개가 세로 배치(홈/저장/비교/마이페이지/앱 정보)', (await d.locator('.tabs a:visible').evaluateAll((els) => new Set(els.map((e) => Math.round(e.getBoundingClientRect().top))).size)) === 5);
 check('데스크톱: 더보기는 숨김, 마이페이지·앱 정보는 보임', (await d.locator('.tabs a:visible:has-text("더보기")').count()) === 0 && (await d.locator('.tabs a:visible:has-text("마이페이지")').count()) === 1 && (await d.locator('.tabs a:visible:has-text("앱 정보")').count()) === 1);
 check('데스크톱: 탭이 사이드바 안쪽', tabs.x >= side.x && tabs.x + tabs.width <= side.x + side.width + 1);
 check('데스크톱: 본문이 사이드바 오른쪽, 겹치지 않음', main.x >= side.width, JSON.stringify(main));

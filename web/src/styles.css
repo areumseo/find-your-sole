@@ -690,3 +690,28 @@ noscript p { padding: 24px 16px; text-align: center; }
 
 .naver-logo { width: 18px; height: 18px; flex: none; }
 .shopping-label { min-width: 0; }
+
+.compare-card-action { padding: 8px 16px 12px; text-align: right; border-top: 1px solid var(--border); }
+.compare-select { min-height: 40px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--title-sky); font-size: 12px; }
+.compare-select[aria-pressed='true'] { background: var(--chip); border-color: var(--title-sky); }
+.compare-selection-bar { position: fixed; z-index: 21; left: 16px; right: 16px; bottom: calc(76px + env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 16px color-mix(in srgb, var(--ink) 10%, transparent); }
+.compare-selection-bar[hidden] { display: none; }
+.compare-bar-hint { color: var(--muted); font-size: 12px; }
+.has-compare-bar { padding-bottom: calc(160px + env(safe-area-inset-bottom)); }
+.has-compare-bar .toast { bottom: calc(164px + env(safe-area-inset-bottom)); }
+.compare-chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.compare-chip { padding: 8px 12px; min-height: 44px; background: var(--chip); color: var(--ink); border: 1px solid var(--border); border-radius: 20px; overflow-wrap: anywhere; }
+.compare-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+.compare-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 13px; }
+.compare-table th, .compare-table td { min-width: 190px; max-width: 240px; padding: 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); background: var(--card); overflow-wrap: anywhere; }
+.compare-table th:first-child { position: sticky; left: 0; z-index: 1; min-width: 110px; width: 110px; max-width: 110px; border-right: 1px solid var(--border); background: var(--page); }
+.compare-brand { display: block; margin-top: 6px; color: var(--muted); font-weight: 400; }
+.compare-shop-link { color: var(--naver-text); }
+@media (min-width: 900px) {
+  .compare-selection-bar { left: calc(248px + 24px); right: 180px; bottom: 24px; }
+  .has-compare-bar { padding-bottom: 110px; }
+}
+
+.compare-bar-button { background: var(--primary); color: var(--primary-ink); white-space: nowrap; }
+.compare-bar-button:disabled { opacity: .65; cursor: default; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }

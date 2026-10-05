@@ -65,7 +65,7 @@ Always run the tests that cover what you changed before pushing, and say honestl
 - Results show the top three candidates first with a one-line comparison to the person's answers (no extra AI call); the rest are under "See more options". The first three result cards start expanded; other cards start collapsed. AI comments have a separate disclosure row and are requested only when that row is opened, never by expanding the card.
 - Prices are shown as exact Korean list prices (`kr_list`) or the overseas USD price with a "check local price" note; never as a KRW range or a guessed amount.
 - On phones the feedback entry is in the More menu (a floating button would cover forms); on wide screens it floats at the bottom right.
-- No login. Saved shoes and "my shoes" live in the browser (`localStorage`). Feedback and the admin inbox work without accounts.
+- No login. Saved shoes, "my shoes" and the maximum-three comparison selection live in the browser (`localStorage`). Comparison uses selection-time snapshots, does not fetch AI, and compares confirmed specs without claiming higher cushioning/drop is better. Feedback and the admin inbox work without accounts.
 - Mascot **솔이** (written **SOL-E** in English copy), a small ghost. Copy tone to users is polite and friendly (존댓말, "~해요"). The persona lives on the About page.
 - Fonts: IBM Plex Sans KR (OFL). Theme follows the system and can be toggled (sun/moon). Colors are CSS tokens in `web/src/styles.css`
   (`--primary`, `--title-sky`, `--name-gray`, `--explain`); do not hard-code colors in components.

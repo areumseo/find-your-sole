@@ -47,7 +47,7 @@ ok((await cards.nth(0).locator('.price-help').textContent()).includes('참고용
 ok((await cards.nth(1).locator('.price-note').count()) === 0, 'Korean list price has no overseas note');
 // Tooltips on the two icon buttons.
 await p.setViewportSize({ width: 1280, height: 800 });
-const heart = cards.nth(0).locator('button[aria-pressed]');
+const heart = cards.nth(0).locator('.actions button[aria-pressed]');
 const plus = cards.nth(0).locator('.icon-btn').nth(1);
 ok((await heart.getAttribute('data-tip')) === '저장' && (await plus.getAttribute('data-tip')) === '내 신발에 추가', 'icon buttons carry their tooltip text');
 await plus.hover();
