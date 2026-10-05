@@ -37,7 +37,8 @@ def test_where_adds_long_use_case():
 def test_endpoint_returns_ranked_candidates():
     res = main.recommend_comfort(prefs(hours="5시간 이상"))
     assert 0 < len(res) <= 10
-    assert [r.score for r in res] == sorted((r.score for r in res), reverse=True)
+    # Within the budget first, best score first within each group.
+    assert [(r.over_budget, -r.score) for r in res] == sorted((r.over_budget, -r.score) for r in res)
     by_id = {s["id"]: s for s in main.SHOES}
     assert all({"walking", "daily"} & set(by_id[r.id]["categories"]) for r in res)  # only walking/daily shoes
 

@@ -338,6 +338,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .tag { padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
 .side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; }
 .side .price { font-weight: 700; font-size: 14px; white-space: nowrap; }
+.over-budget { padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); font-size: 11px; font-weight: 700; white-space: nowrap; }
 .side .actions { display: flex; }
 /* Drawn with borders rather than a glyph: text chevrons render tiny and vary by font. */
 .chev {
