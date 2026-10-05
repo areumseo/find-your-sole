@@ -62,6 +62,6 @@ flutter build ios --no-codesign
 
 ## Shoe launch news (API)
 
-`GET /news` returns recent shoe launch headlines (title, publisher, link, date) from the Naver Search API, and the web home shows them as a widget. It needs `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` set on the API service (Render, Environment tab; never in the web service or the repo). Without them, or if Naver fails, it returns an empty list and the widget stays hidden. Results are cached on the server for 3 hours (`NEWS_TTL_SECONDS` to change), so Naver sees a handful of calls a day however many people visit.
+`GET /news` returns recent shoe launch headlines (title, publisher, link, date) from the NAVER API HUB news search (Naver Cloud Platform, `naverapihub.apigw.ntruss.com`), and the web home shows them as a widget. It needs `NAVER_CLIENT_ID` (the API HUB "API Key ID") and `NAVER_CLIENT_SECRET` (the "API Key") set on the API service (Render, Environment tab; never in the web service or the repo). Without them, or if Naver fails, it returns an empty list and the widget stays hidden. Results are cached on the server for 3 hours (`NEWS_TTL_SECONDS` to change), so Naver sees a handful of calls a day however many people visit.
 
 Run the API tests from `api/` with `pip install -r requirements-dev.txt` then `python -m pytest tests`.

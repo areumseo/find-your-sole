@@ -114,7 +114,7 @@ def test_sends_credentials_and_expected_query():
     up, clock = Upstream(), Clock()
     run(make(up, clock).get())
     first = up.requests[0]
-    assert first.headers["X-Naver-Client-Id"] == "my-id" and first.headers["X-Naver-Client-Secret"] == "my-secret"
+    assert first.headers["X-NCP-APIGW-API-KEY-ID"] == "my-id" and first.headers["X-NCP-APIGW-API-KEY"] == "my-secret"
     assert first.url.params["sort"] == "date" and first.url.params["display"] == "30"
     assert {r.url.params["query"] for r in up.requests} == set(shoe_news.QUERIES)
 
