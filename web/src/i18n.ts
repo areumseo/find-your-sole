@@ -35,7 +35,7 @@ export const onLocaleChange = (fn: () => void): void => {
 };
 
 const ko = {
-  pageTitle: 'Find Your Sole · 신발 추천',
+  pageTitle: 'Find Your Sole — 내 발에 맞는 한 켤레',
   navHome: '홈',
   navSearch: '검색',
   navSaved: '저장',
@@ -283,7 +283,7 @@ const CUSHION_EN: Record<string, string> = { 낮음: 'Low', 중간: 'Medium', �
 const WIDTH_EN: Record<string, string> = { 좁음: 'Narrow', 보통: 'Normal', 넓음: 'Wide' };
 
 const en: Strings = {
-  pageTitle: 'Find Your Sole · Shoe Finder',
+  pageTitle: 'Find Your Sole — Find Your Fit',
   navHome: 'Home',
   navSearch: 'Search',
   navSaved: 'Saved',
