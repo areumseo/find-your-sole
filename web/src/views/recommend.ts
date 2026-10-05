@@ -1,3 +1,4 @@
+import { track } from '../analytics';
 import { h } from '../dom';
 import { recommendBeginner, recommendComfort, recommendExpert } from '../api';
 import { t } from '../i18n';
@@ -193,6 +194,7 @@ function beginnerForm(go: (path: string) => void): HTMLElement {
       weight_kg: weightKg(st.weight),
       brand_filter: [],
     });
+    track('recommendation_complete', {mode: 'beginner', result_count: shoes.length});
     results = shoes;
     searched = true;
     resultPrefs = {
@@ -259,6 +261,7 @@ function comfortForm(go: (path: string) => void): HTMLElement {
       budget: st.budget,
       brand_filter: [],
     });
+    track('recommendation_complete', {mode: 'comfort', result_count: shoes.length});
     results = shoes;
     searched = true;
     resultPrefs = {
@@ -322,6 +325,7 @@ function expertForm(go: (path: string) => void): HTMLElement {
       weight_kg: weightKg(st.weight),
       brand_filter: [],
     });
+    track('recommendation_complete', {mode: 'expert', result_count: shoes.length});
     results = shoes;
     searched = true;
     resultPrefs = { mode: 'expert', arch, pronation, terrain, cushion, width, weekly_km: st.weeklyKm, budget: st.budget };

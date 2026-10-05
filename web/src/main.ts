@@ -1,3 +1,4 @@
+import { trackPage } from './analytics';
 import './fonts.css';
 import './styles.css';
 import { warmUp } from './api';
@@ -102,6 +103,7 @@ const main = h('main', { id: 'content' });
 
 function render(): void {
   const route = parseRoute();
+  trackPage(route.page === 'admin' ? '/admin' : route.page === 'home' ? '/' : route.page === 'search' ? `/search/${route.step}` : `/${route.page}`);
   const s = t();
 
   mount(topbar,
