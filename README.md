@@ -25,12 +25,6 @@ A personalized running shoe recommendation iOS app. Answer a few questions about
 
 API endpoint: `https://find-your-sole.onrender.com`
 
-### Shoe launch news
-
-`GET /news` returns recent shoe launch headlines (title, publisher, link, date) from the Naver Search API, and the web home shows them as a widget. It needs `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` set on the API service (Render, Environment tab; never in the web service or the repo). Without them, or if Naver fails, it returns an empty list and the widget stays hidden. Results are cached on the server for 3 hours (`NEWS_TTL_SECONDS` to change), so Naver sees a handful of calls a day however many people visit.
-
-Run the API tests from `api/` with `pip install -r requirements-dev.txt` then `python -m pytest tests`.
-
 ## Web app
 
 A static site in `web/`, deployed to Render as `find-your-sole-web` (see `render.yaml`). It uses the same backend as the iOS app. The bundle is ~10 KB gzipped, so it loads quickly on mobile networks.
@@ -63,3 +57,9 @@ Release build:
 flutter build ios --no-codesign
 # Then open ios/Runner.xcworkspace in Xcode and run on device
 ```
+
+## Shoe launch news (API)
+
+`GET /news` returns recent shoe launch headlines (title, publisher, link, date) from the Naver Search API, and the web home shows them as a widget. It needs `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` set on the API service (Render, Environment tab; never in the web service or the repo). Without them, or if Naver fails, it returns an empty list and the widget stays hidden. Results are cached on the server for 3 hours (`NEWS_TTL_SECONDS` to change), so Naver sees a handful of calls a day however many people visit.
+
+Run the API tests from `api/` with `pip install -r requirements-dev.txt` then `python -m pytest tests`.
