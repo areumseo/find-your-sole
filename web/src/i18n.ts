@@ -35,7 +35,7 @@ export const onLocaleChange = (fn: () => void): void => {
 };
 
 const ko = {
-  pageTitle: 'Find Your Sole · 러닝화 추천',
+  pageTitle: 'Find Your Sole · 신발 추천',
   navHome: '홈',
   navSearch: '검색',
   navSaved: '저장',
@@ -183,7 +183,7 @@ const ko = {
   aboutCards: [
     {
       title: '🔍 Find Your Sole 소개',
-      body: '초심자부터 경험자까지, 간단한 질문에 답하면 나에게 맞는 러닝화를 추천해드립니다.',
+      body: '러닝 초심자와 경험자, 그리고 오래 걷고 서 있는 분들까지. 간단한 질문에 답하면 내 발과 생활에 맞는 신발을 솔이가 함께 골라 드려요.',
     },
     {
       title: '⚙️ 추천 로직',
@@ -191,11 +191,11 @@ const ko = {
     },
     {
       title: '📦 데이터 및 가격 정보',
-      body: '신발 데이터는 RunRepeat, 리뷰 매체 및 브랜드 공식 사이트를 참고해 러닝화와 워킹/데일리 화 약 60개 모델을 수동으로 정리한 것입니다.\n\n가격은 참고용 가격대이며, 실제 가격과 다를 수 있습니다. 정확한 가격은 네이버 쇼핑 또는 브랜드 공식 사이트에서 확인하세요.',
+      body: '신발 데이터는 RunRepeat, 리뷰 매체 및 브랜드 공식 사이트를 참고해 러닝화와 워킹·데일리 신발 약 60개 모델을 수동으로 정리한 것입니다.\n\n가격은 참고용 가격대이며, 실제 가격과 다를 수 있습니다. 정확한 가격은 네이버 쇼핑 또는 브랜드 공식 사이트에서 확인하세요.',
     },
     {
       title: '⚠️ 면책 조항',
-      body: '이 앱은 러닝화 선택을 돕기 위한 참고 도구이며, 의학적 진단이나 처방이 아닙니다. 발이나 관절에 이상이 있으신 분은 전문의와 상담하시기 바랍니다.',
+      body: '이 앱은 신발 선택을 돕기 위한 참고 도구이며, 의학적 진단이나 처방이 아닙니다. 발이나 관절에 이상이 있으신 분은 전문의와 상담하시기 바랍니다.',
     },
     {
       title: '📬 피드백',
@@ -214,7 +214,7 @@ const CUSHION_EN: Record<string, string> = { 낮음: 'Low', 중간: 'Medium', �
 const WIDTH_EN: Record<string, string> = { 좁음: 'Narrow', 보통: 'Normal', 넓음: 'Wide' };
 
 const en: Strings = {
-  pageTitle: 'Find Your Sole · Running Shoe Finder',
+  pageTitle: 'Find Your Sole · Shoe Finder',
   navHome: 'Home',
   navSearch: 'Search',
   navSaved: 'Saved',
@@ -325,7 +325,7 @@ const en: Strings = {
   moreTitle: 'More',
 
   myShoesTitle: 'My Shoes',
-  myShoesEmpty: 'Add your running shoes',
+  myShoesEmpty: 'Add your shoes',
   addShoe: 'Add Shoe',
   shoeAdded: (name: string) => `${name} added 👟`,
   shoeName: 'Shoe name',
@@ -362,7 +362,7 @@ const en: Strings = {
   aboutCards: [
     {
       title: '🔍 About Find Your Sole',
-      body: 'A running shoe recommendation app for beginners and experienced runners alike. Answer a few simple questions and get personalized shoe recommendations.',
+      body: 'A shoe recommendation app for new and experienced runners, and for anyone on their feet all day. Answer a few simple questions and Soli helps you pick shoes that fit your feet and your life.',
     },
     {
       title: '⚙️ How Recommendations Work',
@@ -374,7 +374,7 @@ const en: Strings = {
     },
     {
       title: '⚠️ Disclaimer',
-      body: 'This app is a running shoe selection aid and does not constitute medical advice or diagnosis. If you have foot or joint conditions, please consult a medical professional.',
+      body: 'This app is a shoe selection aid and does not constitute medical advice or diagnosis. If you have foot or joint conditions, please consult a medical professional.',
     },
     {
       title: '📬 Feedback',
