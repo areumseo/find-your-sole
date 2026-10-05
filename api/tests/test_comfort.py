@@ -38,4 +38,11 @@ def test_endpoint_returns_ranked_candidates():
     res = main.recommend_comfort(prefs(hours="5시간 이상"))
     assert 0 < len(res) <= 10
     assert [r.score for r in res] == sorted((r.score for r in res), reverse=True)
-    assert all("데일리" in r.use_case for r in res)  # only everyday-capable shoes
+    by_id = {s["id"]: s for s in main.SHOES}
+    assert all({"walking", "daily"} & set(by_id[r.id]["categories"]) for r in res)  # only walking/daily shoes
+
+
+def test_every_walking_or_daily_shoe_can_be_recommended():
+    candidates = [s for s in main.SHOES if main.is_comfort_candidate(s)]
+    assert len(candidates) >= 15
+    assert not main.is_comfort_candidate({"categories": ["running"]})

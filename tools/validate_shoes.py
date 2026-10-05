@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 CATEGORIES = {"running", "walking", "daily"}  # fashion/lifestyle sneakers are out of scope
-REQUIRED = ["id", "name", "brand", "price", "weight_g", "category", "cushion", "terrain", "score_base", "url"]
+REQUIRED = ["id", "name", "brand", "price", "weight_g", "categories", "cushion", "terrain", "score_base", "url"]
 
 shoes = json.loads((Path(__file__).parent.parent / "shoes_data.json").read_text(encoding="utf-8"))
 errors, ids = [], set()
@@ -13,8 +13,9 @@ for s in shoes:
     for k in REQUIRED:
         if k not in s:
             errors.append(f"{label}: missing '{k}'")
-    if s.get("category") not in CATEGORIES:
-        errors.append(f"{label}: category must be one of {sorted(CATEGORIES)}")
+    cats = s.get("categories")
+    if not isinstance(cats, list) or not cats or not set(cats) <= CATEGORIES:
+        errors.append(f"{label}: categories must be a non-empty list from {sorted(CATEGORIES)}")
     if s.get("id") in ids:
         errors.append(f"{label}: duplicate id {s.get('id')}")
     ids.add(s.get("id"))

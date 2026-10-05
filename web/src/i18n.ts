@@ -191,7 +191,7 @@ const ko = {
     },
     {
       title: '📦 데이터 및 가격 정보',
-      body: '러닝화 데이터는 RunRepeat 및 브랜드 공식 사이트를 참고해 약 50개 모델을 수동으로 정리한 것입니다.\n\n가격은 참고용 가격대이며, 실제 가격과 다를 수 있습니다. 정확한 가격은 네이버 쇼핑 또는 브랜드 공식 사이트에서 확인하세요.',
+      body: '신발 데이터는 RunRepeat, 리뷰 매체 및 브랜드 공식 사이트를 참고해 러닝화와 워킹/데일리 화 약 60개 모델을 수동으로 정리한 것입니다.\n\n가격은 참고용 가격대이며, 실제 가격과 다를 수 있습니다. 정확한 가격은 네이버 쇼핑 또는 브랜드 공식 사이트에서 확인하세요.',
     },
     {
       title: '⚠️ 면책 조항',
@@ -370,7 +370,7 @@ const en: Strings = {
     },
     {
       title: '📦 Data & Pricing',
-      body: "The shoe database covers approximately 50 models across road and trail categories, curated with reference to RunRepeat and brand official sites.\n\nPrices shown are approximate ranges for reference only. Please check Naver Shopping or the brand's official site for current pricing.",
+      body: "The shoe database covers approximately 60 running, walking and everyday models, curated with reference to RunRepeat, review sites and brand official pages.\n\nPrices shown are approximate ranges for reference only. Please check Naver Shopping or the brand's official site for current pricing.",
     },
     {
       title: '⚠️ Disclaimer',
