@@ -1,5 +1,6 @@
 :root {
   --primary: #4aabdb;
+  --title-sky: #1b7fb3; /* primary darkened to stay readable on light cards */
   --primary-ink: #fff;
   --naver: #03c75a;
   --danger: #d93025;
@@ -26,6 +27,7 @@
     --muted: rgba(255, 255, 255, 0.62);
     --explain: #1a2a33;
     --chip: #2a2a2a;
+    --title-sky: #6cc0ec;
   }
 }
 :root[data-theme='dark'] {
@@ -36,6 +38,7 @@
   --muted: rgba(255, 255, 255, 0.62);
   --explain: #1a2a33;
   --chip: #2a2a2a;
+  --title-sky: #6cc0ec;
   color-scheme: dark;
 }
 :root[data-theme='light'] { color-scheme: light; }
@@ -458,7 +461,7 @@ noscript p { padding: 24px 16px; text-align: center; }
   border-radius: var(--radius);
   background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 14%, var(--card)), var(--card) 70%);
 }
-.hero h1 { font-size: 24px; letter-spacing: -0.02em; }
+.hero h1 { font-size: 24px; letter-spacing: -0.02em; color: var(--title-sky); }
 .hero > p { margin: 6px 0 20px; color: var(--muted); }
 .hero .mode-card { background: var(--card); }
 
@@ -473,7 +476,7 @@ noscript p { padding: 24px 16px; text-align: center; }
 @media (min-width: 900px) { .widgets { grid-template-columns: 1fr 1fr; } }
 .widget { padding: 18px 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
 .widget-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-.widget-head h2 { font-size: 16px; }
+.widget-head h2 { font-size: 16px; color: var(--title-sky); }
 .widget-head a { color: var(--primary); font-size: 13px; font-weight: 700; text-decoration: none; }
 .rows { list-style: none; margin: 0; padding: 0; }
 .row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--border); }
