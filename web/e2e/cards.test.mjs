@@ -70,5 +70,31 @@ await over.click('.btn-primary');
 await over.waitForSelector('article.card');
 ok((await over.locator('.notice-card').count()) === 0, 'no note when everything is within budget');
 
+// SOL-E celebrates on the results page, but only when there are results.
+for (const [width, locale, scheme, line] of [[390, 'ko-KR', 'light', '딱 맞는 신발 발견!'], [1280, 'en-US', 'dark', 'Found your perfect pair!']]) {
+  const page = await (await b.newContext({ viewport: { width, height: 844 }, locale, colorScheme: scheme })).newPage();
+  await page.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(RESULTS) }));
+  await page.goto(BASE);
+  await page.locator('.mode-card').nth(2).click();
+  await page.click('.btn-primary');
+  await page.waitForSelector('article.card');
+  const label = `${width}px ${locale} ${scheme}`;
+  const img = await page.locator('.found-row .soli').boundingBox();
+  const bubble = await page.locator('.found-row .bubble').boundingBox();
+  const firstCard = await page.locator('article.card').first().boundingBox();
+  ok((await page.textContent('.found-row .bubble')) === line, `${label}: the bubble says "${line}"`);
+  ok((await page.locator('.found-row .soli').getAttribute('src')) === '/soli-complete.svg' && (await page.locator('.found-row .soli').getAttribute('alt')) === '', `${label}: the arms-up pose, as decoration`);
+  ok(await page.locator('.found-row .soli').evaluate((i) => i.complete && i.naturalWidth > 0), `${label}: the image loads`);
+  ok(bubble.x > img.x + img.width - 1 && bubble.y + bubble.height < firstCard.y, `${label}: the bubble sits beside SOL-E, above the first card`, JSON.stringify({ img, bubble, firstCard }));
+  ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: nothing overflows`);
+}
+const none = await (await b.newContext({ viewport: { width: 390, height: 844 }, locale: 'ko-KR' })).newPage();
+await none.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '[]' }));
+await none.goto(BASE);
+await none.locator('.mode-card').nth(2).click();
+await none.click('.btn-primary');
+await none.waitForSelector('.hero');
+ok((await none.locator('.found-row').count()) === 0, 'no celebration when nothing was found (the app stays on a page without results)');
+
 await b.close();
 process.exit(fail ? 1 : 0);

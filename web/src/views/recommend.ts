@@ -358,6 +358,13 @@ function resultsView(go: (path: string) => void): HTMLElement {
   const s = t();
   return h('div', {},
     pageHeader(s.resultsTitle, () => go(PATH[lastForm])),
+    // SOL-E celebrates (arms up) only when there is something to show.
+    results.length
+      ? h('div', { class: 'found-row' },
+        h('img', { class: 'soli', src: '/soli-complete.svg', alt: '', width: 72, height: 72 }),
+        h('p', { class: 'bubble' }, s.foundBubble),
+      )
+      : null,
     results.some((r) => r.over_budget || r.price_source !== 'kr_list') ? h('p', { class: 'notice-card', role: 'note' }, s.overBudgetNote) : null,
     results.length
       ? h('div', {},

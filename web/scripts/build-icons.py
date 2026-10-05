@@ -28,6 +28,8 @@ ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 DESIGN = ROOT / "design/soli/soli-default.svg"
 LOGO = PUBLIC / "logo.svg"
+COMPLETE = ROOT / "design/soli/soli-complete.svg"  # the "found it" pose, shown on the results page
+COMPLETE_OUT = PUBLIC / "soli-complete.svg"
 
 # Brand-blue tile behind the mascot on the square icons. A touch of vertical
 # gradient keeps it from looking flat.
@@ -55,6 +57,7 @@ def tile(size: int, mascot_scale: float) -> Image.Image:
 
 def main() -> None:
     shutil.copyfile(DESIGN, LOGO)
+    shutil.copyfile(COMPLETE, COMPLETE_OUT)
     # Favicon: same drawing, viewBox cropped to the artwork.
     svg = LOGO.read_text()
     (PUBLIC / "favicon.svg").write_text(re.sub(r'viewBox="[^"]+"', 'viewBox="6 6 108 108"', svg, count=1))
