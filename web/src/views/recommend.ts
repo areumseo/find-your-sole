@@ -1,17 +1,18 @@
 import { h } from '../dom';
-import { recommendBeginner, recommendExpert } from '../api';
+import { recommendBeginner, recommendComfort, recommendExpert } from '../api';
 import { t } from '../i18n';
 import { chips, pageHeader, section, slider } from '../ui';
 import { shoeCard } from './shoeCard';
 import type { Prefs, Shoe } from '../types';
 
-export type Step = 'mode' | 'beginner' | 'expert' | 'results';
+export type Step = 'mode' | 'beginner' | 'expert' | 'comfort' | 'results';
 
 /** Hash paths for each step of the search flow. */
 export const SEARCH = '/search';
 const PATH = {
   beginner: '/search/beginner',
   expert: '/search/expert',
+  comfort: '/search/comfort',
   results: '/search/results',
 } as const;
 
@@ -26,6 +27,9 @@ const TERRAIN_SHORT_API = ['로드', '트레일'];
 const USE_CASE_API = ['데일리', '장거리', '레이스', '입문', '회복런', '트레일'];
 const CUSHION_API = ['낮음', '중간', '높음', '최고'];
 const WIDTH_API = ['좁음', '보통', '넓음'];
+const WHERE_API = ['출퇴근 · 통학', '서서 일하는 직장', '여행 · 산책', '매일 편하게'];
+const HOURS_API = ['2시간 미만', '2~5시간', '5시간 이상'];
+const COMFORT_PAIN_API = ['없음', '발바닥 · 뒤꿈치', '무릎', '발목', '발가락 · 발볼'];
 const WEIGHT_KG = [50, 70, 85];
 
 // Form answers live at module level so switching language (which re-renders)
@@ -51,9 +55,17 @@ const expert = {
   budget: 150000,
 };
 
+const comfort = {
+  where: new Set([0]),
+  hours: new Set([1]),
+  pain: new Set([0]),
+  wide: false,
+  budget: 150000,
+};
+
 let results: Shoe[] = [];
 let resultPrefs: Prefs = {};
-let lastForm: 'beginner' | 'expert' = 'beginner';
+let lastForm: 'beginner' | 'expert' | 'comfort' = 'beginner';
 
 export function hasResults(): boolean {
   return results.length > 0;
@@ -73,6 +85,7 @@ export function renderRecommend(step: Step, go: (path: string) => void): HTMLEle
   switch (step) {
     case 'beginner': lastForm = 'beginner'; return beginnerForm(go);
     case 'expert': lastForm = 'expert'; return expertForm(go);
+    case 'comfort': lastForm = 'comfort'; return comfortForm(go);
     case 'results': return resultsView(go);
     default: return modeSelect(go);
   }
@@ -95,6 +108,7 @@ export function modeCards(go: (path: string) => void): HTMLElement {
   return h('div', { class: 'mode-grid' },
     card('🌱', s.beginnerTitle, s.beginnerSubtitle, s.beginnerDescription, PATH.beginner),
     card('🏃', s.expertTitle, s.expertSubtitle, s.expertDescription, PATH.expert),
+    card('🚶', s.comfortTitle, s.comfortSubtitle, s.comfortDescription, PATH.comfort),
   );
 }
 
@@ -216,6 +230,62 @@ function beginnerForm(go: (path: string) => void): HTMLElement {
     })),
     section(s.sectionWideFoot, h('div', { class: 'switch-row' }, wideSwitch, wideLabel)),
     weightField(st),
+    budgetField(st),
+    h('div', { class: 'form-actions' }, button, note),
+    ),
+  );
+}
+
+// ── Comfort ───────────────────────────────────────────────
+function comfortForm(go: (path: string) => void): HTMLElement {
+  const s = t();
+  const st = comfort;
+
+  const wideLabel = h('span', {}, st.wide ? s.wideFootYes : s.wideFootNo);
+  const wideSwitch = h('button', {
+    type: 'button', class: 'switch', role: 'switch',
+    'aria-checked': String(st.wide), 'aria-label': s.sectionWideFoot,
+    onClick: () => {
+      st.wide = !st.wide;
+      wideSwitch.setAttribute('aria-checked', String(st.wide));
+      wideLabel.textContent = st.wide ? s.wideFootYes : s.wideFootNo;
+    },
+  });
+
+  const { button, note } = submitButton(async () => {
+    const pain = [...st.pain].sort((a, b) => a - b).map((i) => COMFORT_PAIN_API[i]);
+    const shoes = await recommendComfort({
+      where: WHERE_API[first(st.where)],
+      hours: HOURS_API[first(st.hours)],
+      pain,
+      wide_foot: st.wide,
+      budget: st.budget,
+      brand_filter: [],
+    });
+    results = shoes;
+    resultPrefs = { terrain: '로드', budget: st.budget };
+    go(PATH.results);
+  });
+
+  return h('div', { class: 'page-wide' },
+    pageHeader(s.comfortModeTitle, () => go(SEARCH)),
+    h('div', { class: 'form-grid' },
+    section(s.sectionWhere, chips({ options: s.wheres, selected: st.where, onChange: (n) => (st.where = n) })),
+    section(s.sectionHours, chips({ options: s.hoursOptions, selected: st.hours, onChange: (n) => (st.hours = n) })),
+    section(s.sectionComfortPain, chips({
+      options: s.comfortPains, selected: st.pain, multi: true,
+      onChange: (next) => {
+        // Same rule as the beginner form: "None" is exclusive.
+        if (next.has(0) && !st.pain.has(0)) {
+          st.pain = new Set([0]);
+        } else {
+          next.delete(0);
+          st.pain = next.size ? next : new Set([0]);
+        }
+        return st.pain;
+      },
+    })),
+    section(s.sectionWideFoot, h('div', { class: 'switch-row' }, wideSwitch, wideLabel)),
     budgetField(st),
     h('div', { class: 'form-actions' }, button, note),
     ),

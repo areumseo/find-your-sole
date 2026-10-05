@@ -79,6 +79,16 @@ class ExpertPrefs(BaseModel):
     brand_filter: List[str] = []
 
 
+class ComfortPrefs(BaseModel):
+    mode: str = "comfort"
+    where: str          # 출퇴근 · 통학 / 서서 일하는 직장 / 여행 · 산책 / 매일 편하게
+    hours: str          # 2시간 미만 / 2~5시간 / 5시간 이상
+    pain: List[str] = []  # 없음 / 발바닥 · 뒤꿈치 / 무릎 / 발목 / 발가락 · 발볼
+    wide_foot: bool = False
+    budget: int
+    brand_filter: List[str] = []
+
+
 class ExplainRequest(BaseModel):
     shoe: Dict
     prefs: Dict
@@ -199,9 +209,48 @@ def map_beginner_to_prefs(data: BeginnerPrefs) -> dict:
     }
 
 
-def run_recommendation(prefs: Dict, brand_filter: List[str]) -> List[ShoeResult]:
+def map_comfort_to_prefs(data: ComfortPrefs) -> dict:
+    """Turn the everyday-comfort answers into the preferences compute_score reads."""
+    cushion_level = {"2시간 미만": 2, "2~5시간": 3, "5시간 이상": 4}.get(data.hours, 2)
+    pains = [p for p in data.pain if p != "없음"]
+
+    arch, pronation = "normal", "neutral"
+    if "발바닥 · 뒤꿈치" in pains:
+        arch, pronation = "flat", "mild_overpronation"
+        cushion_level = max(cushion_level, 3)
+    if "무릎" in pains:
+        cushion_level = max(cushion_level, 3)
+    if "발목" in pains:
+        pronation = "mild_overpronation"
+    if len(pains) >= 2:
+        cushion_level = max(cushion_level, 4)
+
+    use_case = ["데일리"]
+    if data.where in ("서서 일하는 직장", "여행 · 산책"):
+        use_case.append("장거리")
+
+    wide = data.wide_foot or "발가락 · 발볼" in pains
+    return {
+        "arch": arch,
+        "pronation": pronation,
+        "terrain": "로드",
+        "use_case": use_case,
+        "cushion": {2: "중간", 3: "높음", 4: "최고"}[cushion_level],
+        "width": "넓음" if wide else "보통",
+        "weekly_km": 40,  # everyday walking is not a weekly-mileage question
+        "budget": data.budget,
+        "weight_kg": None,
+    }
+
+
+def is_comfort_candidate(shoe: Dict) -> bool:
+    """Walking/daily shoes, plus running shoes that work as everyday trainers."""
+    return shoe.get("category") in ("walking", "daily") or "데일리" in shoe.get("use_case", [])
+
+
+def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[List[Dict]] = None) -> List[ShoeResult]:
     results = []
-    for shoe in SHOES:
+    for shoe in (SHOES if shoes is None else shoes):
         if brand_filter and shoe["brand"] not in brand_filter:
             continue
         score = compute_score(shoe, prefs)
@@ -223,6 +272,13 @@ def health():
 def recommend_beginner(data: BeginnerPrefs):
     prefs = map_beginner_to_prefs(data)
     return run_recommendation(prefs, data.brand_filter)
+
+
+@app.post("/recommend/comfort", response_model=List[ShoeResult])
+def recommend_comfort(data: ComfortPrefs):
+    prefs = map_comfort_to_prefs(data)
+    candidates = [s for s in SHOES if is_comfort_candidate(s)]
+    return run_recommendation(prefs, data.brand_filter, candidates)
 
 
 @app.post("/recommend/expert", response_model=List[ShoeResult])

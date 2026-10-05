@@ -418,6 +418,7 @@ noscript p { padding: 24px 16px; text-align: center; }
 
 .mode-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .mode-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .mode-grid { grid-template-columns: repeat(3, 1fr); } }
 
 .cards-grid { display: grid; gap: 12px; align-items: start; grid-template-columns: 1fr; }
 .cards-grid .card { margin: 0; }
