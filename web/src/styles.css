@@ -483,7 +483,16 @@ noscript p { padding: 24px 16px; text-align: center; }
 .tile-sub { margin-top: 2px; color: var(--danger); font-size: 12px; font-weight: 700; }
 
 .widgets { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
-@media (min-width: 900px) { .widgets { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) {
+  .widgets { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+  .widgets:has(.col-main:empty) { grid-template-columns: 1fr; }
+}
+.col-main, .col-side { display: grid; gap: 16px; min-width: 0; }
+.col-main:empty { display: none; }
+.pick-name { font-size: 17px; font-weight: 700; }
+.pick-reason, .tip-a { margin: 8px 0 12px; line-height: 1.6; font-size: 14px; }
+.tip-q { margin: 0; font-weight: 700; color: var(--title-sky); }
+.tip-a { margin-bottom: 0; color: var(--muted); }
 .widget { padding: 18px 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
 .widget-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
 .widget-head h2 { font-size: 16px; color: var(--title-sky); }
