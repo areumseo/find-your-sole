@@ -42,3 +42,16 @@ def test_news_exposes_last_refresh_time(monkeypatch):
     monkeypatch.setattr(shoe_news.service, "updated_at", 1_790_000_000.0)
     res = TestClient(main.app).get("/news")
     assert res.headers["x-news-updated"] == "2026-09-21T14:13:20Z"
+
+
+def test_price_source_and_usd_reach_the_clients():
+    client = TestClient(main.app)
+    est = next(s for s in main.SHOES if s.get("price_source") == "estimate")
+    res = client.post("/recommend/expert", json={
+        "arch": "normal", "pronation": "neutral", "terrain": "로드", "use_case": ["데일리"],
+        "cushion": "중간", "width": "보통", "weekly_km": 20, "budget": 1_000_000,
+    }).json()
+    assert all("price_source" in r for r in res)
+    pick = client.get("/pick").json()
+    assert "price_source" in pick and "price_usd" in pick
+    assert isinstance(est["price_usd"], int)

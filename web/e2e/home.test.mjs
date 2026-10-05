@@ -41,5 +41,19 @@ ok((await down.locator('.pick').count()) === 0 && (await down.locator('.tip').co
 const cols = await down.evaluate(() => getComputedStyle(document.querySelector('.widgets')).gridTemplateColumns.split(' ').length);
 ok(cols === 1 || (await down.locator('.col-main').evaluate((e) => getComputedStyle(e).display)) === 'none', 'empty main column is hidden');
 
+// An estimated KRW price is shown as the overseas USD list price instead.
+const est = await (await b.newContext({ viewport: { width: 1280, height: 900 }, locale: 'ko-KR' })).newPage();
+const pickBody = (extra) => JSON.stringify({ name: 'Test Shoe', brand: 'Brand', price: 179000, weight_g: 280, cushion: '높음', categories: ['daily'], reason: '쿠션은 높음이에요.', naver_url: 'https://search.shopping.naver.com/search/all?query=x', ...extra });
+await est.route('**/pick*', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: pickBody({ price_source: 'estimate', price_usd: 150 }) }));
+await est.goto(BASE);
+await est.waitForSelector('.pick');
+const sub = await est.locator('.pick .row-sub').textContent();
+ok(sub.includes('해외 정가 $150') && !sub.includes('만원'), 'estimated price shows the USD list price', sub);
+await est.unroute('**/pick*');
+await est.route('**/pick*', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: pickBody({ price_source: 'kr_list', price_usd: null }) }));
+await est.reload();
+await est.waitForSelector('.pick');
+ok((await est.locator('.pick .row-sub').textContent()).includes('15~20만원대'), 'a Korean list price keeps the KRW range');
+
 await b.close();
 process.exit(fail ? 1 : 0);

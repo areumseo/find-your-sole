@@ -3,6 +3,10 @@ export interface Shoe {
   name: string;
   brand: string;
   price: number;
+  /** "kr_list" when the KRW price is a Korean list price, "estimate" when it is not. */
+  price_source?: string | null;
+  /** Overseas list price in USD, present when the KRW price is an estimate. */
+  price_usd?: number | null;
   weight_g: number;
   drop_mm: number;
   cushion: string;
@@ -32,6 +36,8 @@ export interface DailyPick {
   name: string;
   brand: string;
   price: number;
+  price_source?: string | null;
+  price_usd?: number | null;
   weight_g: number;
   cushion: string;
   categories: string[];

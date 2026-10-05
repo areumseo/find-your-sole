@@ -144,7 +144,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       toggle,
       h('div', { class: 'side' },
         h('div', { class: 'actions' }, favBtn, addBtn),
-        h('div', { class: 'price' }, s.priceRange(shoe.price)),
+        h('div', { class: 'price' }, s.priceLabel(shoe)),
         chev,
       ),
     ),

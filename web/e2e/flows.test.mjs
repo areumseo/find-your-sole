@@ -229,7 +229,7 @@ const b2 = (await r2).postDataJSON();
 console.log('   payload:', JSON.stringify(b2));
 check('expert payload 값', b2.arch === 'normal' && b2.pronation === 'neutral' && b2.terrain === '로드' && Array.isArray(b2.use_case) && b2.cushion === '중간' && b2.width === '보통' && b2.weekly_km === 20 && b2.budget === 150000);
 await page.waitForSelector('article.card');
-check('영어 가격대 표기', /₩/.test(await page.textContent('.side .price >> nth=0')));
+check('영어 가격 표기(₩ 구간 또는 해외 정가 $)', /₩|US list price \$\d+/.test(await page.textContent('.side .price >> nth=0')));
 
 // 폼 상태가 언어 전환 후에도 유지
 await page.goBack(); // results → expert form
