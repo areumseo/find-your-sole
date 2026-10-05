@@ -1,10 +1,11 @@
 import json
 import os
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
 import anthropic
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -50,6 +51,7 @@ app.add_middleware(
     allow_origins=DEFAULT_ORIGINS + EXTRA_ORIGINS,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
+    expose_headers=["X-News-Updated"],  # lets the web app show when the news was refreshed
 )
 
 app.include_router(news_router)
@@ -278,6 +280,42 @@ def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[Lis
 @app.get("/health")
 def health():
     return {"status": "ok", "shoes_count": len(SHOES)}
+
+
+KST = timezone(timedelta(hours=9))
+
+
+def pick_of_the_day(now: Optional[datetime] = None) -> Dict:
+    """One shoe per Korean calendar day, the same for everyone (no randomness, no storage)."""
+    today = (now or datetime.now(KST)).astimezone(KST).date()
+    ordered = sorted(SHOES, key=lambda s: s["id"])
+    # A prime stride shuffles the order so consecutive days are not neighbours in the file.
+    return ordered[(today.toordinal() * 7919) % len(ordered)]
+
+
+def pick_reason(shoe: Dict, locale: str) -> str:
+    tag = shoe["tags"][0] if shoe.get("tags") else ""
+    if locale == "en":
+        return f"{shoe['cushion']} cushioning at {shoe['weight_g']}g" + (f", known for: {tag}." if tag else ".")
+    return f"쿠션은 {shoe['cushion']}, 무게는 {shoe['weight_g']}g" + (f", 특징은 \"{tag}\"이에요." if tag else "이에요.")
+
+
+@app.get("/pick")
+def pick(response: Response, locale: str = "ko"):
+    from urllib.parse import quote
+
+    shoe = pick_of_the_day()
+    response.headers["Cache-Control"] = "public, max-age=1800"
+    return {
+        "name": shoe["name"],
+        "brand": shoe["brand"],
+        "price": shoe["price"],
+        "weight_g": shoe["weight_g"],
+        "cushion": shoe["cushion"],
+        "categories": shoe.get("categories", []),
+        "reason": pick_reason(shoe, locale),
+        "naver_url": f"https://search.shopping.naver.com/search/all?query={quote(shoe['name'])}",
+    }
 
 
 @app.post("/recommend/beginner", response_model=List[ShoeResult])

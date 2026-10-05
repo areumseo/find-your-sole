@@ -28,6 +28,23 @@ export interface OwnedShoe {
   km: number;
 }
 
+export interface DailyPick {
+  name: string;
+  brand: string;
+  price: number;
+  weight_g: number;
+  cushion: string;
+  categories: string[];
+  reason: string;
+  naver_url: string;
+}
+
+export interface NewsResult {
+  items: NewsItem[];
+  /** ISO 8601 UTC: when the server last refreshed the news, if it says. */
+  updatedAt?: string;
+}
+
 export interface NewsItem {
   title: string;
   /** Publisher host, e.g. "example.com", or "네이버 뉴스". */
