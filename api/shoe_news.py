@@ -163,8 +163,13 @@ class NewsService:
                     raise r
                 r.raise_for_status()
                 raw.extend(r.json().get("items", []))
-            except Exception:  # noqa: BLE001
+            except Exception as exc:  # noqa: BLE001
                 failures += 1
+                # Log the cause (never the keys) so a bad key / disabled API is diagnosable.
+                if isinstance(exc, httpx.HTTPStatusError):
+                    log.warning("naver news query failed: HTTP %s %s", exc.response.status_code, exc.response.text[:200])
+                else:
+                    log.warning("naver news query failed: %s: %s", type(exc).__name__, exc)
         if failures == len(QUERIES):
             raise RuntimeError("all news queries failed")
         return parse_items(raw, datetime.fromtimestamp(self._clock(), timezone.utc))
