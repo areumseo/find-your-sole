@@ -13,6 +13,12 @@ try {
   assert.equal(await first.locator('.price-note').count(),0);assert.equal(await first.locator('.price-unconfirmed').count(),0);
   await first.locator('.price-info').click();assert.ok(await first.locator('.price-help').isVisible());
   const shopping=first.locator('.card-shopping');const box=await shopping.boundingBox();assert.ok(box.width<=341);
+  const logo=shopping.locator('.naver-logo');assert.equal(await logo.getAttribute('alt'),'');
+  assert.ok(await logo.evaluate(el=>el.complete && el.naturalWidth>0));
+  assert.ok(!(await shopping.innerText()).includes('↗'));
+  assert.equal(await shopping.locator('.naver-name').evaluate(el=>getComputedStyle(el).textDecorationLine),'none');
+  assert.equal(await shopping.getAttribute('target'),'_blank');
+  assert.ok((await shopping.getAttribute('rel')).includes('noopener'));
   await first.locator('.comment-toggle').click();await first.locator('.comment-loading').waitFor();
   await first.locator('.comment-toggle').click();await first.locator('.comment-toggle').click();
   await first.locator('.explain').waitFor();assert.equal(calls,1);
