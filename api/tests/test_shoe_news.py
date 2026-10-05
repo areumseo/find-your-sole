@@ -44,6 +44,10 @@ def test_naver_links_are_labelled_as_naver_news():
     "나이키 러닝화 상품 후기",            # shoe, but not launch news
     "러닝화 신제품 출시 기념 특가 할인",   # promo
     "러닝화 신제품 출시 쿠폰 증정 이벤트",
+    "블랙야크 키즈, 아동 운동화 '라이트스텝 프로' 출시",            # kids' shoes
+    "뉴발란스X김연아 26FW 화보 공개… 워킹화로 감각",                 # lookbook
+    "디아도라 X JW 앤더슨 협업 컬렉션 국내 출시 스니커즈",           # fashion collab
+    "새 축구화 출시, 신발 끈 조임 개선",                              # other sport
 ])
 def test_irrelevant_and_promo_items_are_dropped(title):
     assert parse_items([raw(title)], NOW) == []
@@ -193,3 +197,9 @@ def test_endpoint_shape_and_cache_headers(monkeypatch):
     monkeypatch.setattr(shoe_news, "service", NewsService(None, None))
     r = c.get("/news")
     assert r.status_code == 200 and r.json() == [] and r.headers["cache-control"] == "public, max-age=60"
+
+
+def test_real_launch_news_still_passes_the_off_topic_filter():
+    titles = ["나이키, 새 슈퍼슈즈 ‘에이펙스’ 공개", "아디다스, 러닝화는 더 빠르게 신제품 잇달아 출시", "호카 클리프턴 10 러닝화 출시"]
+    items = parse_items([raw(x, url=f"https://www.example.com/{i}") for i, x in enumerate(titles)], NOW)
+    assert len(items) == 3
