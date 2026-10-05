@@ -19,7 +19,7 @@ if (build.status !== 0) process.exit(build.status ?? 1);
 
 const servers = [
   spawn(python, ['-m', 'uvicorn', 'main:app', '--port', '8000'], {
-    cwd: api, stdio: 'ignore', env: { ...process.env, ANTHROPIC_API_KEY: 'dummy-key-for-local-test' },
+    cwd: api, stdio: 'ignore', env: { ...process.env, ANTHROPIC_API_KEY: 'dummy-key-for-local-test', ADMIN_TOKEN: 'e2e-admin-token', DATABASE_URL: '' },
   }),
   spawn(python, ['-m', 'http.server', '4173', '--directory', dist], { stdio: 'ignore' }),
 ];

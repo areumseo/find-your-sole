@@ -146,3 +146,47 @@ export async function explainShoe(shoe: Shoe, prefs: Prefs, locale: string): Pro
   });
   return explanation;
 }
+
+// ── Feedback ──────────────────────────────────────────────
+export interface FeedbackItem {
+  id: number;
+  message: string;
+  context: string;
+  created_at: string;
+  resolved: boolean;
+  has_screenshot: boolean;
+}
+
+/** Error that keeps the HTTP status so callers can word the message for the user. */
+export class HttpError extends Error {
+  constructor(readonly status: number) {
+    super(`HTTP ${status}`);
+  }
+}
+
+async function call(path: string, init: RequestInit & { token?: string } = {}): Promise<Response> {
+  const { token, ...rest } = init;
+  const headers = new Headers(rest.headers);
+  if (token) headers.set('Authorization', `Bearer ${token}`);
+  if (rest.body) headers.set('Content-Type', 'application/json');
+  const res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+  if (!res.ok) throw new HttpError(res.status);
+  return res;
+}
+
+export async function sendFeedback(message: string, context: string, screenshot: string | null, website: string): Promise<void> {
+  await call('/feedback', { method: 'POST', body: JSON.stringify({ message, context, screenshot, website }) });
+}
+
+export async function adminList(token: string): Promise<FeedbackItem[]> {
+  return (await (await call('/admin/feedback', { token })).json()) as FeedbackItem[];
+}
+
+export async function adminScreenshot(token: string, id: number): Promise<Blob> {
+  return (await call(`/admin/feedback/${id}/screenshot`, { token })).blob();
+}
+
+export async function adminResolve(token: string, id: number): Promise<boolean> {
+  const res = await call(`/admin/feedback/${id}/resolve`, { method: 'POST', token });
+  return ((await res.json()) as { resolved: boolean }).resolved;
+}

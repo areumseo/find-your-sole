@@ -76,3 +76,12 @@ npm run e2e          # builds the site against a local API, starts both, runs ev
 ```
 
 It needs Python with the API requirements installed (`pip install -r api/requirements.txt`) and a Chromium that Playwright can find; set `CHROMIUM_PATH` to point at one if needed, and `E2E_SHOTS=<folder>` to save screenshots.
+
+## Feedback
+
+A round feedback button floats on every page of the web app. People write a note (up to 2000 characters) and can attach one screenshot, which the browser shrinks to a JPEG under 1.5 MB. There are no accounts, so nothing identifies the sender; the page they were on is recorded as context.
+
+- **Endpoints** (`api/feedback.py`): `POST /feedback`, and for the admin `GET /admin/feedback` (newest first, no screenshot data), `GET /admin/feedback/{id}/screenshot`, `POST /admin/feedback/{id}/resolve` (toggles).
+- **Abuse limits:** 5 notes per IP per 10 minutes and 200 per day overall (`FEEDBACK_PER_CLIENT`, `FEEDBACK_WINDOW_SECONDS`, `FEEDBACK_DAILY_CAP`), a hidden honeypot field, magic-byte checks on the image (the declared type is never trusted) and a 413 over 1.5 MB.
+- **Admin:** open `#/admin` (not linked anywhere) and enter the `ADMIN_TOKEN` set on the API service. Admin endpoints return 404 until that variable exists; repeated wrong tokens are rate limited.
+- **Storage:** set `DATABASE_URL` to a Postgres URL (a free Neon database works; `postgres://` and `postgresql://` are both accepted) and the `feedback` table is created on first use. Without it feedback is kept in memory and is lost on restart, which is only meant for local development. Screenshots are stored as base64 text in the same table; move them to file storage if volume grows.

@@ -1,17 +1,19 @@
 import './fonts.css';
 import './styles.css';
 import { warmUp } from './api';
+import { feedbackButton } from './feedback';
 import { h, mount } from './dom';
 import { getLocale, onLocaleChange, setLocale, t } from './i18n';
 import { themeToggle } from './theme';
 import { renderAbout } from './views/about';
+import { renderAdmin } from './views/admin';
 import { renderHome } from './views/home';
 import { renderMe } from './views/me';
 import { renderMore } from './views/more';
 import { hasResults, renderRecommend, type Step } from './views/recommend';
 import { renderSaved } from './views/saved';
 
-type Page = 'home' | 'search' | 'saved' | 'me' | 'about' | 'more';
+type Page = 'home' | 'search' | 'saved' | 'me' | 'about' | 'more' | 'admin';
 
 interface Route {
   page: Page;
@@ -54,6 +56,7 @@ function parseRoute(): Route {
     case 'saved':
     case 'me':
     case 'about':
+    case 'admin': // no menu item and no link: reached only by typing #/admin
       return { page, step: 'mode' };
     case 'more':
       // "More" is a phone menu; on wide screens its entries are in the sidebar.
@@ -133,8 +136,17 @@ function render(): void {
     case 'me': mount(main, renderMe(render)); break;
     case 'about': mount(main, renderAbout()); break;
     case 'more': mount(main, renderMore()); break;
+    case 'admin': mount(main, renderAdmin()); break;
     default: mount(main, renderHome(go));
   }
+}
+
+/** The floating feedback button lives outside the page content so it survives navigation. */
+let fab: HTMLElement | null = null;
+function mountFeedbackButton(): void {
+  const next = feedbackButton();
+  fab ? fab.replaceWith(next) : document.body.append(next);
+  fab = next;
 }
 
 function boot(): void {
@@ -148,6 +160,8 @@ function boot(): void {
   });
   onLocaleChange(render);
   render();
+  mountFeedbackButton();
+  onLocaleChange(mountFeedbackButton);
 
   // Wake the free-tier backend now so the first recommendation is not slow.
   warmUp();

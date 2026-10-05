@@ -11,9 +11,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 try:  # started from api/ (`uvicorn main:app`)
+    from feedback import router as feedback_router
     from rate_limit import ExplainLimiter
     from shoe_news import router as news_router
 except ModuleNotFoundError:  # started from the repo root (`uvicorn api.main:app`)
+    from api.feedback import router as feedback_router
     from api.rate_limit import ExplainLimiter
     from api.shoe_news import router as news_router
 
@@ -51,11 +53,12 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=DEFAULT_ORIGINS + EXTRA_ORIGINS,
     allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_headers=["Content-Type", "Authorization"],
     expose_headers=["X-News-Updated"],  # lets the web app show when the news was refreshed
 )
 
 app.include_router(news_router)
+app.include_router(feedback_router)
 
 explain_limiter = ExplainLimiter.from_env()
 

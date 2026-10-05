@@ -13,6 +13,12 @@ services:
         sync: false
       - key: NAVER_CLIENT_SECRET
         sync: false
+      # Feedback inbox. DATABASE_URL is a Postgres URL (e.g. Neon); without it feedback is
+      # kept in memory and lost on restart. ADMIN_TOKEN opens #/admin; without it admin is off.
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false
     healthCheckPath: /health
 
   # Static frontend. Built from web/ and served from Render's CDN; it talks to
