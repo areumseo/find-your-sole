@@ -27,7 +27,7 @@ export function empty(message: string, cta: { href: string; label: string }): HT
   );
 }
 
-/** Owned shoes, total distance, shoes due for replacement, saved shoes. */
+/** Owned shoes, total distance and shoes due for replacement. */
 export function statTiles(): HTMLElement {
   const s = t();
   const owned = myShoes.all();
@@ -37,7 +37,6 @@ export function statTiles(): HTMLElement {
     tile(s.statShoes, s.pairs(owned.length)),
     tile(s.statKm, `${Math.round(totalKm).toLocaleString()}km`),
     tile(s.statSoon, s.count(soon), soon ? `${SOON_KM}km+` : undefined),
-    tile(s.statSaved, s.count(favorites.all().length)),
   );
 }
 
