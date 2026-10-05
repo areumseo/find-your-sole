@@ -79,12 +79,12 @@ for (const [width, locale, scheme, line] of [[390, 'ko-KR', 'light', '딱 맞는
   await page.click('.btn-primary');
   await page.waitForSelector('article.card');
   const label = `${width}px ${locale} ${scheme}`;
-  const img = await page.locator('.found-row .soli').boundingBox();
+  const img = await page.locator('.found-row .sol-e').boundingBox();
   const bubble = await page.locator('.found-row .bubble').boundingBox();
   const firstCard = await page.locator('article.card').first().boundingBox();
   ok((await page.textContent('.found-row .bubble')) === line, `${label}: the bubble says "${line}"`);
-  ok((await page.locator('.found-row .soli').getAttribute('src')) === '/soli-complete.svg' && (await page.locator('.found-row .soli').getAttribute('alt')) === '', `${label}: the arms-up pose, as decoration`);
-  ok(await page.locator('.found-row .soli').evaluate((i) => i.complete && i.naturalWidth > 0), `${label}: the image loads`);
+  ok((await page.locator('.found-row .sol-e').getAttribute('src')) === '/sol-e-complete.svg' && (await page.locator('.found-row .sol-e').getAttribute('alt')) === '', `${label}: the arms-up pose, as decoration`);
+  ok(await page.locator('.found-row .sol-e').evaluate((i) => i.complete && i.naturalWidth > 0), `${label}: the image loads`);
   ok(bubble.x > img.x + img.width - 1 && bubble.y + bubble.height < firstCard.y, `${label}: the bubble sits beside SOL-E, above the first card`, JSON.stringify({ img, bubble, firstCard }));
   ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: nothing overflows`);
 }

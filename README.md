@@ -40,7 +40,7 @@ npm run build        # typecheck + production build into web/dist
 
 To develop against a local backend, copy `web/.env.example` to `web/.env.local`, set `VITE_API_URL=http://localhost:8000`, and run `uvicorn main:app` from `api/`.
 
-The mascot, SOL-E (솔이), is in `web/design/soli/` as editable vector SVGs: the default pose, a "found the right pair" pose with both arms up, and a presentation board. `design/soli/soli-default.svg` is the single source for the logo; `npm run icons` copies it to `public/logo.svg` and regenerates the favicon and app icons (needs `pip install cairosvg pillow`).
+The mascot, SOL-E (솔이), is in `web/design/sol-e/` as editable vector SVGs: the default pose, a "found the right pair" pose with both arms up, and a presentation board. `design/sol-e/sol-e-default.svg` is the single source for the logo; `npm run icons` copies it to `public/logo.svg` and regenerates the favicon and app icons (needs `pip install cairosvg pillow`).
 
 The font is [IBM Plex Sans KR](https://github.com/IBM/plex) (SIL Open Font License; the notice is in the About tab and the license text ships at `/licenses/`). `npm run fonts` rebuilds `web/src/fonts/` from the `@ibm/plex-sans-kr` package, keeping the 2,350 everyday Hangul syllables of KS X 1001 plus Latin and symbols. Anything outside that falls back to a system font. It needs `pip install fonttools brotli`, and only has to be rerun when the character set or weights change.
 

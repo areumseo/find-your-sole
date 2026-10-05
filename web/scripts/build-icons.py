@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Builds the site logo, favicon and app icons in public/ from the Soli mascot.
+"""Builds the site logo, favicon and app icons in public/ from the SOL-E mascot.
 
     npm run icons        # needs: pip install cairosvg pillow
 
-The single source of truth is design/soli/soli-default.svg. It is copied verbatim to
+The single source of truth is design/sol-e/sol-e-default.svg. It is copied verbatim to
 public/logo.svg (what the site loads), so edit the design file, not the copy.
 
 Outputs:
-  logo.svg              copy of design/soli/soli-default.svg
+  logo.svg              copy of design/sol-e/sol-e-default.svg
   favicon.svg           the logo cropped tight so it fills a browser tab
   favicon-32.png        PNG fallback for the tab icon
   apple-touch-icon.png  180px, full-bleed (iOS rounds the corners itself)
   icon-192.png, icon-512.png            "any" icons for the web manifest
   icon-maskable-512.png                 the same artwork with a larger safe margin
 
-Re-run after editing design/soli/soli-default.svg.
+Re-run after editing design/sol-e/sol-e-default.svg.
 """
 import io
 import re
@@ -26,10 +26,10 @@ from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
-DESIGN = ROOT / "design/soli/soli-default.svg"
+DESIGN = ROOT / "design/sol-e/sol-e-default.svg"
 LOGO = PUBLIC / "logo.svg"
-COMPLETE = ROOT / "design/soli/soli-complete.svg"  # the "found it" pose, shown on the results page
-COMPLETE_OUT = PUBLIC / "soli-complete.svg"
+COMPLETE = ROOT / "design/sol-e/sol-e-complete.svg"  # the "found it" pose, shown on the results page
+COMPLETE_OUT = PUBLIC / "sol-e-complete.svg"
 
 # Brand-blue tile behind the mascot on the square icons. A touch of vertical
 # gradient keeps it from looking flat.
