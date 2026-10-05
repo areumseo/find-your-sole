@@ -134,7 +134,7 @@ const ko = {
   newsUpdated: (when: string) => `${when} 기준`,
   widgetPick: '솔이의 오늘의 픽',
   pickCta: '쇼핑에서 보기',
-  pickCredit: '날짜가 바뀔 때마다 새로 골라요',
+  pickCredit: '매일 새로 골라요',
   widgetTip: '솔이의 한 입 상식',
   tips: [
     { q: '드롭이 뭐예요?', a: '뒤꿈치와 앞꿈치의 높이 차이예요. 숫자가 클수록 뒤꿈치가 높아서 발바닥 앞쪽 부담이 줄고, 낮을수록 자연스러운 걸음에 가까워요.' },
@@ -334,7 +334,7 @@ const en: Strings = {
   newsUpdated: (when: string) => `As of ${when}`,
   widgetPick: 'Soli’s Pick of the Day',
   pickCta: 'See in shops',
-  pickCredit: 'A new pick every day',
+  pickCredit: 'Fresh pick daily',
   widgetTip: 'Soli’s Bite-size Tip',
   tips: [
     { q: 'What is drop?', a: 'The height difference between heel and forefoot. A bigger number puts the heel higher and eases the front of the foot; a lower one feels closer to barefoot.' },
