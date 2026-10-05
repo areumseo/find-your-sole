@@ -116,3 +116,13 @@ def test_pick_falls_back_to_the_plain_sentence_when_ai_fails(monkeypatch):
     # The failure is remembered for the day instead of retrying on every visit.
     monkeypatch.setattr(main, "generate_pick_comment", lambda shoe, locale: pytest.fail("retried"))
     assert TestClient(main.app).get("/pick").json()["reason"] == reason
+
+
+def test_english_fallback_sentence_has_no_korean():
+    import re
+
+    for shoe in main.SHOES:
+        text = main.pick_reason(shoe, "en")
+        assert not re.search(r"[가-힣]", text), text
+        assert str(shoe["weight_g"]) in text
+    assert main.pick_reason(main.SHOES[0], "en").startswith(("Low", "Medium", "High", "Max"))
