@@ -39,7 +39,7 @@ await page.waitForSelector('.mode-card');
 check('한국어 UI (navigator.language=ko)', (await page.textContent('.hero h1')).includes('딱 맞는 한 켤레'));
 check('title', (await page.title()).includes('Find Your Sole'));
 check('모바일 하단 탭: 홈/저장/더보기 (3개 보임, 검색 메뉴 없음)', (await page.locator('.tabs a:visible').count()) === 3 && (await page.locator('.tabs a:has-text("검색")').count()) === 0);
-check('비교 메뉴는 아직 없음(데이터 준비 전)', (await page.locator('.tabs a:has-text("비교")').count()) === 0);
+check('비교 메뉴는 데스크톱 사이드바에 준비됨', (await page.locator('.tabs a[href="#/compare"]').count()) === 1);
 check('홈: 찾기 카드 3개(초심자/경험자/편한 신발), 개인 통계는 없음', (await page.locator('.hero .mode-card').count()) === 3 && (await page.locator('.tile').count()) === 0);
 check('홈: 빈 위젯 없음(저장한 신발이 있을 때만 표시)', (await page.locator('.widget-empty').count()) === 0);
 
@@ -123,7 +123,7 @@ check('저장 카드 펼쳐도 /explain 호출 안 함', explainCalls === callsB
 // ── 내 신발 탭 ──
 await page.click('.tabs a:has-text("더보기")');
 await page.waitForSelector('.menu-row');
-check('더보기: 마이페이지/앱 정보 항목 + 언어 선택', (await page.locator('.menu-row').count()) === 3 && (await page.locator('main .chips .chip').count()) === 2);
+check('더보기: 비교/마이페이지/앱 정보/피드백 + 언어 선택', (await page.locator('.menu-row').count()) === 4 && (await page.locator('main .chips .chip').count()) === 2);
 check('더보기 탭 활성 표시', (await page.getAttribute('.tabs a:has-text("더보기")', 'aria-current')) === 'page');
 await page.click('.menu-row:has-text("마이페이지")');
 await page.waitForSelector('.owned');

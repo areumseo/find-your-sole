@@ -1,6 +1,6 @@
 /** Only allowlisted routes and event fields reach GA; never forward form answers. */
 const ID = 'G-02CCFQWHZ1';
-const ROUTES = new Set(['/', '/search/beginner', '/search/expert', '/search/comfort', '/search/results', '/saved', '/me', '/about', '/more']);
+const ROUTES = new Set(['/', '/search/beginner', '/search/expert', '/search/comfort', '/search/results', '/compare', '/saved', '/me', '/about', '/more']);
 let started = false;
 let previous = '';
 let lastPage = '';

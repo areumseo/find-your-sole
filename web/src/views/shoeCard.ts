@@ -1,3 +1,4 @@
+import { comparison } from '../compare';
 import { track } from '../analytics';
 import { h, safeUrl } from '../dom';
 import { explainShoe } from '../api';
@@ -239,6 +240,9 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     ),
     ...(prefs && rank !== undefined && rank <= 3 ? [matchSummary(shoe, prefs)] : []),
     detail,
+    h('div', { class: 'compare-card-action' }, h('button', {type: 'button', class: 'compare-select', 'data-compare-id': shoe.id, 'aria-pressed': String(comparison.has(shoe.id)),
+      onClick: () => { if (!comparison.toggle(shoe, prefs)) toast(s.compareLimit); }
+    }, comparison.has(shoe.id) ? s.compareAdded : s.compareAdd)),
   );
   return card;
 }
