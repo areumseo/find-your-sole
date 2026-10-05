@@ -339,7 +339,7 @@ def pick_reason(shoe: Dict, locale: str) -> str:
     return f"쿠션은 {shoe['cushion']}, 무게는 {shoe['weight_g']}g" + (f", 특징은 \"{tag}\"이에요." if tag else "이에요.")
 
 
-# Soli's daily comment is written by Claude at most once per day per language and
+# SOL-E's daily comment is written by Claude at most once per day per language and
 # kept in memory, so the cost is two tiny calls a day however many people visit.
 _pick_comments: Dict[Tuple[str, str], str] = {}
 _pick_comment_lock = threading.Lock()
@@ -371,7 +371,7 @@ def generate_pick_comment(shoe: Dict, locale: str) -> str:
     )
     if locale == "en":
         system = (
-            "You are Soli, a friendly little ghost who helps people pick shoes. "
+            "You are SOL-E, a friendly little ghost who helps people pick shoes. "
             "Write ONE or TWO short, warm sentences (max 200 characters) saying who today's pick suits and why. "
             "Use only the facts given; do not invent specs or prices. Plain text, no markdown, no emoji."
         )
