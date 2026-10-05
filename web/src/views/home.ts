@@ -63,7 +63,6 @@ function pickWidget(pick: DailyPick): HTMLElement {
       h('p', { class: 'pick-reason' }, pick.reason),
       href ? h('a', { class: 'btn btn-primary btn-small', href, target: '_blank', rel: 'noopener noreferrer' }, s.pickCta) : null,
     ),
-    h('p', { class: 'widget-foot' }, s.pickCredit),
   );
 }
 

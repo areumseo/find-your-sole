@@ -10,7 +10,7 @@ await p.goto(BASE);
 await p.waitForSelector('.col-side .widget');
 await p.waitForSelector('.pick');
 
-ok((await p.locator('.col-side .widget h2').allTextContents()).join('|') === '솔이의 오늘의 픽|솔이의 한 입 상식', 'side column: pick then tip');
+ok((await p.locator('.col-side .widget h2').allTextContents()).join('|') === '솔이의 데일리 픽|솔이의 한 입 상식', 'side column: pick then tip');
 ok((await p.locator('.pick-name').textContent()).length > 3, 'pick has a shoe name');
 const link = p.locator('.pick a');
 ok((await link.getAttribute('href')).startsWith('https://search.shopping.naver.com/') && (await link.getAttribute('rel')).includes('noopener'), 'pick links to shopping safely');
@@ -26,7 +26,7 @@ ok(first[0] === (await p.locator('.pick-name').textContent()) && first[1] === (a
 // English switches the copy and refetches the pick in English.
 await p.click('.lang');
 await p.waitForFunction(() => /cushioning/.test(document.querySelector('.pick-reason')?.textContent ?? ''));
-ok((await p.locator('.col-side .widget h2').first().textContent()) === 'Soli’s Pick of the Day', 'english titles');
+ok((await p.locator('.col-side .widget h2').first().textContent()) === 'Soli’s Daily Pick', 'english titles');
 
 // If the pick endpoint is down, the tip still shows and nothing breaks.
 const errors = [];
