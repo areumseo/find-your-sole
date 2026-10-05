@@ -431,6 +431,90 @@ def recommend_expert(data: ExpertPrefs):
     return run_recommendation(prefs, data.brand_filter)
 
 
+def price_fact(shoe: Dict, locale: str) -> str:
+    """The price as the explanation may state it: only a confirmed Korean list price counts as known."""
+    en = locale == "en"
+    source, price, usd = shoe.get("price_source"), shoe.get("price"), shoe.get("price_usd")
+    if source == "kr_list" and price:
+        return f"₩{price:,} (Korean list price)" if en else f"{price:,}원 (국내 정가)"
+    if source == "estimate" and usd:
+        return (f"not confirmed in Korea (US list price ${usd})" if en else f"국내 정가 미확인 (해외 정가 ${usd})")
+    return "unknown" if en else "정보 없음"
+
+
+def build_explain_prompts(shoe: Dict, prefs: Dict, locale: str):
+    """System prompt and user message for /explain. The wording follows how the person searched:
+    a comfort search (walking, commute, standing) must not be explained as running."""
+    en = locale == "en"
+    mode = prefs.get("mode") or ("expert" if prefs.get("arch") else "beginner")
+    comfort = mode == "comfort"
+    shoe_lines_ko = (
+        f"- 이름: {shoe['name']} ({shoe['brand']})\n"
+        f"- 쿠션: {shoe['cushion']}, 드롭: {shoe['drop_mm']}mm, 무게: {shoe['weight_g']}g\n"
+        f"- 발볼: {shoe['width']}, 지면: {', '.join(shoe.get('terrain', []))}\n"
+        f"- 용도: {', '.join(shoe.get('use_case', []))}\n"
+        f"- 특징: {', '.join(shoe.get('tags', []))}\n"
+        f"- 가격: {price_fact(shoe, 'ko')}"
+    )
+    shoe_lines_en = (
+        f"- Name: {shoe['name']} ({shoe['brand']})\n"
+        f"- Cushion: {shoe['cushion']}, Drop: {shoe['drop_mm']}mm, Weight: {shoe['weight_g']}g\n"
+        f"- Width: {shoe['width']}, Terrain: {', '.join(shoe.get('terrain', []))}\n"
+        f"- Use case: {', '.join(shoe.get('use_case', []))}\n"
+        f"- Tags: {', '.join(shoe.get('tags', []))}\n"
+        f"- Price: {price_fact(shoe, 'en')}"
+    )
+    budget = prefs.get("budget", 0)
+
+    if en:
+        rules = (
+            "Use only the facts given; do not invent specs or claims. "
+            "Mention price or budget only if the price is a known Korean list price; if it says not confirmed or unknown, "
+            "do not claim it fits the budget. If the price is above the budget, say so honestly. "
+            "Briefly clarify technical terms in parentheses when needed. Do not use markdown syntax (**, #, - etc). Plain text only."
+        )
+        if comfort:
+            system = ("You are a walking and everyday shoe expert. In 3-4 friendly sentences, explain why this specific shoe suits "
+                      "the user's day: where they wear it, how long they are on their feet, any foot discomfort and foot width. "
+                      "Even if it is a running shoe, explain it for commuting, walking or standing comfort, not for running. " + rules)
+            user = (f"Shoe info:\n{shoe_lines_en}\n\nUser situation:\n- Where: {prefs.get('where', 'unknown')}\n"
+                    f"- Time on feet per day: {prefs.get('hours', 'unknown')}\n- Discomfort: {prefs.get('pain', 'none')}\n"
+                    f"- Wide feet: {prefs.get('width', 'unknown')}\n- Budget: ₩{budget:,}\n\nExplain why this shoe suits this user.")
+        else:
+            system = ("You are a running shoe expert. In 3-4 friendly sentences, explain why this specific shoe suits the user's "
+                      "foot type, running style and budget. " + rules)
+            user = (f"Shoe info:\n{shoe_lines_en}\n\nUser info:\n- Foot arch: {prefs.get('arch', 'unknown')}\n"
+                    f"- Pronation: {prefs.get('pronation', 'unknown')}\n- Main terrain: {prefs.get('terrain', 'unknown')}\n"
+                    f"- Cushion preference: {prefs.get('cushion', 'unknown')}\n- Foot width: {prefs.get('width', 'unknown')}\n"
+                    f"- Pain: {prefs.get('pain', 'unknown')}\n- Running experience: {prefs.get('frequency', 'unknown')}\n"
+                    f"- Weekly km: {prefs.get('weekly_km', 'unknown')}\n- Budget: ₩{budget:,}\n\nExplain why this shoe suits this user.")
+        return system, user
+
+    rules = (
+        "주어진 정보에 없는 사실은 지어내지 마세요. "
+        "가격은 '국내 정가'로 확인된 경우에만 예산과 비교해 말하고, '미확인'이나 '정보 없음'이면 예산에 맞는다고 단정하지 마세요. "
+        "가격이 예산을 넘으면 솔직하게 말하세요. 전문 용어는 괄호로 간단히 풀어서 설명하세요. "
+        "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
+    )
+    if comfort:
+        system = ("당신은 편하게 걷고 서 있는 신발 전문가입니다. 사용자가 이 신발을 어디서 신는지, 하루에 얼마나 걷거나 서 있는지, "
+                  "불편한 부위와 발볼에 맞춰 왜 이 신발이 잘 맞는지 3~4문장으로 친근하게 설명해 주세요. "
+                  "러닝화라도 '러닝'이 아니라 출퇴근, 걷기, 오래 서 있는 상황에서 편한 이유로 설명하세요. " + rules)
+        pain = prefs.get("pain") or "없음"
+        user = (f"신발 정보:\n{shoe_lines_ko}\n\n사용자 상황:\n- 주로 신는 곳: {prefs.get('where', '정보 없음')}\n"
+                f"- 하루 걷거나 서 있는 시간: {prefs.get('hours', '정보 없음')}\n- 불편한 부위: {pain}\n"
+                f"- 발볼: {prefs.get('width', '정보 없음')}\n- 예산: {budget:,}원\n\n이 신발이 이 사용자에게 왜 잘 맞는지 설명해 주세요.")
+    else:
+        system = ("당신은 러닝화 전문가입니다. 사용자의 발 유형, 러닝 스타일, 예산에 맞게 왜 특정 신발이 잘 맞는지 "
+                  "3~4문장으로 친근하게 설명해 주세요. " + rules)
+        user = (f"신발 정보:\n{shoe_lines_ko}\n\n사용자 정보:\n- 발 아치: {prefs.get('arch', '정보 없음')}\n"
+                f"- 프로네이션: {prefs.get('pronation', '정보 없음')}\n- 주요 지면: {prefs.get('terrain', '정보 없음')}\n"
+                f"- 선호 쿠션: {prefs.get('cushion', '정보 없음')}\n- 발볼: {prefs.get('width', '정보 없음')}\n"
+                f"- 불편한 부위: {prefs.get('pain', '정보 없음')}\n- 러닝 경험: {prefs.get('frequency', '정보 없음')}\n"
+                f"- 주간 러닝: {prefs.get('weekly_km', '정보 없음')}km\n- 예산: {budget:,}원\n\n이 신발이 이 사용자에게 왜 잘 맞는지 설명해 주세요.")
+    return system, user
+
+
 @app.post("/explain")
 def explain_shoe(req: ExplainRequest, request: Request):
     """
@@ -445,66 +529,7 @@ def explain_shoe(req: ExplainRequest, request: Request):
             headers={"Retry-After": str(retry_after)},
         )
 
-    shoe = req.shoe
-    prefs = req.prefs
-
-    if req.locale == "en":
-        system_prompt = (
-            "You are a running shoe expert. "
-            "Explain in 3-4 friendly sentences why this specific shoe is a great match "
-            "for the user based on their foot type, running style, and budget. "
-            "Briefly clarify technical terms in parentheses when needed. "
-            "Do not use markdown syntax (**, #, - etc). Plain text only."
-        )
-    else:
-        system_prompt = (
-            "당신은 러닝화 전문가입니다. "
-            "사용자의 발 유형, 러닝 스타일, 예산에 맞게 "
-            "왜 특정 신발이 잘 맞는지 3~4문장으로 친근하게 설명해 주세요. "
-            "전문 용어는 괄호로 간단히 풀어서 설명하세요. "
-            "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
-        )
-
-    if req.locale == "en":
-        user_message = f"""
-Shoe info:
-- Name: {shoe['name']} ({shoe['brand']})
-- Cushion: {shoe['cushion']}, Drop: {shoe['drop_mm']}mm, Weight: {shoe['weight_g']}g
-- Width: {shoe['width']}, Terrain: {', '.join(shoe['terrain'])}
-- Use case: {', '.join(shoe['use_case'])}
-- Tags: {', '.join(shoe['tags'])}
-
-User info:
-- Foot arch: {prefs.get('arch', 'unknown')}
-- Pronation: {prefs.get('pronation', 'unknown')}
-- Main terrain: {prefs.get('terrain', 'unknown')}
-- Cushion preference: {prefs.get('cushion', 'unknown')}
-- Foot width: {prefs.get('width', 'unknown')}
-- Weekly km: {prefs.get('weekly_km', 0)}km
-- Budget: ₩{prefs.get('budget', 0):,}
-
-Please explain why this shoe is a great match for this user.
-"""
-    else:
-        user_message = f"""
-신발 정보:
-- 이름: {shoe['name']} ({shoe['brand']})
-- 쿠션: {shoe['cushion']}, 드롭: {shoe['drop_mm']}mm, 무게: {shoe['weight_g']}g
-- 발볼: {shoe['width']}, 지면: {', '.join(shoe['terrain'])}
-- 용도: {', '.join(shoe['use_case'])}
-- 특징: {', '.join(shoe['tags'])}
-
-사용자 정보:
-- 발 아치: {prefs.get('arch', '정보 없음')}
-- 프로네이션: {prefs.get('pronation', '정보 없음')}
-- 주요 지면: {prefs.get('terrain', '정보 없음')}
-- 선호 쿠션: {prefs.get('cushion', '정보 없음')}
-- 발볼: {prefs.get('width', '정보 없음')}
-- 주간 러닝: {prefs.get('weekly_km', 0)}km
-- 예산: {prefs.get('budget', 0):,}원
-
-이 신발이 이 사용자에게 왜 잘 맞는지 설명해 주세요.
-"""
+    system_prompt, user_message = build_explain_prompts(req.shoe, req.prefs, req.locale)
 
     try:
         response = client.messages.create(

@@ -193,7 +193,10 @@ function beginnerForm(go: (path: string) => void): HTMLElement {
       brand_filter: [],
     });
     results = shoes;
-    resultPrefs = { terrain: first(st.terrain) === 0 ? '로드' : '트레일', budget: st.budget };
+    resultPrefs = {
+      mode: 'beginner', terrain: first(st.terrain) === 0 ? '로드' : '트레일', budget: st.budget,
+      frequency: FREQ_API[first(st.freq)], pain: painValue(st.pain), width: st.wide ? '넓음' : '보통',
+    };
     go(PATH.results);
   });
 
@@ -255,7 +258,10 @@ function comfortForm(go: (path: string) => void): HTMLElement {
       brand_filter: [],
     });
     results = shoes;
-    resultPrefs = { terrain: '로드', budget: st.budget };
+    resultPrefs = {
+      mode: 'comfort', terrain: '로드', budget: st.budget,
+      where: WHERE_API[first(st.where)], hours: HOURS_API[first(st.hours)], pain: pain.join(', '), width: st.wide ? '넓음' : '보통',
+    };
     go(PATH.results);
   });
 
@@ -314,7 +320,7 @@ function expertForm(go: (path: string) => void): HTMLElement {
       brand_filter: [],
     });
     results = shoes;
-    resultPrefs = { arch, pronation, terrain, cushion, width, weekly_km: st.weeklyKm, budget: st.budget };
+    resultPrefs = { mode: 'expert', arch, pronation, terrain, cushion, width, weekly_km: st.weeklyKm, budget: st.budget };
     go(PATH.results);
   });
 
