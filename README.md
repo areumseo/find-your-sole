@@ -25,6 +25,8 @@ A personalized running shoe recommendation iOS app. Answer a few questions about
 
 API endpoint: `https://find-your-sole.onrender.com`
 
+The web app is served at `https://findyoursole.app`. The API only answers browser requests from that origin (plus `localhost:5173` and `localhost:4173` for development). To allow another site, such as a Render preview URL, set `ALLOWED_ORIGINS` on the API service to a comma-separated list; they are added to the defaults. The iOS app is not a browser and is unaffected. This is hygiene rather than protection: scripts can still call the API directly, and `/explain` spends Anthropic credits.
+
 ## Web app
 
 A static site in `web/`, deployed to Render as `find-your-sole-web` (see `render.yaml`). It uses the same backend as the iOS app. The bundle is ~10 KB gzipped, so it loads quickly on mobile networks.

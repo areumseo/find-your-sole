@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -19,11 +20,29 @@ client = anthropic.Anthropic()  # ANTHROPIC_API_KEY 환경변수 필요
 
 app = FastAPI(title="Find Your Sole API")
 
+# Browsers may only call this API from these origins. Native apps (the iOS app)
+# send no Origin header, so CORS does not apply to them. To allow another site,
+# e.g. a Render preview URL, set ALLOWED_ORIGINS to a comma-separated list; those
+# are added to the defaults below.
+#
+# Note this is hygiene, not protection: anything that is not a browser (curl,
+# a script) can still call the API, and /explain spends Anthropic credits.
+DEFAULT_ORIGINS = [
+    "https://findyoursole.app",
+    "https://www.findyoursole.app",
+    # local development: vite dev server and vite preview
+    "http://localhost:5173",
+    "http://localhost:4173",
+]
+EXTRA_ORIGINS = [
+    o.strip().rstrip("/") for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=DEFAULT_ORIGINS + EXTRA_ORIGINS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 
