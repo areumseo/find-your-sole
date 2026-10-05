@@ -133,6 +133,9 @@ export async function explainShoe(shoe: Shoe, prefs: Prefs, locale: string): Pro
     shoe: {
       name: shoe.name,
       brand: shoe.brand,
+      price: shoe.price,
+      price_source: shoe.price_source,
+      price_usd: shoe.price_usd,
       cushion: shoe.cushion,
       drop_mm: shoe.drop_mm,
       weight_g: shoe.weight_g,

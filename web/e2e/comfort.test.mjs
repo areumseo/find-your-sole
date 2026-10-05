@@ -20,4 +20,16 @@ ok(await p.locator('.card').count()>0,'results shown');
 await p.getByRole('button',{name:'뒤로'}).first().click().catch(()=>{});
 await p.goto(BASE + '#/search'); await p.waitForSelector('.mode-card');
 ok(await p.locator('.mode-card').count()===3,'3 cards on search');
+// The explanation request tells the server how the person searched, so it is not explained as running.
+let explainBody = null;
+await p.route('**/explain', (r) => { explainBody = JSON.parse(r.request().postData()); return r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"explanation":"ok"}' }); });
+await p.goto(BASE); await p.waitForSelector('.mode-card');
+await p.locator('.mode-card').nth(2).click();
+await p.getByRole('button',{name:'5시간 이상'}).click();
+await p.click('.btn-primary');
+await p.waitForSelector('article.card');
+await p.locator('article.card .card-head').first().click();
+await p.waitForSelector('.explain');
+ok(explainBody && explainBody.prefs.mode === 'comfort' && explainBody.prefs.hours === '5시간 이상' && explainBody.prefs.where === '출퇴근 · 통학', 'comfort search sends its context to /explain', JSON.stringify(explainBody?.prefs));
+ok('price' in explainBody.shoe && 'price_source' in explainBody.shoe, '/explain also gets the shoe price fields');
 await b.close(); process.exit(f?1:0);
