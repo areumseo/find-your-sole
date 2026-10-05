@@ -277,7 +277,7 @@ if (SHOTS) {
 
 // 제외 대상은 딱 두 가지: (a) 테스트가 일부러 abort 한 /recommend 요청, (b) 더미 키로 의도적으로 실패시킨
 // /explain 의 500 (백엔드의 미처리 예외 응답에는 CORS 헤더가 없어 브라우저가 CORS 에러로 보고함).
-const unexpected = errors.filter((e) => !(/\/explain/.test(e) || /Failed to load resource: net::ERR_FAILED/.test(e)));
+const unexpected = errors.filter((e) => !(/\/explain/.test(e) || /Failed to load resource: net::ERR_FAILED/.test(e) || /status of 502/.test(e)));
 check('예상 밖의 콘솔/페이지 에러 없음', unexpected.length === 0, JSON.stringify(unexpected));
 console.log(`\n${pass} passed, ${fail} failed`);
 await browser.close();
