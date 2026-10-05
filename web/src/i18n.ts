@@ -130,6 +130,7 @@ const ko = {
   savedHint: '추천 결과에서 ♡를 눌러 저장해 보세요',
 
   heroBubble: '어서 와, 같이 골라보자!',
+  foundBubble: '딱 맞는 신발 발견!',
   homeGreeting: '내 발에 딱 맞는 한 켤레, 같이 찾아요',
   homeSubtitle: '질문 몇 개면 충분해요. 솔이가 골라 드릴게요.',
   statShoes: '보유 신발',
@@ -373,6 +374,7 @@ const en: Strings = {
   savedHint: 'Tap ♡ on a recommendation to save it',
 
   heroBubble: 'Come on in, let’s pick together!',
+  foundBubble: 'Found your perfect pair!',
   homeGreeting: 'Let’s find the pair that fits your feet',
   homeSubtitle: 'A few questions is all it takes. SOL-E will help you pick.',
   statShoes: 'My shoes',
