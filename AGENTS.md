@@ -112,3 +112,8 @@ Naver news uses NAVER API HUB (`naverapihub.apigw.ntruss.com`), not the old deve
 - Small, well-bounded work (copy, styling, one component, data fixes, tests): either agent, on its own branch.
 - Cross-cutting work (API + web together, new endpoints, data model, prompts, deploy/config): one agent owns the whole change in one PR.
 - Do not edit the same file from two branches at once (`web/src/i18n.ts`, `web/src/styles.css` and `api/main.py` are the usual collision points); say which agent holds them.
+
+## Releases
+
+- Versions follow SemVer and live in `web/package.json` (`version`); the About page shows it with `dataUpdated` (`YYYY-MM`, bump it whenever `shoes_data.json` changes).
+- The owner publishes a GitHub Release tagged `vX.Y.Z` after merging; agents bump the version only when asked and never create tags or releases.
