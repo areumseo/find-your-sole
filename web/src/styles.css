@@ -520,7 +520,8 @@ noscript p { padding: 24px 16px; text-align: center; }
 .news-title:hover { color: var(--primary); text-decoration: underline; }
 .widget-foot { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
 .widget-empty { padding: 20px 0 8px; text-align: center; color: var(--muted); }
-.widget-empty p { margin: 0 0 14px; }
+.widget-empty p { margin: 0 0 14px; font-weight: 700; }
+.empty-title { margin: 0; font-weight: 700; }
 
 /* ── Feedback button & admin ───────────────────────────── */
 .fab {
