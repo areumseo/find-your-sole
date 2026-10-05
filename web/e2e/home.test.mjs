@@ -55,5 +55,16 @@ await est.reload();
 await est.waitForSelector('.pick');
 ok((await est.locator('.pick .row-sub').textContent()).includes('15~20만원대'), 'a Korean list price keeps the KRW range');
 
+// Saved shoes keep the label rules too: an estimated shoe shows its USD price, an old entry without the fields keeps the range.
+const saved = await (await b.newContext({ viewport: { width: 1280, height: 900 }, locale: 'ko-KR' })).newPage();
+await saved.addInitScript(() => localStorage.setItem('fys.favorites', JSON.stringify([
+  { id: 1, name: 'Est Shoe', brand: 'B', price: 179000, price_source: 'estimate', price_usd: 150 },
+  { id: 2, name: 'Old Entry', brand: 'B', price: 129000 },
+])));
+await saved.goto(BASE);
+await saved.waitForSelector('.widget .row');
+const rows = await saved.locator('.widget .row-end').allTextContents();
+ok(rows.join('|') === '해외 $150|10~15만원대', 'saved widget: USD for estimates, range for old entries', rows.join('|'));
+
 await b.close();
 process.exit(fail ? 1 : 0);

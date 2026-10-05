@@ -1,8 +1,9 @@
 import json
 import os
+import threading
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import anthropic
 from fastapi import FastAPI, HTTPException, Request, Response
@@ -287,25 +288,85 @@ def health():
 KST = timezone(timedelta(hours=9))
 
 
+def is_pick_candidate(shoe: Dict) -> bool:
+    """Road shoes people wear day to day: everyday running, walking and daily. No trail or race shoes."""
+    return "로드" in shoe["terrain"] and ("데일리" in shoe["use_case"] or "walking" in shoe.get("categories", []))
+
+
 def pick_of_the_day(now: Optional[datetime] = None) -> Dict:
     """One shoe per Korean calendar day, the same for everyone (no randomness, no storage)."""
     today = (now or datetime.now(KST)).astimezone(KST).date()
-    ordered = sorted(SHOES, key=lambda s: s["id"])
+    ordered = sorted((s for s in SHOES if is_pick_candidate(s)), key=lambda s: s["id"])
     # A prime stride shuffles the order so consecutive days are not neighbours in the file.
     return ordered[(today.toordinal() * 7919) % len(ordered)]
 
 
 def pick_reason(shoe: Dict, locale: str) -> str:
+    """Plain data-driven sentence; used when the AI comment is unavailable."""
     tag = shoe["tags"][0] if shoe.get("tags") else ""
     if locale == "en":
         return f"{shoe['cushion']} cushioning at {shoe['weight_g']}g" + (f", known for: {tag}." if tag else ".")
     return f"쿠션은 {shoe['cushion']}, 무게는 {shoe['weight_g']}g" + (f", 특징은 \"{tag}\"이에요." if tag else "이에요.")
 
 
+# Soli's daily comment is written by Claude at most once per day per language and
+# kept in memory, so the cost is two tiny calls a day however many people visit.
+_pick_comments: Dict[Tuple[str, str], str] = {}
+_pick_comment_lock = threading.Lock()
+
+
+def pick_comment(shoe: Dict, locale: str, today: str) -> str:
+    key = (today, locale)
+    with _pick_comment_lock:
+        if key in _pick_comments:
+            return _pick_comments[key]
+        # Drop yesterday's entries so the dict never grows.
+        for old in [k for k in _pick_comments if k[0] != today]:
+            del _pick_comments[old]
+        try:
+            text = generate_pick_comment(shoe, locale)
+        except Exception as exc:  # noqa: BLE001 - never let a comment take /pick down
+            print(f"pick comment failed ({type(exc).__name__}); using the plain sentence")
+            text = ""
+        # A failure is cached too, so an outage is retried tomorrow, not on every visit.
+        _pick_comments[key] = text or pick_reason(shoe, locale)
+        return _pick_comments[key]
+
+
+def generate_pick_comment(shoe: Dict, locale: str) -> str:
+    facts = (
+        f"{shoe['name']} ({shoe['brand']}); cushion {shoe['cushion']}, weight {shoe['weight_g']}g, "
+        f"drop {shoe['drop_mm']}mm, width {shoe['width']}; features: {', '.join(shoe.get('tags', []))}; "
+        f"uses: {', '.join(shoe.get('use_case', []))}"
+    )
+    if locale == "en":
+        system = (
+            "You are Soli, a friendly little ghost who helps people pick shoes. "
+            "Write ONE or TWO short, warm sentences (max 200 characters) saying who today's pick suits and why. "
+            "Use only the facts given; do not invent specs or prices. Plain text, no markdown, no emoji."
+        )
+    else:
+        system = (
+            "당신은 신발 고르는 걸 도와주는 작은 유령 '솔이'입니다. "
+            "오늘의 추천 신발이 어떤 사람에게 왜 잘 맞는지 따뜻한 존댓말(~해요)로 한두 문장, 100자 이내로 써 주세요. "
+            "주어진 정보만 쓰고 수치나 가격을 지어내지 마세요. 마크다운과 이모지는 쓰지 마세요."
+        )
+    # Short timeout and no retries: this runs while a visitor waits on /pick.
+    response = client.with_options(timeout=15.0, max_retries=0).messages.create(
+        model="claude-haiku-4-5",
+        max_tokens=200,
+        system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+        messages=[{"role": "user", "content": facts}],
+    )
+    return next((b.text for b in response.content if b.type == "text"), "").strip()
+
+
 @app.get("/pick")
 def pick(response: Response, locale: str = "ko"):
     from urllib.parse import quote
 
+    locale = "en" if locale == "en" else "ko"
+    today = datetime.now(KST).date().isoformat()
     shoe = pick_of_the_day()
     response.headers["Cache-Control"] = "public, max-age=1800"
     return {
@@ -317,7 +378,7 @@ def pick(response: Response, locale: str = "ko"):
         "weight_g": shoe["weight_g"],
         "cushion": shoe["cushion"],
         "categories": shoe.get("categories", []),
-        "reason": pick_reason(shoe, locale),
+        "reason": pick_comment(shoe, locale, today),
         "naver_url": f"https://search.shopping.naver.com/search/all?query={quote(shoe['name'])}",
     }
 

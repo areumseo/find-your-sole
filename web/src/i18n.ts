@@ -183,6 +183,9 @@ const ko = {
     shoe.price_source === 'estimate' && shoe.price_usd
       ? `해외 정가 $${shoe.price_usd} · 국내 가격은 판매처 확인`
       : ko.priceRange(shoe.price),
+  /** Short form for narrow rows: just the USD list price for estimates. */
+  priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
+    shoe.price_source === 'estimate' && shoe.price_usd ? `해외 $${shoe.price_usd}` : ko.priceRange(shoe.price),
   tag: (t: string) => t,
   cushionName: (c: string) => c,
   widthName: (w: string) => w,
@@ -383,6 +386,8 @@ const en: Strings = {
     shoe.price_source === 'estimate' && shoe.price_usd
       ? `US list price $${shoe.price_usd} · check local price`
       : en.priceRange(shoe.price),
+  priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
+    shoe.price_source === 'estimate' && shoe.price_usd ? `US $${shoe.price_usd}` : en.priceRange(shoe.price),
   tag: (t: string) => TAGS_EN[t] ?? t,
   cushionName: (c: string) => CUSHION_EN[c] ?? c,
   widthName: (w: string) => WIDTH_EN[w] ?? w,

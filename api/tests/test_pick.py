@@ -5,11 +5,19 @@ from datetime import datetime, timedelta, timezone
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 os.environ.setdefault("ANTHROPIC_API_KEY", "test")
 
+import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
 import main  # noqa: E402
 
 KST = timezone(timedelta(hours=9))
+
+
+@pytest.fixture(autouse=True)
+def no_real_ai(monkeypatch):
+    """Never call Claude from tests; start each test with an empty comment cache."""
+    main._pick_comments.clear()
+    monkeypatch.setattr(main, "generate_pick_comment", lambda shoe, locale: "")
 
 
 def test_pick_is_stable_within_a_day_and_changes_next_day():
@@ -73,3 +81,38 @@ def test_explain_reports_anthropic_failures_as_502_with_a_log(monkeypatch, capsy
     res = TestClient(main.app).post("/explain", json=body)
     assert res.status_code == 502
     assert "401" in capsys.readouterr().out
+
+
+def test_pick_only_comes_from_everyday_road_shoes():
+    start = datetime(2026, 10, 1, 12, tzinfo=KST)
+    for d in range(120):
+        shoe = main.pick_of_the_day(start + timedelta(days=d))
+        assert "로드" in shoe["terrain"]
+        assert "데일리" in shoe["use_case"] or "walking" in shoe.get("categories", [])
+
+
+def test_ai_comment_is_generated_once_per_day_and_language(monkeypatch):
+    calls = []
+
+    def fake(shoe, locale):
+        calls.append(locale)
+        return f"솔이 코멘트 ({locale})"
+
+    monkeypatch.setattr(main, "generate_pick_comment", fake)
+    client = TestClient(main.app)
+    for _ in range(3):
+        assert client.get("/pick").json()["reason"] == "솔이 코멘트 (ko)"
+    assert client.get("/pick?locale=en").json()["reason"] == "솔이 코멘트 (en)"
+    assert calls == ["ko", "en"]
+
+
+def test_pick_falls_back_to_the_plain_sentence_when_ai_fails(monkeypatch):
+    def boom(shoe, locale):
+        raise RuntimeError("api down")
+
+    monkeypatch.setattr(main, "generate_pick_comment", boom)
+    reason = TestClient(main.app).get("/pick").json()["reason"]
+    assert "쿠션은" in reason
+    # The failure is remembered for the day instead of retrying on every visit.
+    monkeypatch.setattr(main, "generate_pick_comment", lambda shoe, locale: pytest.fail("retried"))
+    assert TestClient(main.app).get("/pick").json()["reason"] == reason
