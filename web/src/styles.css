@@ -494,10 +494,10 @@ noscript p { padding: 24px 16px; text-align: center; }
 .col-main:empty { display: none; }
 .pick-name { font-size: 17px; font-weight: 700; color: var(--name-gray); }
 .pick-reason, .tip-a { margin: 8px 0 12px; line-height: 1.6; font-size: 14px; }
-/* Soli's comment sits in a tinted box, like the explanation on a result card. */
-.pick-reason { padding: 10px 12px; background: var(--explain); border-radius: 12px; font-size: 13px; }
+/* Soli's comments (pick and tip) sit in the same tinted box, like the explanation on a result card. */
+.pick-reason, .tip-a { padding: 10px 12px; background: var(--explain); border-radius: 12px; font-size: 13px; }
 .tip-q { margin: 0; font-weight: 700; color: var(--name-gray); }
-.tip-a { margin-bottom: 0; color: var(--muted); }
+.tip-a { margin-bottom: 0; }
 .widget { padding: 18px 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
 .widget-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
 .widget-head h2 { font-size: 16px; color: var(--title-sky); }
