@@ -62,8 +62,11 @@ Always run the tests that cover what you changed before pushing, and say honestl
 
 - Scope: running + walking/everyday comfort shoes. No fashion sneakers.
 - Home has three finder cards (beginner runner, experienced runner, comfort shoes). There is no Search menu.
+- Results show the top three candidates first with a one-line comparison to the person's answers (no extra AI call); the rest are under "See more options". The AI explanation is requested only when a card is expanded.
+- Prices are shown as exact Korean list prices (`kr_list`) or the overseas USD price with a "check local price" note; never as a KRW range or a guessed amount.
+- On phones the feedback entry is in the More menu (a floating button would cover forms); on wide screens it floats at the bottom right.
 - No login. Saved shoes and "my shoes" live in the browser (`localStorage`). Feedback and the admin inbox work without accounts.
-- Mascot **Soli (솔이)**, a small ghost. Copy tone to users is polite and friendly (존댓말, "~해요"). Soli's persona lives on the About page.
+- Mascot **솔이** (written **SOL-E** in English copy), a small ghost. Copy tone to users is polite and friendly (존댓말, "~해요"). The persona lives on the About page.
 - Fonts: IBM Plex Sans KR (OFL). Theme follows the system and can be toggled (sun/moon). Colors are CSS tokens in `web/src/styles.css`
   (`--primary`, `--title-sky`, `--name-gray`, `--explain`); do not hard-code colors in components.
 - Mobile is first-class: check phone width (390 px) for any UI change; icon buttons need a tooltip and `aria-label`.
@@ -75,6 +78,7 @@ Always run the tests that cover what you changed before pushing, and say honestl
 - `price_source` is `kr_list` (a Korean list price was found, e.g. KREAM 발매가) or `estimate`.
   Estimated prices must carry `price_usd` (overseas list price); the UI then shows the USD price instead of a made-up KRW range.
 - Never invent specs or prices. If you cannot confirm a value, mark it `estimate` and say so in the PR.
+- Budget logic only trusts `kr_list` prices. API results carry `budget_status` (`within` / `unknown` / `over`) and are ordered in that sequence, then by score; `over_budget` is true only for confirmed Korean prices. Unknown prices are never a claim of affordability.
 - Run `python tools/validate_shoes.py` after touching `shoes_data.json`.
 
 ## Backend rules
