@@ -105,7 +105,9 @@ class NewsService:
         transport: Optional[httpx.AsyncBaseTransport] = None,
         clock: Callable[[], float] = time.time,
     ) -> None:
-        self._id, self._secret = client_id, client_secret
+        # Pasted env values often carry stray whitespace/quotes; Naver rejects them with 401.
+        self._id = client_id.strip().strip("'\"") if client_id else client_id
+        self._secret = client_secret.strip().strip("'\"") if client_secret else client_secret
         self.ttl, self.stale_ttl, self.retry_after = ttl, stale_ttl, retry_after
         self._transport, self._clock = transport, clock
         self._items: Optional[List[NewsItem]] = None
@@ -114,6 +116,9 @@ class NewsService:
         self._lock = asyncio.Lock()
         if not self.enabled:
             log.warning("NAVER_CLIENT_ID / NAVER_CLIENT_SECRET not set; /news will return an empty list")
+        else:
+            # Lengths only, never the values: lets you spot swapped or truncated keys.
+            log.warning("naver keys loaded: id_len=%d secret_len=%d", len(self._id), len(self._secret))
 
     @classmethod
     def from_env(cls) -> "NewsService":
