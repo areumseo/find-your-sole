@@ -447,6 +447,9 @@ noscript p { padding: 24px 16px; text-align: center; }
 .btn { display: inline-block; text-align: center; text-decoration: none; }
 .btn-small { padding: 8px 16px; min-height: 40px; font-size: 14px; }
 .block { margin-bottom: 32px; }
+/* A titled card that groups a page section. */
+.panel { padding: 18px 20px; margin-bottom: 24px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.panel .tile, .panel .card.owned { background: var(--page); }
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .section-head h2 { font-size: 18px; }
 .empty .hint { font-size: 13px; margin: 4px 0 18px; }
@@ -472,8 +475,8 @@ noscript p { padding: 24px 16px; text-align: center; }
 .hero > p { margin: 6px 0 20px; color: var(--muted); }
 .hero .mode-card { background: var(--card); }
 
-.tiles { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-bottom: 16px; }
-@media (min-width: 700px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); margin-bottom: 16px; }
+@media (max-width: 480px) { .tiles { gap: 8px; } .tile { padding: 12px; } .tile-value { font-size: 22px; } }
 .tile { padding: 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
 .tile-label { color: var(--muted); font-size: 12px; font-weight: 700; }
 .tile-value { margin-top: 6px; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }

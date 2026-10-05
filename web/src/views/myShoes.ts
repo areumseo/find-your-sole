@@ -4,7 +4,7 @@ import { REPLACE_KM, myShoes } from '../storage';
 import { openForm, toast } from '../ui';
 
 /** The user's shoe collection, shown as a section of the My Page screen. */
-export function myShoesSection(rerender: () => void): HTMLElement {
+export function myShoesSection(rerender: () => void, stats?: Node): HTMLElement {
   const s = t();
   const shoes = myShoes.all();
 
@@ -28,8 +28,9 @@ export function myShoesSection(rerender: () => void): HTMLElement {
       ),
   }, `＋ ${s.addShoe}`);
 
-  return h('section', { class: 'block' },
+  return h('section', { class: 'panel' },
     h('div', { class: 'section-head' }, h('h2', {}, s.myShoesTitle), addButton),
+    stats ?? null,
     shoes.length
       ? h('div', { class: 'cards-grid' }, ...shoes.map((shoe) => {
           const worn = shoe.km > REPLACE_KM;

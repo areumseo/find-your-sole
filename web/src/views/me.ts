@@ -1,7 +1,7 @@
 import { h } from '../dom';
 import { getLocale, setLocale, t, type Locale } from '../i18n';
-import { chips, pageHeader, section } from '../ui';
-import { savedWidget, statTiles } from './dashboard';
+import { chips, pageHeader } from '../ui';
+import { statTiles } from './dashboard';
 import { myShoesSection } from './myShoes';
 
 const LOCALES: { id: Locale; label: string }[] = [
@@ -24,15 +24,10 @@ export function languageChips(): HTMLElement {
 
 export function renderMe(rerender: () => void): HTMLElement {
   const s = t();
+  // Saved shoes live in their own tab; this page is only about the shoes you own.
   return h('div', { class: 'page-wide' },
     pageHeader(s.mePageTitle),
     h('p', { class: 'notice-card', role: 'note' }, 'ⓘ ', s.deviceNotice),
-    statTiles(),
-    h('div', { class: 'widgets me-widgets' }, savedWidget() as HTMLElement),
-    myShoesSection(rerender),
-    h('section', { class: 'block' },
-      h('div', { class: 'section-head' }, h('h2', {}, s.settingsTitle)),
-      section(s.languageLabel, languageChips()),
-    ),
+    myShoesSection(rerender, statTiles()),
   );
 }
