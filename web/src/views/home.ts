@@ -56,10 +56,14 @@ function tipWidget(): HTMLElement {
 function pickWidget(pick: DailyPick): HTMLElement {
   const s = t();
   const href = safeUrl(pick.naver_url);
+  const brandHref = pick.brand_url ? safeUrl(pick.brand_url) : null;
+  const brandEl = brandHref
+    ? h('a', { class: 'brand-link', href: brandHref, target: '_blank', rel: 'noopener noreferrer', 'aria-label': s.officialSite(pick.brand), title: s.officialSite(pick.brand) }, `${pick.brand} ↗`)
+    : pick.brand;
   return widget(s.widgetPick, null,
     h('div', { class: 'pick' },
       h('div', { class: 'pick-name' }, pick.name),
-      h('div', { class: 'row-sub' }, `${pick.brand} · ${s.priceLabel(pick)}`),
+      h('div', { class: 'row-sub' }, brandEl, ` · ${s.priceLabel(pick)}`),
       h('p', { class: 'pick-reason' }, pick.reason),
       href ? h('a', { class: 'btn btn-primary btn-small', href, target: '_blank', rel: 'noopener noreferrer' }, s.pickCta) : null,
     ),

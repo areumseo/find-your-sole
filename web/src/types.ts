@@ -40,6 +40,7 @@ export interface OwnedShoe {
 export interface DailyPick {
   name: string;
   brand: string;
+  brand_url?: string | null;
   price: number;
   price_source?: string | null;
   price_usd?: number | null;
