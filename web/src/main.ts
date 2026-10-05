@@ -3,6 +3,7 @@ import './styles.css';
 import { warmUp } from './api';
 import { h, mount } from './dom';
 import { getLocale, onLocaleChange, setLocale, t } from './i18n';
+import { themeToggle } from './theme';
 import { renderAbout } from './views/about';
 import { renderHome } from './views/home';
 import { renderMe } from './views/me';
@@ -102,10 +103,13 @@ function render(): void {
       // Two lines beside the mascot. The <br> keeps the text reading as "Find Your Sole".
       h('span', { class: 'brand-name' }, 'Find Your ', h('br'), h('b', {}, 'Sole')),
     ),
-    h('button', {
-      type: 'button', class: 'lang', 'aria-label': s.langToggleLabel,
-      onClick: () => setLocale(getLocale() === 'ko' ? 'en' : 'ko'),
-    }, s.langToggle),
+    h('div', { class: 'controls' },
+      themeToggle(),
+      h('button', {
+        type: 'button', class: 'lang', 'aria-label': s.langToggleLabel,
+        onClick: () => setLocale(getLocale() === 'ko' ? 'en' : 'ko'),
+      }, s.langToggle),
+    ),
   );
 
   mount(tabs, ...NAV.map(({ href, icon, label, pages, show }) =>
