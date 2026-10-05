@@ -18,6 +18,10 @@ for s in shoes:
         errors.append(f"{label}: categories must be a non-empty list from {sorted(CATEGORIES)}")
     if "price_source" in s and s["price_source"] not in ("kr_list", "estimate"):
         errors.append(f"{label}: price_source must be 'kr_list' or 'estimate'")
+    if s.get("price_source") == "estimate" and not isinstance(s.get("price_usd"), int):
+        errors.append(f"{label}: estimated prices need price_usd (the overseas list price shown to users)")
+    if "price_usd" in s and (not isinstance(s["price_usd"], int) or s["price_usd"] <= 0):
+        errors.append(f"{label}: invalid price_usd")
     if s.get("id") in ids:
         errors.append(f"{label}: duplicate id {s.get('id')}")
     ids.add(s.get("id"))

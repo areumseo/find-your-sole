@@ -59,7 +59,7 @@ function pickWidget(pick: DailyPick): HTMLElement {
   return widget(s.widgetPick, null,
     h('div', { class: 'pick' },
       h('div', { class: 'pick-name' }, pick.name),
-      h('div', { class: 'row-sub' }, `${pick.brand} · ${s.priceRange(pick.price)}`),
+      h('div', { class: 'row-sub' }, `${pick.brand} · ${s.priceLabel(pick)}`),
       h('p', { class: 'pick-reason' }, pick.reason),
       href ? h('a', { class: 'btn btn-primary btn-small', href, target: '_blank', rel: 'noopener noreferrer' }, s.pickCta) : null,
     ),

@@ -114,6 +114,8 @@ class ShoeResult(BaseModel):
     name: str
     brand: str
     price: int
+    price_source: Optional[str] = None  # "kr_list" or "estimate"
+    price_usd: Optional[int] = None  # overseas list price, shown when the KRW price is an estimate
     weight_g: int
     drop_mm: int
     cushion: str
@@ -310,6 +312,8 @@ def pick(response: Response, locale: str = "ko"):
         "name": shoe["name"],
         "brand": shoe["brand"],
         "price": shoe["price"],
+        "price_source": shoe.get("price_source"),
+        "price_usd": shoe.get("price_usd"),
         "weight_g": shoe["weight_g"],
         "cushion": shoe["cushion"],
         "categories": shoe.get("categories", []),

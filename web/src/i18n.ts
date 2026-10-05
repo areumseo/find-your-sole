@@ -179,6 +179,10 @@ const ko = {
 
   priceRange: (p: number): string =>
     p < 100000 ? '10만원 미만' : p < 150000 ? '10~15만원대' : p < 200000 ? '15~20만원대' : '20만원 이상',
+  priceLabel: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
+    shoe.price_source === 'estimate' && shoe.price_usd
+      ? `해외 정가 $${shoe.price_usd} · 국내 가격은 판매처 확인`
+      : ko.priceRange(shoe.price),
   tag: (t: string) => t,
   cushionName: (c: string) => c,
   widthName: (w: string) => w,
@@ -375,6 +379,10 @@ const en: Strings = {
 
   priceRange: (p: number) =>
     p < 100000 ? 'Under ₩100,000' : p < 150000 ? '₩100,000–150,000' : p < 200000 ? '₩150,000–200,000' : '₩200,000+',
+  priceLabel: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
+    shoe.price_source === 'estimate' && shoe.price_usd
+      ? `US list price $${shoe.price_usd} · check local price`
+      : en.priceRange(shoe.price),
   tag: (t: string) => TAGS_EN[t] ?? t,
   cushionName: (c: string) => CUSHION_EN[c] ?? c,
   widthName: (w: string) => WIDTH_EN[w] ?? w,
