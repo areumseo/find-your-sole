@@ -1,10 +1,10 @@
 # Find Your Sole 👟
 
-A personalized running shoe recommendation iOS app. Answer a few questions about your foot type, running style, and budget — get matched with the right shoe, explained by AI.
+A personalized shoe recommendation service for running shoes and everyday walking/comfort shoes. Answer a few questions about your feet, lifestyle, and budget — get matched with the right shoe, explained by AI. It ships as a web app (`web/`), a FastAPI backend (`api/`), and an iOS app (Flutter).
 
 ## Features
 
-- **Beginner & Expert modes** — simple 3-step flow for newcomers, full-detail form for experienced runners
+- **Three ways to search** — a simple flow for running beginners, a full-detail form for experienced runners, and a comfort flow (walking / commute / on-your-feet-all-day) for everyday shoes
 - **Rule-based scoring** — recommendations based on foot arch, pronation, terrain, cushion preference, foot width, weekly mileage, budget, and body weight
 - **AI explanations** — Claude Haiku explains why each shoe fits your profile
 - **Favorites** — save shoes you're interested in
