@@ -76,7 +76,7 @@ for (const [width, locale, scheme] of [[390, 'ko-KR', 'light'], [360, 'en-US', '
   const hero = await page.locator('.hero').boundingBox();
   const label = `${width}px ${locale} ${scheme}`;
   ok((await page.locator('.hero .sol-e').getAttribute('alt')) === '', `${label}: SOL-E is decoration (empty alt)`);
-  ok((await page.textContent('.hero .bubble')) === (locale === 'ko-KR' ? '어서 와, 같이 골라보자!' : 'Come on in, let’s pick together!'), `${label}: the bubble carries SOL-E's line`);
+  ok((await page.textContent('.hero .bubble')) === (locale === 'ko-KR' ? '나는 솔이. 같이 골라보자!' : 'I’m SOL-E. Let’s pick together!'), `${label}: the bubble carries SOL-E's line`);
   ok(bubble.x > img.x + img.width - 1 && bubble.x + bubble.width <= hero.x + hero.width, `${label}: the bubble sits beside SOL-E inside the hero`, JSON.stringify({ img, bubble, hero }));
   ok(img.width >= 80 && img.y >= hero.y, `${label}: SOL-E is large and inside the hero`, JSON.stringify(img));
   ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: nothing overflows`);

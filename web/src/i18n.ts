@@ -129,7 +129,7 @@ const ko = {
   savedEmpty: '저장한 신발이 없어요',
   savedHint: '추천 결과에서 ♡를 눌러 저장해 보세요',
 
-  heroBubble: '어서 와, 같이 골라보자!',
+  heroBubble: '나는 솔이. 같이 골라보자!',
   foundBubble: '딱 맞는 신발 발견!',
   homeGreeting: '내 발에 딱 맞는 한 켤레, 같이 찾아요',
   homeSubtitle: '질문 몇 개면 충분해요. 솔이가 골라 드릴게요.',
@@ -234,7 +234,7 @@ const ko = {
   aboutTitle: '앱 정보',
   personaTitle: '솔이를 소개해요',
   personaName: '솔이 (SOL-E)',
-  personaTagline: '“어서 와, 같이 골라보자!”',
+  personaTagline: '“나는 솔이. 같이 골라보자!”',
   personaBody: '신발장 구석에서 태어난 작은 유령이에요. 수많은 발걸음 곁에서 지내다 보니, 어떤 발에 어떤 신발이 편한지 눈에 보이게 됐대요. 지금은 Find Your Sole에서 여러분의 한 켤레를 같이 골라 줘요.',
   personaFacts: [
     { label: '성격', value: '호기심 많고 다정해요. 발 이야기가 나오면 눈이 반짝여요.' },
@@ -373,7 +373,7 @@ const en: Strings = {
   savedEmpty: 'No saved shoes yet',
   savedHint: 'Tap ♡ on a recommendation to save it',
 
-  heroBubble: 'Come on in, let’s pick together!',
+  heroBubble: 'I’m SOL-E. Let’s pick together!',
   foundBubble: 'Found your perfect pair!',
   homeGreeting: 'Let’s find the pair that fits your feet',
   homeSubtitle: 'A few questions is all it takes. SOL-E will help you pick.',
@@ -477,7 +477,7 @@ const en: Strings = {
   aboutTitle: 'About',
   personaTitle: 'Meet SOL-E',
   personaName: 'SOL-E',
-  personaTagline: '“Come on in, let’s pick together!”',
+  personaTagline: '“I’m SOL-E. Let’s pick together!”',
   personaBody: 'A little ghost born in the corner of a shoe closet. After spending so long beside countless footsteps, SOL-E can just tell which shoe feels right on which foot. Now SOL-E helps you find your pair here at Find Your Sole.',
   personaFacts: [
     { label: 'Personality', value: 'Curious and kind. Lights up whenever feet come up.' },
