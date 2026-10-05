@@ -38,7 +38,8 @@ def test_endpoint_returns_ranked_candidates():
     res = main.recommend_comfort(prefs(hours="5시간 이상"))
     assert 0 < len(res) <= 10
     # Within the budget first, best score first within each group.
-    assert [(r.over_budget, -r.score) for r in res] == sorted((r.over_budget, -r.score) for r in res)
+    order = {"within": 0, "unknown": 1, "over": 2}
+    assert [(order[r.budget_status], -r.score) for r in res] == sorted((order[r.budget_status], -r.score) for r in res)
     by_id = {s["id"]: s for s in main.SHOES}
     assert all({"walking", "daily"} & set(by_id[r.id]["categories"]) for r in res)  # only walking/daily shoes
 

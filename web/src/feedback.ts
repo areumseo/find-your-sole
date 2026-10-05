@@ -61,7 +61,7 @@ function toBase64(blob: Blob): Promise<string> {
   });
 }
 
-function openFeedback(): void {
+export function openFeedback(): void {
   const s = t();
   const context = contextLabel();
   let screenshot: string | null = null;

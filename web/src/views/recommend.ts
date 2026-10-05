@@ -93,7 +93,7 @@ export function renderRecommend(step: Step, go: (path: string) => void): HTMLEle
 }
 
 // ── Mode select ───────────────────────────────────────────
-/** The two entry cards, shared by the Search page and the Home dashboard. */
+/** The three entry cards on the Home dashboard. */
 export function modeCards(go: (path: string) => void): HTMLElement {
   const s = t();
   const card = (emoji: string, title: string, sub: string, desc: string, path: string) =>
@@ -358,9 +358,15 @@ function resultsView(go: (path: string) => void): HTMLElement {
   const s = t();
   return h('div', {},
     pageHeader(s.resultsTitle, () => go(PATH[lastForm])),
-    results.some((r) => r.over_budget) ? h('p', { class: 'notice-card', role: 'note' }, s.overBudgetNote) : null,
+    results.some((r) => r.over_budget || r.price_source !== 'kr_list') ? h('p', { class: 'notice-card', role: 'note' }, s.overBudgetNote) : null,
     results.length
-      ? h('div', { class: 'cards-grid' }, ...results.map((shoe, i) => shoeCard({ shoe, rank: i + 1, prefs: resultPrefs })))
+      ? h('div', {},
+        h('div', { class: 'cards-grid' }, ...results.slice(0, 3).map((shoe, i) => shoeCard({ shoe, rank: i + 1, prefs: resultPrefs }))),
+        results.length > 3 ? h('details', { class: 'more-results' },
+          h('summary', {}, s.moreResults(results.length - 3)),
+          h('div', { class: 'cards-grid' }, ...results.slice(3).map((shoe, i) => shoeCard({ shoe, rank: i + 4, prefs: resultPrefs }))),
+        ) : null,
+      )
       : h('p', { class: 'empty' }, s.noResults),
   );
 }

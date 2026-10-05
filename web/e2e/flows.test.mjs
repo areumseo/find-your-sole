@@ -101,6 +101,7 @@ check('다이얼로그에 신발 이름 prefill', (await page.inputValue('dialog
 await page.click('dialog .btn-primary');
 await page.waitForSelector('.toast.show');
 check('추가 토스트', (await page.textContent('.toast')).includes('추가됐어요'));
+await page.waitForSelector('dialog', { state: 'detached' });
 check('다이얼로그 닫힘/제거', (await page.locator('dialog').count()) === 0);
 
 // ── 뒤로가기(브라우저) ──
@@ -122,7 +123,7 @@ check('저장 카드 펼쳐도 /explain 호출 안 함', explainCalls === callsB
 // ── 내 신발 탭 ──
 await page.click('.tabs a:has-text("더보기")');
 await page.waitForSelector('.menu-row');
-check('더보기: 마이페이지/앱 정보 항목 + 언어 선택', (await page.locator('.menu-row').count()) === 2 && (await page.locator('main .chips .chip').count()) === 2);
+check('더보기: 마이페이지/앱 정보 항목 + 언어 선택', (await page.locator('.menu-row').count()) === 3 && (await page.locator('main .chips .chip').count()) === 2);
 check('더보기 탭 활성 표시', (await page.getAttribute('.tabs a:has-text("더보기")', 'aria-current')) === 'page');
 await page.click('.menu-row:has-text("마이페이지")');
 await page.waitForSelector('.owned');

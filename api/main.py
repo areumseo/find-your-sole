@@ -142,7 +142,8 @@ class ShoeResult(BaseModel):
     width: str
     tags: List[str]
     score: int
-    over_budget: bool = False  # the price is above the budget the user set
+    over_budget: bool = False  # only confirmed Korean prices can exceed the budget
+    budget_status: str = "unknown"  # within / unknown / over
     naver_url: str
 
 
@@ -168,11 +169,12 @@ def compute_score(shoe: Dict, prefs: Dict) -> int:
     else:
         score -= 30
 
-    if shoe["price"] <= prefs["budget"]:
-        score += 5
-    else:
-        over_ratio = (shoe["price"] - prefs["budget"]) / prefs["budget"]
-        score -= int(over_ratio * 30)
+    if shoe.get("price_source") == "kr_list":
+        if shoe["price"] <= prefs["budget"]:
+            score += 5
+        else:
+            over_ratio = (shoe["price"] - prefs["budget"]) / max(prefs["budget"], 1)
+            score -= int(over_ratio * 30)
 
     if prefs["width"] == "넓음" and shoe["width"] == "좁음":
         score -= 20
@@ -288,12 +290,17 @@ def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[Lis
         score = compute_score(shoe, prefs)
         from urllib.parse import quote
         naver_url = f"https://search.shopping.naver.com/search/all?query={quote(shoe['name'])}"
-        over = shoe["price"] > prefs["budget"]
-        results.append(ShoeResult(**{**shoe, "score": score, "naver_url": naver_url, "over_budget": over}))
+        known = shoe.get("price_source") == "kr_list"
+        over = known and shoe["price"] > prefs["budget"]
+        status = "over" if over else "within" if known else "unknown"
+        results.append(ShoeResult(**{**shoe, "score": score, "naver_url": naver_url,
+                                    "over_budget": over, "budget_status": status}))
 
     # Shoes within the budget come first (best score first); shoes above it follow, flagged,
     # so a 150,000 KRW budget does not open with 200,000 KRW shoes.
-    results.sort(key=lambda x: (x.over_budget, -x.score))
+    # Estimates cannot establish affordability: keep them separate from confirmed prices.
+    order = {"within": 0, "unknown": 1, "over": 2}
+    results.sort(key=lambda x: (order[x.budget_status], -x.score))
     return results[:10]
 
 

@@ -20,6 +20,7 @@ export interface Shoe {
   score: number;
   /** The price is above the budget the person set. */
   over_budget?: boolean;
+  budget_status?: 'within' | 'unknown' | 'over';
   naver_url: string;
 }
 

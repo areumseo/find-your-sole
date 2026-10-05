@@ -50,7 +50,7 @@ const ko = {
 
   heroSubtitle: '어떤 신발을 찾고 계세요?',
   beginnerTitle: '러닝 초심자',
-  beginnerSubtitle: '입문 ~ 1년',
+  beginnerSubtitle: '1년 미만',
   beginnerDescription: '전문 용어 없이 쉽게 추천받아요',
   expertTitle: '러닝 경험자',
   expertSubtitle: '1년 이상',
@@ -111,7 +111,15 @@ const ko = {
   wakingServer: '서버를 깨우는 중이에요. 처음에는 최대 1분 정도 걸릴 수 있어요…',
   noResults: '조건에 맞는 신발을 찾지 못했어요',
   overBudget: '예산 초과',
-  overBudgetNote: '예산 안의 신발을 먼저 보여드려요. 예산을 넘는 신발은 뒤쪽에 "예산 초과"로 표시했어요.',
+  overBudgetNote: '국내 정가 기준으로 예산 안의 신발을 먼저 보여드려요. 국내 가격 미확인 제품과 예산 초과 제품은 별도로 표시했어요. 실제 판매가는 달라질 수 있어요.',
+  priceUnconfirmed: '국내 가격 확인 필요',
+  moreResults: (count: number) => `다른 후보 ${count}개 보기`,
+  matchSummary: (facts: string[]) => `내 조건과 비교: ${facts.join(' · ')}`,
+  widthMatch: '선택한 발볼과 일치',
+  cushionMatch: '선호한 쿠션과 일치',
+  terrainMatch: (terrain: string) => `${terrain}용`,
+  cushionFact: (cushion: string) => `쿠션 ${cushion}`,
+  withinBudget: '국내 정가 기준 예산 이내',
   addFavorite: '저장하기',
   removeFavorite: '저장 해제',
   addToMyShoes: '내 신발에 추가',
@@ -213,17 +221,17 @@ const ko = {
   priceLabel: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
     shoe.price_source === 'estimate' && shoe.price_usd
       ? `해외 정가 $${shoe.price_usd} · 국내 가격은 판매처 확인`
-      : ko.priceRange(shoe.price),
+      : shoe.price_source === 'kr_list' ? `${shoe.price.toLocaleString('ko-KR')}원` : '국내 가격 확인 필요',
   /** Short form for narrow rows: just the USD list price for estimates. */
   priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
-    shoe.price_source === 'estimate' && shoe.price_usd ? `해외 $${shoe.price_usd}` : ko.priceRange(shoe.price),
+    shoe.price_source === 'estimate' && shoe.price_usd ? `해외 $${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `${shoe.price.toLocaleString('ko-KR')}원` : '국내 가격 확인 필요',
   tag: (t: string) => t,
   cushionName: (c: string) => c,
   widthName: (w: string) => w,
 
   aboutTitle: '앱 정보',
   personaTitle: '솔이를 소개해요',
-  personaName: '솔이 (Soli)',
+  personaName: '솔이 (SOL-E)',
   personaTagline: '“어서 와, 같이 골라보자!”',
   personaBody: '신발장 구석에서 태어난 작은 유령이에요. 수많은 발걸음 곁에서 지내다 보니, 어떤 발에 어떤 신발이 편한지 눈에 보이게 됐대요. 지금은 Find Your Sole에서 여러분의 한 켤레를 같이 골라 줘요.',
   personaFacts: [
@@ -284,14 +292,14 @@ const en: Strings = {
 
   heroSubtitle: 'What kind of shoe are you looking for?',
   beginnerTitle: 'Beginner',
-  beginnerSubtitle: 'Up to 1 year',
-  beginnerDescription: 'Get recommendations without the jargon',
+  beginnerSubtitle: 'Under 1 year',
+  beginnerDescription: 'Simple, jargon-free picks',
   expertTitle: 'Experienced Runner',
   expertSubtitle: '1+ years',
-  expertDescription: 'Precise recommendations based on your running profile',
+  expertDescription: 'Picks for your running style',
   comfortTitle: 'Comfort Shoes',
   comfortSubtitle: 'Walking · commute · everyday',
-  comfortDescription: 'Shoes that stay comfortable on long days on your feet',
+  comfortDescription: 'Comfort for long days on your feet',
   comfortModeTitle: '🚶 Comfort Shoes',
   sectionWhere: 'Where will you wear them most?',
   wheres: ['Commute / school', 'Standing at work', 'Travel / strolls', 'Everyday comfort'],
@@ -317,7 +325,7 @@ const en: Strings = {
   freq: ['Just starting out', 'Under 6 months', 'Under 1 year'],
   terrains: ['Park / Road', 'Trail / Dirt'],
   pains: ['None', 'Knee', 'Ankle', 'Plantar fascia', 'Multiple areas'],
-  sectionBudget: (won: number) => `Budget (under ₩${won.toLocaleString('en-US')})`,
+  sectionBudget: (won: number) => `Budget (up to ₩${won.toLocaleString('en-US')})`,
   sectionWeeklyKm: (km: number) => `Weekly distance (${km}km)`,
 
   sectionArch: 'Foot arch',
@@ -347,7 +355,15 @@ const en: Strings = {
   addFavorite: 'Save',
   removeFavorite: 'Remove from saved',
   overBudget: 'Over budget',
-  overBudgetNote: 'Shoes within your budget come first. Shoes above it follow, marked "Over budget".',
+  overBudgetNote: 'Shoes within budget at Korean list prices come first. Unconfirmed local prices and over-budget options are marked separately. Store prices may vary.',
+  priceUnconfirmed: 'Check Korean price',
+  moreResults: (count: number) => `See ${count} more options`,
+  matchSummary: (facts: string[]) => `Compared with your answers: ${facts.join(' · ')}`,
+  widthMatch: 'Matches selected width',
+  cushionMatch: 'Matches preferred cushioning',
+  terrainMatch: (terrain: string) => `${terrain} use`,
+  cushionFact: (cushion: string) => `${cushion} cushioning`,
+  withinBudget: 'Within budget at Korean list price',
   addToMyShoes: 'Add to My Shoes',
   toggleDetails: 'Show details',
 
@@ -356,7 +372,7 @@ const en: Strings = {
   savedHint: 'Tap ♡ on a recommendation to save it',
 
   homeGreeting: 'Let’s find the pair that fits your feet',
-  homeSubtitle: 'A few questions is all it takes. Soli will help you pick.',
+  homeSubtitle: 'A few questions is all it takes. SOL-E will help you pick.',
   statShoes: 'My shoes',
   statKm: 'Total distance',
   statSoon: 'Due for replacement',
@@ -365,12 +381,12 @@ const en: Strings = {
   count: (n: number) => String(n),
   widgetMyShoes: 'My shoes',
   widgetSaved: 'Saved shoes',
-  widgetNews: 'Soli’s New Arrivals Radar',
+  widgetNews: 'SOL-E’s New Arrivals Radar',
   newsCredit: 'News search by Naver',
   newsLanguageNote: 'Articles are in Korean',
   feedbackFab: 'Feedback',
   feedbackTitle: 'Tell us what you think',
-  feedbackHint: 'Anything helps: something confusing, wrong info, or a feature you want. Soli reads every note.',
+  feedbackHint: 'Anything helps: something confusing, wrong info, or a feature you want. SOL-E reads every note.',
   feedbackPrivacy: 'We cannot reply, so please do not include personal details like your name or contact info.',
   feedbackPlaceholder: 'Write here',
   feedbackAttach: 'Attach screenshot',
@@ -398,9 +414,9 @@ const en: Strings = {
   adminStatusTitle: 'Server checks (at startup)',
   adminStatusNames: { anthropic: 'AI explanations (Anthropic)', naver: 'Launch news (Naver)', database: 'Feedback storage (DB)', admin: 'Admin token' } as Record<string, string>,
   newsUpdated: (when: string) => `As of ${when}`,
-  widgetPick: 'Soli’s Daily Pick',
+  widgetPick: 'SOL-E’s Daily Pick',
   pickCta: 'See in shops',
-  widgetTip: 'Soli’s Bite-size Tip',
+  widgetTip: 'SOL-E’s Bite-size Tip',
   tips: [
     { q: 'What is drop?', a: 'The height difference between heel and forefoot. A bigger number puts the heel higher and eases the front of the foot; a lower one feels closer to barefoot.' },
     { q: 'When should I replace running shoes?', a: 'Usually after 500–800 km (300–500 miles). Replace sooner if the cushioning feels flat or the outsole wears on one side.' },
@@ -447,18 +463,18 @@ const en: Strings = {
   priceLabel: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
     shoe.price_source === 'estimate' && shoe.price_usd
       ? `US list price $${shoe.price_usd} · check local price`
-      : en.priceRange(shoe.price),
+      : shoe.price_source === 'kr_list' ? `₩${shoe.price.toLocaleString('en-US')}` : 'Check Korean price',
   priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
-    shoe.price_source === 'estimate' && shoe.price_usd ? `US $${shoe.price_usd}` : en.priceRange(shoe.price),
+    shoe.price_source === 'estimate' && shoe.price_usd ? `US $${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `₩${shoe.price.toLocaleString('en-US')}` : 'Check Korean price',
   tag: (t: string) => TAGS_EN[t] ?? t,
   cushionName: (c: string) => CUSHION_EN[c] ?? c,
   widthName: (w: string) => WIDTH_EN[w] ?? w,
 
   aboutTitle: 'About',
-  personaTitle: 'Meet Soli',
-  personaName: 'Soli',
+  personaTitle: 'Meet SOL-E',
+  personaName: 'SOL-E',
   personaTagline: '“Come on in, let’s pick together!”',
-  personaBody: 'A little ghost born in the corner of a shoe closet. After spending so long beside countless footsteps, Soli can just tell which shoe feels right on which foot. Now Soli helps you find your pair here at Find Your Sole.',
+  personaBody: 'A little ghost born in the corner of a shoe closet. After spending so long beside countless footsteps, SOL-E can just tell which shoe feels right on which foot. Now SOL-E helps you find your pair here at Find Your Sole.',
   personaFacts: [
     { label: 'Personality', value: 'Curious and kind. Lights up whenever feet come up.' },
     { label: 'Loves', value: 'Opening a fresh shoe box, squishy cushioning, walks on sunny days' },
@@ -471,7 +487,7 @@ const en: Strings = {
   aboutCards: [
     {
       title: '🔍 About Find Your Sole',
-      body: 'A shoe recommendation app for new and experienced runners, and for anyone on their feet all day. Answer a few simple questions and Soli helps you pick shoes that fit your feet and your life.',
+      body: 'A shoe recommendation app for new and experienced runners, and for anyone on their feet all day. Answer a few simple questions and SOL-E helps you pick shoes that fit your feet and your life.',
     },
     {
       title: '⚙️ How Recommendations Work',
