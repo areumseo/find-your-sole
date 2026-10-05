@@ -56,3 +56,10 @@ def test_estimates_do_not_claim_affordability_or_affect_price_score():
     middle = results[1:4]
     assert all(r.budget_status == "unknown" and not r.over_budget for r in middle)
     assert len({r.score for r in middle}) == 1
+
+
+def test_results_carry_the_brands_official_site():
+    results = run(1_000_000)
+    assert results and all(r.brand_url and r.brand_url.startswith("https://") for r in results)
+    by_id = {s["id"]: s for s in main.SHOES}
+    assert all(r.brand_url == by_id[r.id]["url"] for r in results)

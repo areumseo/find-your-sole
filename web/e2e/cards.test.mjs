@@ -37,10 +37,10 @@ const priceTexts = await p.locator('.side .price').allTextContents();
 ok(priceTexts[0] === '해외 $150' && priceTexts[1] === '179,000원', 'card header shows the short price', priceTexts.join('|'));
 
 // The full explanation is in the expanded card.
-await cards.nth(0).locator('.card-head').click();
+await cards.nth(0).locator('.name-toggle').click();
 await p.waitForSelector('.price-note');
 ok((await p.textContent('.price-note')).includes('해외 정가 $150 · 국내 가격은 판매처 확인'), 'the full overseas price is in the details');
-await cards.nth(1).locator('.card-head').click();
+await cards.nth(1).locator('.name-toggle').click();
 ok((await cards.nth(1).locator('.price-note').count()) === 0, 'a Korean list price has no overseas note');
 
 // Tooltips on the two icon buttons.
@@ -115,6 +115,46 @@ for (const [scheme, locale, label] of [['light', 'ko-KR', '내 조건과 비교:
   const texts = await page.locator('.match-summary .fact').allTextContents();
   ok(texts.filter((x) => x.startsWith('✓')).length === kinds.filter((k) => k !== 'fact-info').length, `${where}: matches and budget carry a check mark, plain info does not`, texts.join('|'));
   ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${where}: nothing overflows`);
+}
+
+// The brand name links to the official site; the rest of the text block still toggles the card.
+{
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, locale: 'ko-KR' });
+  const page = await ctx.newPage();
+  await page.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' },
+    body: JSON.stringify([
+      shoe(1, 'Linked Shoe', { brand: 'Hoka', brand_url: 'https://www.hoka.com/ko-kr' }),
+      shoe(2, 'Unsafe Link Shoe', { brand: 'Evil', brand_url: 'javascript:alert(1)' }),
+      shoe(3, 'Old Entry Shoe', { brand: 'Legacy' }),
+    ]) }));
+  await page.goto(BASE);
+  await page.locator('.mode-card').nth(2).click();
+  await page.click('.btn-primary');
+  await page.waitForSelector('article.card');
+  const card = page.locator('article.card');
+  const link = card.nth(0).locator('a.brand-link');
+  ok((await link.getAttribute('href')) === 'https://www.hoka.com/ko-kr' && (await link.getAttribute('target')) === '_blank' && (await link.getAttribute('rel')).includes('noopener') && (await link.getAttribute('rel')).includes('noreferrer'), 'brand name is a safe new-tab link to the official site');
+  ok((await link.getAttribute('aria-label')) === 'Hoka 공식 사이트 (새 탭)' && (await link.textContent()).startsWith('Hoka'), 'the link has an accessible name');
+  ok((await card.nth(1).locator('a.brand-link').count()) === 0 && (await card.nth(1).locator('.shoe-brand').textContent()) === 'Evil', 'a non-https address is shown as plain text');
+  ok((await card.nth(2).locator('a.brand-link').count()) === 0 && (await card.nth(2).locator('.shoe-brand').textContent()) === 'Legacy', 'an entry without an address is plain text');
+  // Clicking the link opens a new tab and does NOT toggle the card.
+  const [popup] = await Promise.all([ctx.waitForEvent('page'), link.click()]);
+  await popup.close();
+  ok((await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded')) === 'false', 'clicking the brand link does not expand the card');
+  // Clicking the name or the tags toggles it.
+  await card.nth(0).locator('.tags .tag').first().click();
+  const afterTag = await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded');
+  await card.nth(0).locator('.name-toggle').click();
+  const afterName = await card.nth(0).locator('.name-toggle').getAttribute('aria-expanded');
+  ok(afterTag === 'true' && afterName === 'false', 'clicking the tags expands the card and clicking the name collapses it', `${afterTag} -> ${afterName}`);
+  // Keyboard: Tab reaches the name button, then the brand link, as separate stops.
+  await page.keyboard.press('Escape');
+  await card.nth(1).locator('.name-toggle').focus();
+  await page.keyboard.press('Tab');
+  ok(await card.nth(1).locator('.shoe-brand').count() === 1, 'the unsafe-link card keeps a plain brand line after the name');
+  await link.focus();
+  ok(await link.evaluate((e) => document.activeElement === e), 'the brand link is keyboard focusable');
+  ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'nothing overflows');
 }
 
 await b.close();

@@ -22,6 +22,8 @@ for s in shoes:
         errors.append(f"{label}: estimated prices need price_usd (the overseas list price shown to users)")
     if "price_usd" in s and (not isinstance(s["price_usd"], int) or s["price_usd"] <= 0):
         errors.append(f"{label}: invalid price_usd")
+    if not str(s.get("url", "")).startswith("https://"):
+        errors.append(f"{label}: url must be the brand's https site")
     if s.get("id") in ids:
         errors.append(f"{label}: duplicate id {s.get('id')}")
     ids.add(s.get("id"))

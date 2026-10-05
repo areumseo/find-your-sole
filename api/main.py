@@ -131,6 +131,7 @@ class ShoeResult(BaseModel):
     price: int
     price_source: Optional[str] = None  # "kr_list" or "estimate"
     price_usd: Optional[int] = None  # overseas list price, shown when the KRW price is an estimate
+    brand_url: Optional[str] = None  # the brand's official (Korean) site, linked from the brand name
     weight_g: int
     drop_mm: int
     cushion: str
@@ -294,7 +295,8 @@ def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[Lis
         over = known and shoe["price"] > prefs["budget"]
         status = "over" if over else "within" if known else "unknown"
         results.append(ShoeResult(**{**shoe, "score": score, "naver_url": naver_url,
-                                    "over_budget": over, "budget_status": status}))
+                                    "over_budget": over, "budget_status": status,
+                                    "brand_url": shoe.get("url")}))
 
     # Shoes within the budget come first (best score first); shoes above it follow, flagged,
     # so a 150,000 KRW budget does not open with 200,000 KRW shoes.

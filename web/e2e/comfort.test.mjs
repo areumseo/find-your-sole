@@ -28,7 +28,7 @@ await p.locator('.mode-card').nth(2).click();
 await p.getByRole('button',{name:'5시간 이상'}).click();
 await p.click('.btn-primary');
 await p.waitForSelector('article.card');
-await p.locator('article.card .card-head').first().click();
+await p.locator('article.card .name-toggle').first().click();
 await p.waitForSelector('.explain');
 ok(explainBody && explainBody.prefs.mode === 'comfort' && explainBody.prefs.hours === '5시간 이상' && explainBody.prefs.where === '출퇴근 · 통학', 'comfort search sends its context to /explain', JSON.stringify(explainBody?.prefs));
 ok('price' in explainBody.shoe && 'price_source' in explainBody.shoe, '/explain also gets the shoe price fields');
