@@ -515,6 +515,19 @@ noscript p { padding: 24px 16px; text-align: center; }
   border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); transform: rotate(45deg);
 }
 @media (max-width: 599px) { .sol-e-row .sol-e { width: 80px; height: 80px; } }
+/* Wide screens: SOL-E and the bubble on the left, the greeting larger on the right, the cards below.
+   Below 900px (phones and small tablets) the stacked layout above is unchanged. */
+@media (min-width: 900px) {
+  .hero {
+    display: grid; grid-template-columns: auto 1fr; grid-template-areas: 'mascot title' 'mascot sub' 'cards cards';
+    column-gap: 40px; align-items: center;
+  }
+  .hero .sol-e-row { grid-area: mascot; margin: 0; }
+  .hero .sol-e-row .sol-e { width: 120px; height: 120px; }
+  .hero h1 { grid-area: title; margin: 0; align-self: end; font-size: 36px; line-height: 1.25; }
+  .hero > p { grid-area: sub; margin: 8px 0 0; align-self: start; font-size: 18px; }
+  .hero .mode-grid { grid-area: cards; margin-top: 22px; }
+}
 /* Results page: the arms-up SOL-E with a short bubble above the cards. */
 .found-row { display: flex; align-items: flex-end; gap: 10px; margin: -6px 0 12px; }
 .found-row .sol-e { width: 72px; height: 72px; flex: none; }

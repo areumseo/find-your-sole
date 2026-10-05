@@ -84,5 +84,31 @@ for (const [width, locale, scheme] of [[390, 'ko-KR', 'light'], [360, 'en-US', '
   ok(bg !== 'rgba(0, 0, 0, 0)', `${label}: the bubble has a background`, bg);
 }
 
+// Wide screens put the greeting to the right of SOL-E; phones keep the stacked layout.
+for (const [width, wide] of [[1280, true], [1000, true], [900, true], [899, false], [768, false], [390, false], [360, false]]) {
+  for (const scheme of ['light', 'dark']) {
+    const page = await (await b.newContext({ viewport: { width, height: 800 }, locale: 'ko-KR', colorScheme: scheme })).newPage();
+    await page.goto(BASE);
+    await page.waitForSelector('.hero .bubble');
+    const row = await page.locator('.hero .sol-e-row').boundingBox();
+    const sol = await page.locator('.hero .sol-e').boundingBox();
+    const h1 = await page.locator('.hero h1').boundingBox();
+    const sub = await page.locator('.hero > p').boundingBox();
+    const cards = await page.locator('.hero .mode-grid').boundingBox();
+    const hero = await page.locator('.hero').boundingBox();
+    const size = await page.locator('.hero h1').evaluate((e) => parseFloat(getComputedStyle(e).fontSize));
+    const label = `${width}px ${scheme}`;
+    if (wide) {
+      ok(h1.x >= row.x + row.width - 1 && sub.x >= row.x + row.width - 1, `${label}: the greeting is to the right of SOL-E`, JSON.stringify({ row, h1 }));
+      ok(size === 36 && sol.width === 120, `${label}: larger greeting (36px) and SOL-E (120px)`, `${size} ${sol.width}`);
+      ok(cards.y >= Math.max(row.y + row.height, sub.y + sub.height) - 1 && cards.width > hero.width - 60, `${label}: the cards sit below, full width`, JSON.stringify({ cards, hero }));
+    } else {
+      ok(h1.y >= row.y + row.height - 1 && h1.x <= row.x + 1, `${label}: unchanged: the greeting stays below SOL-E`, JSON.stringify({ row, h1 }));
+      ok(size === 24 && sol.width <= 92, `${label}: unchanged sizes (24px greeting, SOL-E at most 92px)`, `${size} ${sol.width}`);
+    }
+    ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: nothing overflows`);
+  }
+}
+
 await b.close();
 process.exit(fail ? 1 : 0);
