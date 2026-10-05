@@ -18,22 +18,39 @@ Production: web at `https://findyoursole.app`, API at `https://find-your-sole.on
 
 ## Commands
 
-```bash
-python -m pytest api/tests          # API tests (run from the repo root)
-python tools/validate_shoes.py      # catalogue validation
-cd web && npm run typecheck         # tsc --noEmit
-cd web && npm run e2e               # builds against a local API and runs every web/e2e/*.test.mjs
-```
+Run each command from the directory in the **Run from** column (`<repo>` is the repository root).
 
-`npm run e2e` needs `pip install -r api/requirements.txt` and a Chromium; set `CHROMIUM_PATH` if Playwright cannot find one.
+| Run from | Command | What it checks |
+|---|---|---|
+| `<repo>` | `pip install -r api/requirements-dev.txt` | one-time: API and test dependencies |
+| `<repo>` | `python -m pytest api/tests` | API tests (offline) |
+| `<repo>` | `python tools/validate_shoes.py` | shoe catalogue validation |
+| `<repo>/web` | `npm install` | one-time: web dependencies |
+| `<repo>/web` | `npm run typecheck` | TypeScript (`tsc --noEmit`) |
+| `<repo>/web` | `npm run e2e` | builds the site against a local API and runs every `web/e2e/*.test.mjs` (about 3 minutes) |
+| `<repo>/web` | `npm run build` | type check + production build |
+
+`npm run e2e` starts the API itself (needs the API requirements installed) and a Chromium that Playwright can find;
+set `CHROMIUM_PATH=/path/to/chromium` if it cannot. Run a single browser test with
+`cd <repo>/web && E2E_BASE=http://localhost:4173/ node e2e/<name>.test.mjs` while a build is served on port 4173.
 Always run the tests that cover what you changed before pushing, and say honestly what you did not run.
+
+## Starting a task
+
+1. `git fetch origin main`, then create the branch **from the latest `origin/main`**
+   (`git checkout -b <branch> origin/main`). Never continue on a branch whose PR was already merged; start a new one.
+2. **Before editing, tell the owner the scope** in a short note: what will change, what will not, and the **main files** you expect to touch.
+3. **Check for overlap**: list the open PRs (`gh`/GitHub) and compare their changed files with yours. If another open PR touches the same
+   files or the same behaviour, do **not** work in parallel: wait for it to be merged, or ask the owner which goes first. Overlapping work is done in sequence.
+4. Open the PR against `main`. Do not merge it; the owner merges.
+5. Re-check the open PR list when you finish and mention any PR that now conflicts with yours.
 
 ## Git and PR rules (important)
 
 - Work on a branch named for the task: `feat/...`, `fix/...`, `style/...`, `docs/...`, `test/...`, `chore/...`.
   Agent-prefixed names are fine when two agents work at once (`claude/...`, `codex/...`).
 - **Every PR targets `main`.** Never stack a PR on another PR's branch (it once merged into the base branch and never reached `main`).
-  If you need another change first, wait for it or branch from `main` and say so.
+  If you need another change first, wait for it to be merged, then start from the new `origin/main`.
 - **Never merge PRs and never push to `main`.** The owner reviews and merges.
 - PR titles and bodies are in **English**. Use sections: Problem/Why, Changes, Verification, Notes.
   Commit messages are English too.
