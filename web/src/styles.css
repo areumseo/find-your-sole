@@ -379,6 +379,13 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .about-card { padding: 16px; }
 .about-card p + p { margin-top: 8px; }
 .about-card a { color: var(--primary); font-size: 13px; }
+.persona-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.persona-head h3 { color: var(--title-sky); margin-bottom: 2px; }
+.persona-name { font-size: 18px; font-weight: 700; }
+.persona-tagline { color: var(--muted); font-size: 13px; }
+.persona-facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 14px 0 0; font-size: 13px; line-height: 1.6; }
+.persona-facts dt { color: var(--title-sky); font-weight: 700; }
+.persona-facts dd { margin: 0; }
 .version { text-align: center; color: var(--muted); font-size: 12px; margin-top: 8px; opacity: 0.7; }
 
 /* ── Dialog & toast ────────────────────────────────────── */
