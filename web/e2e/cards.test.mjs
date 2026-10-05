@@ -34,12 +34,16 @@ const names = await cards.locator('.card-head h3, .card-head .name, .card-head s
 const nameBox = await cards.nth(0).locator('text=Hoka Clifton 10').first().boundingBox();
 ok(nameBox.width > 140 && nameBox.height < 60, 'a long overseas price does not squeeze the shoe name', JSON.stringify(nameBox));
 const priceTexts = await p.locator('.side .price').allTextContents();
-ok(priceTexts[0] === '해외 $150' && priceTexts[1] === '179,000원', 'card header shows the short price', priceTexts.join('|'));
+ok(priceTexts[0] === '해외 정가 US$150 ⓘ' && priceTexts[1] === '179,000원', 'card header shows the short price', priceTexts.join('|'));
 
 // The full explanation is in the expanded card.
 await cards.nth(0).locator('.name-toggle').click();
 await p.waitForSelector('.price-note');
-ok((await p.textContent('.price-note')).includes('해외 정가 $150 · 국내 가격은 판매처 확인'), 'the full overseas price is in the details');
+ok((await p.textContent('.price-note')).includes('해외 정가 US$150 · 국내 판매가는 판매처에서 확인해 주세요'), 'the full overseas price is in the details');
+ok((await cards.nth(0).innerText()).includes('해외 정가는 참고용이며, 국내 판매가와 다를 수 있어요.'), 'overseas price is explicitly reference-only');
+ok((await cards.nth(0).locator('.price-unconfirmed').textContent()) === '국내 판매가 확인 필요', 'unknown Korean price stays explicit');
+ok((await cards.nth(0).locator('.btn-outline-naver').textContent()).includes('네이버에서 국내 판매가 확인'), 'shopping button explains the domestic-price check');
+ok((await cards.nth(0).locator('.price-info').getAttribute('aria-label')).includes('참고용'), 'price info has accessible context');
 await cards.nth(1).locator('.name-toggle').click();
 ok((await cards.nth(1).locator('.price-note').count()) === 0, 'a Korean list price has no overseas note');
 
@@ -63,7 +67,7 @@ await over.locator('.mode-card').nth(2).click();
 await over.click('.btn-primary');
 await over.waitForSelector('article.card');
 ok((await over.locator('.over-budget').count()) === 1 && (await over.locator('article.card').nth(1).locator('.over-budget').count()) === 1, 'only the over-budget card carries the badge');
-ok((await over.textContent('.notice-card')).includes('예산 안의 신발을 먼저'), 'a note explains the order');
+ok((await over.textContent('.notice-card')).includes('조건에 맞는 순서'), 'a note explains the order');
 await over.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify([shoe(1, 'Only Shoe')]) }));
 await over.goBack();
 await over.click('.btn-primary');
@@ -165,5 +169,21 @@ for (const [scheme, locale, label] of [['light', 'ko-KR', '내 조건과 비교:
   ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'nothing overflows');
 }
 
+const enCtx = await b.newContext({viewport:{width:390,height:844},locale:'en-US'});
+const enPage = await enCtx.newPage();
+await enPage.route('**/recommend/comfort',r=>r.fulfill({json:RESULTS}));
+await enPage.route('**/explain',r=>r.fulfill({json:{explanation:'Fixture'}}));
+await enPage.goto(BASE);
+await enPage.locator('.mode-card').nth(2).click();
+await enPage.locator('.btn-primary').click();
+await enPage.waitForSelector('article.card');
+const enCard = enPage.locator('article.card').first();
+ok((await enCard.locator('.price').textContent()).includes('Overseas list US$150'), 'English header identifies overseas list price');
+await enCard.locator('.detail-toggle').click();
+ok((await enCard.innerText()).includes('The overseas list price is for reference'), 'English reference-price explanation');
+ok((await enCard.locator('.btn-outline-naver').textContent()).includes('Check Korean selling price on Naver'), 'English domestic-price action');
+ok(await enPage.evaluate(()=>document.documentElement.scrollWidth <= innerWidth), 'English price context fits phone width');
+await enPage.screenshot({path:'price-context-en.png',fullPage:true});
+await p.screenshot({path:'price-context-ko.png',fullPage:true});
 await b.close();
 process.exit(fail ? 1 : 0);

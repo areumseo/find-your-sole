@@ -50,7 +50,7 @@ await est.route('**/pick*', (r) => r.fulfill({ status: 200, contentType: 'applic
 await est.goto(BASE);
 await est.waitForSelector('.pick');
 const sub = await est.locator('.pick .row-sub').textContent();
-ok(sub.includes('해외 정가 $150') && !sub.includes('만원'), 'estimated price shows the USD list price', sub);
+ok(sub.includes('해외 정가 US$150') && !sub.includes('만원'), 'estimated price shows the USD list price', sub);
 await est.unroute('**/pick*');
 await est.route('**/pick*', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: pickBody({ price_source: 'kr_list', price_usd: null }) }));
 await est.reload();
@@ -66,7 +66,7 @@ await saved.addInitScript(() => localStorage.setItem('fys.favorites', JSON.strin
 await saved.goto(BASE);
 await saved.waitForSelector('.widget .row');
 const rows = await saved.locator('.widget .row-end').allTextContents();
-ok(rows.join('|') === '해외 $150|국내 가격 확인 필요', 'saved widget: USD for estimates, unknown price for old entries without a source', rows.join('|'));
+ok(rows.join('|') === '해외 정가 US$150|국내 가격 확인 필요', 'saved widget: USD for estimates, unknown price for old entries without a source', rows.join('|'));
 
 // SOL-E greets from the hero with a speech bubble, on phones and desktops, in both languages and both themes.
 for (const [width, locale, scheme] of [[390, 'ko-KR', 'light'], [360, 'en-US', 'dark'], [1280, 'ko-KR', 'dark'], [768, 'en-US', 'light']]) {
