@@ -90,11 +90,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .brand b { color: var(--primary); }
 
 .controls { display: flex; align-items: center; gap: 8px; }
-.icon-toggle {
+.icon-toggle, .feedback-top {
   display: grid; place-items: center; width: 36px; height: 36px; padding: 0;
   border: 1px solid var(--border); background: var(--card); color: var(--ink); border-radius: 50%;
 }
-.icon-toggle:hover { background: var(--chip); }
+.icon-toggle:hover, .feedback-top:hover { background: var(--chip); }
 .icon-toggle svg { width: 18px; height: 18px; }
 
 .lang {
@@ -550,8 +550,10 @@ noscript p { padding: 24px 16px; text-align: center; }
 }
 .fab:hover { border-color: var(--primary); }
 .fab-ico { font-size: 16px; line-height: 1; }
-@media (max-width: 899px) { .fab-label { display: none; } .fab { padding: 12px; } }
-@media (min-width: 900px) { .fab { right: 24px; bottom: 24px; } }
+/* Phones: the feedback button lives in the top bar (it would cover the bottom buttons as a floating one). */
+@media (max-width: 899px) { .fab { display: none; } }
+@media (min-width: 900px) { .fab { right: 24px; bottom: 24px; } .feedback-top { display: none; } }
+.feedback-top { font-size: 16px; line-height: 1; }
 .feedback-dialog { width: min(480px, calc(100vw - 32px)); }
 .feedback-hint { margin: 4px 0 12px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .feedback-text {

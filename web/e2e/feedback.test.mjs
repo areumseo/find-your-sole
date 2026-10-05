@@ -15,7 +15,7 @@ const open = async (width) => {
   const ctx = await b.newContext({ viewport: { width, height: 800 }, locale: 'ko-KR' });
   const page = await ctx.newPage();
   await page.goto(BASE);
-  await page.waitForSelector('.fab');
+  await page.waitForSelector('.fab, .feedback-top', { state: 'attached' });
   return page;
 };
 const adminList = async (page) => (await page.request.get(`${API}/admin/feedback`, { headers: { Authorization: `Bearer ${TOKEN}` } })).json();
@@ -39,17 +39,22 @@ fs.writeFileSync(fakePng, '<html>not an image</html>');
 
 // ── The button ──
 const desktop = await open(1280);
-ok((await desktop.locator('.fab').count()) === 1, 'one feedback button on Home');
+ok((await desktop.locator('.fab').count()) === 1 && !(await desktop.locator('.feedback-top').isVisible()), 'desktop: one floating feedback button on Home');
 await desktop.goto(BASE + '#/about');
 ok((await desktop.locator('.fab').count()) === 1, 'the button stays on other pages');
 const box = await desktop.locator('.fab').boundingBox();
 ok(box.x + box.width > 1200 && box.y + box.height > 700, 'desktop: bottom-right corner', JSON.stringify(box));
 
 const mobile = await open(390);
-const fab = await mobile.locator('.fab').boundingBox();
-const tabs = await mobile.locator('.tabs').boundingBox();
-ok(fab.y + fab.height <= tabs.y, 'mobile: the button sits above the tab bar', JSON.stringify({ fab, tabs }));
-ok(!(await mobile.locator('.fab-label').isVisible()), 'mobile: icon only');
+const top = await mobile.locator('.feedback-top').boundingBox();
+ok(top.y < 80 && !(await mobile.locator('.fab').isVisible()), 'mobile: the button is in the top bar, not floating over the page', JSON.stringify(top));
+await mobile.locator('.mode-card').first().click();
+await mobile.waitForSelector('.btn-primary');
+const submitBtn = await mobile.locator('.btn-primary').boundingBox();
+ok(!(await mobile.locator('.fab').isVisible()) && submitBtn.width > 200, 'mobile: nothing covers the submit button of a form');
+await mobile.click('.feedback-top');
+await mobile.waitForSelector('dialog[open] textarea');
+ok(true, 'mobile: the top-bar button opens the same dialog');
 
 // ── Sending ──
 await desktop.goto(BASE + '#/saved');

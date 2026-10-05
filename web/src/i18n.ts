@@ -50,7 +50,7 @@ const ko = {
 
   heroSubtitle: '어떤 신발을 찾고 계세요?',
   beginnerTitle: '러닝 초심자',
-  beginnerSubtitle: '입문 ~ 1년',
+  beginnerSubtitle: '입문 ~ 1년 미만',
   beginnerDescription: '전문 용어 없이 쉽게 추천받아요',
   expertTitle: '러닝 경험자',
   expertSubtitle: '1년 이상',
@@ -283,7 +283,7 @@ const en: Strings = {
 
   heroSubtitle: 'What kind of shoe are you looking for?',
   beginnerTitle: 'Beginner',
-  beginnerSubtitle: 'Up to 1 year',
+  beginnerSubtitle: 'Under 1 year',
   beginnerDescription: 'Get recommendations without the jargon',
   expertTitle: 'Experienced Runner',
   expertSubtitle: '1+ years',

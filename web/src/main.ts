@@ -1,7 +1,7 @@
 import './fonts.css';
 import './styles.css';
 import { warmUp } from './api';
-import { feedbackButton } from './feedback';
+import { feedbackButton, feedbackTopButton } from './feedback';
 import { h, mount } from './dom';
 import { getLocale, onLocaleChange, setLocale, t } from './i18n';
 import { themeToggle } from './theme';
@@ -111,6 +111,7 @@ function render(): void {
       h('span', { class: 'brand-name' }, 'Find Your ', h('br'), h('b', {}, 'Sole')),
     ),
     h('div', { class: 'controls' },
+      feedbackTopButton(),
       themeToggle(),
       h('button', {
         type: 'button', class: 'lang', 'aria-label': s.langToggleLabel,

@@ -144,7 +144,13 @@ function openFeedback(): void {
   text.focus();
 }
 
-/** The round "feedback" button that floats on every page. Rebuilt on language change. */
+/** Phone version: a small round button in the top bar, so it never covers the page content. */
+export function feedbackTopButton(): HTMLElement {
+  const s = t();
+  return h('button', { type: 'button', class: 'feedback-top', 'aria-label': s.feedbackFab, title: s.feedbackFab, onClick: openFeedback }, '💬');
+}
+
+/** The round "feedback" button that floats on every page (wide screens). Rebuilt on language change. */
 export function feedbackButton(): HTMLElement {
   const s = t();
   return h('button', { type: 'button', class: 'fab', 'aria-label': s.feedbackFab, title: s.feedbackFab, onClick: openFeedback },
