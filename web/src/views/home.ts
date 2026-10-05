@@ -77,6 +77,11 @@ export function renderHome(go: (path: string) => void): HTMLElement {
 
   const root = h('div', { class: 'dashboard' },
     h('section', { class: 'hero' },
+      // Soli greets with its signature line; the image is decoration, the line is real text.
+      h('div', { class: 'soli-row' },
+        h('img', { class: 'soli', src: '/logo.svg', alt: '', width: 92, height: 92 }),
+        h('p', { class: 'bubble' }, s.heroBubble),
+      ),
       h('h1', {}, s.homeGreeting),
       h('p', {}, s.homeSubtitle),
       modeCards(go),

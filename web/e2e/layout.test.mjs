@@ -123,7 +123,7 @@ const mbrand = await box(bm, '.brand'), mlang = await box(bm, '.lang');
 check('모바일: 브랜드와 언어 버튼이 겹치지 않음', mbrand.x + mbrand.width < mlang.x);
 await bm.click('.lang');
 await brandChecks(bm, '영어 전환 후 모바일');
-check('홈 히어로에 마스코트 없음(요청에 따라 제거)', (await bd.locator('.hero-mascot').count()) === 0 && (await bd.locator('.hero img').count()) === 0);
+check('홈 히어로에 솔이(큰 마스코트 + 말풍선) 하나', (await bd.locator('.hero .soli').count()) === 1 && (await bd.locator('.hero .bubble').count()) === 1 && (await bd.locator('.hero-mascot').count()) === 0);
 
 // ── 사이트 아이콘/매니페스트가 실제로 서비스되는지 ──
 const net = await open(1280, 800);
