@@ -14,8 +14,11 @@
   color-scheme: light dark;
 }
 
+/* Dark values appear twice on purpose: once for a system preference (unless the
+   user explicitly chose light) and once for an explicit dark choice. A saved
+   choice is stamped on <html data-theme> (see theme.ts and index.html). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --page: #121212;
     --card: #1e1e1e;
     --border: #2c2c2c;
@@ -25,6 +28,17 @@
     --chip: #2a2a2a;
   }
 }
+:root[data-theme='dark'] {
+  --page: #121212;
+  --card: #1e1e1e;
+  --border: #2c2c2c;
+  --ink: #f2f2f2;
+  --muted: rgba(255, 255, 255, 0.62);
+  --explain: #1a2a33;
+  --chip: #2a2a2a;
+  color-scheme: dark;
+}
+:root[data-theme='light'] { color-scheme: light; }
 
 * { box-sizing: border-box; }
 
@@ -68,6 +82,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* Two lines beside the mascot: "Find Your" over a blue "Sole". */
 .brand-name { font-size: 18px; font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; }
 .brand b { color: var(--primary); }
+
+.controls { display: flex; align-items: center; gap: 8px; }
+.icon-toggle {
+  display: grid; place-items: center; width: 36px; height: 36px; padding: 0;
+  border: 1px solid var(--border); background: var(--card); color: var(--ink); border-radius: 50%;
+}
+.icon-toggle:hover { background: var(--chip); }
+.icon-toggle svg { width: 18px; height: 18px; }
 
 .lang {
   border: 1px solid var(--border);
@@ -156,7 +178,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   .tabs a[aria-current='page'] {
     background: color-mix(in srgb, var(--primary) 14%, transparent);
   }
-  .lang { order: 2; margin-top: auto; align-self: flex-start; }
+  .controls { order: 2; margin-top: auto; align-self: flex-start; }
 
   main { flex: 1; min-width: 0; max-width: 1200px; margin: 0 auto; padding: 32px 32px 48px; }
 

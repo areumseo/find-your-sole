@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
+    <!-- Apply a saved light/dark choice before first paint so there is no flash of the other theme. -->
+    <script>
+      try {
+        var t = localStorage.getItem('fys.theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
     <meta name="theme-color" content="#4aabdb" />
 
     <title>Find Your Sole · 러닝화 추천</title>

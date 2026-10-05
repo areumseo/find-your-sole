@@ -45,6 +45,8 @@ const ko = {
   navMore: '더보기',
   langToggle: 'EN',
   langToggleLabel: 'Switch to English',
+  themeToLight: '라이트 모드로 전환',
+  themeToDark: '다크 모드로 전환',
 
   heroSubtitle: '러닝 경험이 어느 정도인가요?',
   beginnerTitle: '러닝 초심자',
@@ -201,6 +203,8 @@ const en: Strings = {
   navMore: 'More',
   langToggle: '한국어',
   langToggleLabel: '한국어로 전환',
+  themeToLight: 'Switch to light mode',
+  themeToDark: 'Switch to dark mode',
 
   heroSubtitle: 'How much running experience do you have?',
   beginnerTitle: 'Beginner',
