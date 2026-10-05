@@ -62,6 +62,10 @@ class Store:
         """Set (or toggle when `resolved` is None) the flag. Returns the new value, None if missing."""
         raise NotImplementedError
 
+    def ping(self) -> None:
+        """Raise if the storage cannot be reached."""
+        return None
+
 
 class MemoryStore(Store):
     def __init__(self) -> None:
@@ -127,6 +131,12 @@ class SqlStore(Store):
             Column("screenshot", Text, nullable=True),
         )
         meta.create_all(self._engine)  # the table is created on first use
+
+    def ping(self):
+        from sqlalchemy import text
+
+        with self._engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
 
     def add(self, message, context, mime, screenshot_b64):
         with self._engine.begin() as conn:

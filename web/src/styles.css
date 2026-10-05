@@ -560,3 +560,14 @@ noscript p { padding: 24px 16px; text-align: center; }
 .admin-message { margin: 10px 0; white-space: pre-wrap; word-break: break-word; line-height: 1.6; }
 .admin-actions { display: flex; justify-content: flex-end; gap: 4px; }
 .admin-shot img { display: block; max-width: min(90vw, 560px); max-height: 70vh; margin: 0 auto 8px; }
+
+.admin-status { margin-bottom: 14px; padding: 14px 16px; }
+.admin-status h3 { margin: 0 0 8px; font-size: 14px; }
+.admin-status ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13px; }
+.admin-status li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.admin-status .status-ico { width: 16px; text-align: center; font-weight: 700; }
+.admin-status .good .status-ico { color: #2e9e5b; }
+.admin-status .bad .status-ico { color: var(--danger, #d64545); }
+.admin-status .idle .status-ico { color: var(--muted); }
+.admin-status .status-detail { color: var(--muted); }
+.admin-status[hidden] { display: none; }

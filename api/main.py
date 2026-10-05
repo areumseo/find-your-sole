@@ -1,5 +1,6 @@
 import json
 import os
+from contextlib import asynccontextmanager
 import threading
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -11,10 +12,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 try:  # started from api/ (`uvicorn main:app`)
+    import startup_checks
     from feedback import router as feedback_router
     from rate_limit import ExplainLimiter
     from shoe_news import router as news_router
 except ModuleNotFoundError:  # started from the repo root (`uvicorn api.main:app`)
+    from api import startup_checks
     from api.feedback import router as feedback_router
     from api.rate_limit import ExplainLimiter
     from api.shoe_news import router as news_router
@@ -29,7 +32,14 @@ CUSHION_ORDER = {"낮음": 1, "중간": 2, "높음": 3, "최고": 4}
 # ── Claude 클라이언트 ─────────────────────────────────────────
 client = anthropic.Anthropic()  # ANTHROPIC_API_KEY 환경변수 필요
 
-app = FastAPI(title="Find Your Sole API")
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    # In the background, so a slow or failing check never delays the app coming up.
+    startup_checks.start_in_background(client)
+    yield
+
+
+app = FastAPI(title="Find Your Sole API", lifespan=lifespan)
 
 # Browsers may only call this API from these origins. Native apps (the iOS app)
 # send no Origin header, so CORS does not apply to them. To allow another site,
@@ -59,6 +69,7 @@ app.add_middleware(
 
 app.include_router(news_router)
 app.include_router(feedback_router)
+app.include_router(startup_checks.router)
 
 explain_limiter = ExplainLimiter.from_env()
 
