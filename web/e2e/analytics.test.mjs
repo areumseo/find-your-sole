@@ -8,7 +8,9 @@ async function setup(host = 'findyoursole.app') {
   const ctx = await browser.newContext({locale:'ko-KR',viewport:{width:390,height:844}});
   const p = await ctx.newPage();
   let scripts = 0;
-  await p.route('https://www.googletagmanager.com/**', r => { scripts++; return r.fulfill({body:'',contentType:'text/javascript'}); });
+  const hits = [];
+  await p.route('**/g/collect**', r => { hits.push(r.request().url()); return r.fulfill({status:204,body:''}); });
+  await p.route('https://www.googletagmanager.com/**', async r => { scripts++; return r.fulfill({body:process.env.GA_TEST_SCRIPT ? await readFile(process.env.GA_TEST_SCRIPT, 'utf8') : '',contentType:'text/javascript'}); });
   await p.route(`https://${host}/**`, async r => {
     const pathname = new URL(r.request().url()).pathname;
     const file = pathname === '/' ? 'index.html' : pathname.slice(1);
@@ -20,10 +22,10 @@ async function setup(host = 'findyoursole.app') {
   const shoe = {id:65,name:'Test shoe',brand:'LeMouton',price:149000,price_source:'kr_list',weight_g:181,drop_mm:null,cushion:'미확인',width:'미확인',terrain:['로드'],arch:[],pronation:[],use_case:['데일리'],weekly_km:'미확인',tags:[],score:90,budget_status:'within',naver_url:'https://search.shopping.naver.com/search/all?query=Test'};
   await p.route('**/recommend/comfort',r=>r.fulfill({json:[shoe]}));
   await p.route('**/explain',r=>r.fulfill({json:{explanation:'Test explanation'}}));
-  return {ctx,p,scripts:()=>scripts};
+  return {ctx,p,scripts:()=>scripts,hits};
 }
 try {
-  const {ctx,p,scripts} = await setup();
+  const {ctx,p,scripts,hits} = await setup();
   await p.goto('https://findyoursole.app/?private=secret');
   await p.locator('.mode-card').nth(2).click();
   await p.locator('.btn-primary').click();
@@ -34,7 +36,13 @@ try {
   await p.locator('article .icon-btn').first().click();
   await p.locator('.btn-outline-naver').evaluate(el=>el.addEventListener('click',e=>e.preventDefault()));
   await p.locator('.btn-outline-naver').click();
-  const commands = await p.evaluate(()=>window.dataLayer);
+  const queueShape = await p.evaluate(()=>window.dataLayer.filter(x=>x[0]).map(x=>({array:Array.isArray(x),kind:Object.prototype.toString.call(x)})));
+  assert.ok(queueShape.length > 0 && queueShape.every(x=>!x.array && x.kind==='[object Arguments]'), 'Google command queue uses Arguments, not method-call arrays');
+  const commands = await p.evaluate(()=>window.dataLayer.filter(x=>x[0]).map(x=>Array.from(x)));
+  if (process.env.GA_TEST_SCRIPT) {
+    if (!hits.length) await p.waitForRequest(r=>r.url().includes('/g/collect'),{timeout:15000});
+    assert.ok(hits.some(url=>new URL(url).searchParams.get('tid')==='G-02CCFQWHZ1'), 'Real Google library sends a hit for the expected measurement ID');
+  }
   assert.equal(scripts(),1);
   assert.equal(commands.find(x=>x[0]==='config')[1],'G-02CCFQWHZ1');
   assert.equal(commands.find(x=>x[0]==='config')[2].send_page_view,false);
@@ -46,7 +54,7 @@ try {
   const count=commands.length;
   await p.evaluate(()=>{location.hash='#/admin';});
   await p.waitForTimeout(100);
-  assert.equal(await p.evaluate(()=>window.dataLayer.length),count);
+  assert.equal(await p.evaluate(()=>window.dataLayer.filter(x=>x[0]).length),count);
   await ctx.close();
   for (const [host,hash] of [['findyoursole.app','#/admin'],['localhost','']]) {
     const test = await setup(host);
