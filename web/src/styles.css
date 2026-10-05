@@ -1,6 +1,7 @@
 :root {
   --primary: #4aabdb;
   --name-gray: #4f5b66; /* slate gray: stands out from body text without competing with the sky-blue titles */
+  --good: #217a45; /* green for "within budget"; darker on light for contrast */
   --title-sky: #1b7fb3; /* primary darkened to stay readable on light cards */
   --primary-ink: #fff;
   --naver: #03c75a;
@@ -29,6 +30,7 @@
     --explain: #1a2a33;
     --chip: #2a2a2a;
     --title-sky: #6cc0ec;
+    --good: #5fd08a;
     --name-gray: #b4bfca;
   }
 }
@@ -41,6 +43,7 @@
   --explain: #1a2a33;
   --chip: #2a2a2a;
   --title-sky: #6cc0ec;
+  --good: #5fd08a;
   --name-gray: #b4bfca;
   color-scheme: dark;
 }
@@ -584,7 +587,12 @@ noscript p { padding: 24px 16px; text-align: center; }
 .feedback-dialog { width: min(480px, calc(100vw - 32px)); }
 .feedback-entry { width: 100%; text-align: left; }
 .price-unconfirmed { color: var(--muted); font-size: 12px; }
-.match-summary { margin: 0; padding: 0 16px 16px; color: var(--title-sky); font-size: 13px; line-height: 1.6; }
+.match-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 0 16px 16px; }
+.match-label { margin-right: 2px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.fact { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; line-height: 1.4; }
+.fact-match { background: color-mix(in srgb, var(--primary) 14%, transparent); color: var(--title-sky); }
+.fact-good { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+.fact-info { background: var(--chip); color: var(--ink); }
 .more-results { margin-top: 20px; }
 .more-results > summary { cursor: pointer; padding: 14px 0; color: var(--primary); font-weight: 700; }
 /* Give names their own row rather than squeezing them between rank and price. */
