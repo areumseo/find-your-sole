@@ -11,7 +11,7 @@ await p.getByRole('button',{name:'5시간 이상'}).click();
 await p.getByRole('button',{name:'발바닥 · 뒤꿈치'}).click();
 await p.getByRole('button',{name:'무릎'}).click();
 const req = p.waitForRequest(r=>r.url().includes('/recommend/comfort'));
-await p.getByRole('button',{name:'추천 받기'}).click();
+await p.getByRole('button',{name:'결과 보기'}).click();
 const body = JSON.parse((await req).postData());
 console.log(JSON.stringify(body));
 ok(body.hours==='5시간 이상' && body.pain.length===2 && !body.pain.includes('없음'),'payload');
