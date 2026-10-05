@@ -179,7 +179,7 @@ const ko = {
   adminStatusNames: { anthropic: 'AI 설명(Anthropic)', naver: '신상 뉴스(Naver)', database: '피드백 저장소(DB)', admin: '관리자 토큰' } as Record<string, string>,
   newsUpdated: (when: string) => `${when} 기준`,
   widgetPick: '솔이의 데일리 픽',
-  pickCta: '쇼핑에서 보기',
+  pickCta: '네이버 쇼핑에서 보기',
   widgetTip: '솔이의 한 입 상식',
   tips: [
     { q: '드롭이 뭐예요?', a: '뒤꿈치와 앞꿈치의 높이 차이예요. 숫자가 클수록 뒤꿈치가 높아서 발바닥 앞쪽 부담이 줄고, 낮을수록 자연스러운 걸음에 가까워요.' },
@@ -427,7 +427,7 @@ const en: Strings = {
   adminStatusNames: { anthropic: 'AI explanations (Anthropic)', naver: 'Launch news (Naver)', database: 'Feedback storage (DB)', admin: 'Admin token' } as Record<string, string>,
   newsUpdated: (when: string) => `As of ${when}`,
   widgetPick: 'SOL-E’s Daily Pick',
-  pickCta: 'See in shops',
+  pickCta: 'See on Naver Shopping',
   widgetTip: 'SOL-E’s Bite-size Tip',
   tips: [
     { q: 'What is drop?', a: 'The height difference between heel and forefoot. A bigger number puts the heel higher and eases the front of the foot; a lower one feels closer to barefoot.' },
