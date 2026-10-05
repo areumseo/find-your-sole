@@ -146,7 +146,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   const naver = safeUrl(shoe.naver_url);
   detail.append(
     // The header only has room for the short price; spell out the overseas list price here.
-    ...(shoe.price_source === 'estimate' && shoe.price_usd ? [h('p', { class: 'price-note' }, s.priceLabel(shoe))] : []),
+    ...(shoe.price_source === 'estimate' && shoe.price_usd ? [h('p', { class: 'price-note' }, s.priceLabel(shoe)), h('p', { class: 'price-note' }, s.overseasPriceNote)] : []),
     h('dl', { class: 'specs' },
       ...(
         [
@@ -204,7 +204,9 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       main,
       h('div', { class: 'side' },
         h('div', { class: 'actions' }, favBtn, addBtn),
-        h('div', { class: 'price' }, s.priceBrief(shoe)),
+        h('div', { class: 'price' }, s.priceBrief(shoe),
+          shoe.price_source === 'estimate' && shoe.price_usd
+            ? h('span', { class: 'price-info', title: s.overseasPriceInfo, 'aria-label': s.overseasPriceInfo, role: 'img' }, ' ⓘ') : null),
         shoe.price_source !== 'kr_list' && shoe.price_usd
           ? h('span', { class: 'price-unconfirmed' }, s.priceUnconfirmed)
           : shoe.price_source === 'kr_list' && shoe.over_budget ? h('span', { class: 'over-budget' }, s.overBudget) : null,

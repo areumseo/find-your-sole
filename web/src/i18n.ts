@@ -104,7 +104,7 @@ const ko = {
   drop: '드롭',
   cushion: '쿠션',
   width: '발볼',
-  naverShopping: '네이버 쇼핑에서 보기',
+  naverShopping: '네이버에서 국내 판매가 확인',
   explanationError: '설명을 불러오지 못했어요.',
   explanationBusy: '설명 요청이 많아요. 잠시 뒤에 다시 눌러 주세요.',
   errorRecommend: (e: string) => `오류가 발생했어요: ${e}`,
@@ -114,8 +114,10 @@ const ko = {
   noResultsAction: '조건 바꾸기',
   versionLine: (v: string, d: string) => `Find Your Sole v${v} · 신발 데이터 업데이트 ${d}`,
   overBudget: '예산 초과',
-  overBudgetNote: '국내 정가 기준으로 예산 안의 신발을 먼저 보여드려요. 국내 가격 미확인 제품과 예산 초과 제품은 별도로 표시했어요. 실제 판매가는 달라질 수 있어요.',
-  priceUnconfirmed: '국내 가격 확인 필요',
+  overBudgetNote: '예산 안의 제품과 국내 판매가 미확인 제품을 조건에 맞는 순서로 보여드려요. 국내 정가 기준 예산 초과 제품은 뒤에 표시해요. 구매 전 실제 판매가를 확인해 주세요.',
+  priceUnconfirmed: '국내 판매가 확인 필요',
+  overseasPriceNote: '해외 정가는 참고용이며, 국내 판매가와 다를 수 있어요. 구매 전 판매처에서 실제 가격을 확인해 주세요.',
+  overseasPriceInfo: '해외 정가는 참고용이에요. 국내 판매가는 별도로 확인해 주세요.',
   moreResults: (count: number) => `다른 후보 ${count}개 보기`,
   matchLabel: '내 조건과 비교',
   widthMatch: '선택한 발볼과 일치',
@@ -226,11 +228,11 @@ const ko = {
     p < 100000 ? '10만원 미만' : p < 150000 ? '10~15만원대' : p < 200000 ? '15~20만원대' : '20만원 이상',
   priceLabel: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
     shoe.price_source === 'estimate' && shoe.price_usd
-      ? `해외 정가 $${shoe.price_usd} · 국내 가격은 판매처 확인`
+      ? `해외 정가 US$${shoe.price_usd} · 국내 판매가는 판매처에서 확인해 주세요`
       : shoe.price_source === 'kr_list' ? `${shoe.price.toLocaleString('ko-KR')}원` : '국내 가격 확인 필요',
   /** Short form for narrow rows: just the USD list price for estimates. */
   priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
-    shoe.price_source === 'estimate' && shoe.price_usd ? `해외 $${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `${shoe.price.toLocaleString('ko-KR')}원` : '국내 가격 확인 필요',
+    shoe.price_source === 'estimate' && shoe.price_usd ? `해외 정가 US$${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `${shoe.price.toLocaleString('ko-KR')}원` : '국내 가격 확인 필요',
   tag: (t: string) => t,
   unknownSpec: '미확인',
   sourceChecked: (date: string) => `공식 제품 정보 · ${date} 확인`,
@@ -357,7 +359,7 @@ const en: Strings = {
   drop: 'Drop',
   cushion: 'Cushion',
   width: 'Width',
-  naverShopping: 'View on Naver Shopping',
+  naverShopping: 'Check Korean selling price on Naver',
   explanationError: 'Failed to load explanation.',
   explanationBusy: 'Lots of requests right now. Please try again in a bit.',
   errorRecommend: (e: string) => `An error occurred: ${e}`,
@@ -370,8 +372,10 @@ const en: Strings = {
   addFavorite: 'Save',
   removeFavorite: 'Remove from saved',
   overBudget: 'Over budget',
-  overBudgetNote: 'Shoes within budget at Korean list prices come first. Unconfirmed local prices and over-budget options are marked separately. Store prices may vary.',
-  priceUnconfirmed: 'Check Korean price',
+  overBudgetNote: 'Shoes within budget and those with unconfirmed Korean prices are ranked together by fit. Shoes over budget at Korean list prices follow. Check the actual selling price before buying.',
+  priceUnconfirmed: 'Check Korean selling price',
+  overseasPriceNote: 'The overseas list price is for reference and may differ from the Korean selling price. Check the actual price with the retailer before buying.',
+  overseasPriceInfo: 'Overseas list price for reference. Check the Korean selling price separately.',
   moreResults: (count: number) => `See ${count} more options`,
   matchLabel: 'Compared with your answers',
   widthMatch: 'Matches selected width',
@@ -479,10 +483,10 @@ const en: Strings = {
     p < 100000 ? 'Under ₩100,000' : p < 150000 ? '₩100,000–150,000' : p < 200000 ? '₩150,000–200,000' : '₩200,000+',
   priceLabel: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
     shoe.price_source === 'estimate' && shoe.price_usd
-      ? `US list price $${shoe.price_usd} · check local price`
+      ? `Overseas list price US$${shoe.price_usd} · check the Korean selling price`
       : shoe.price_source === 'kr_list' ? `₩${shoe.price.toLocaleString('en-US')}` : 'Check Korean price',
   priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
-    shoe.price_source === 'estimate' && shoe.price_usd ? `US $${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `₩${shoe.price.toLocaleString('en-US')}` : 'Check Korean price',
+    shoe.price_source === 'estimate' && shoe.price_usd ? `Overseas list US$${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `₩${shoe.price.toLocaleString('en-US')}` : 'Check Korean price',
   tag: (t: string) => TAGS_EN[t] ?? t,
   unknownSpec: 'Not confirmed',
   sourceChecked: (date: string) => `Official product information · checked ${date}`,
