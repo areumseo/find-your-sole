@@ -66,10 +66,11 @@ const comfort = {
 
 let results: Shoe[] = [];
 let resultPrefs: Prefs = {};
+let searched = false;
 let lastForm: 'beginner' | 'expert' | 'comfort' = 'beginner';
 
 export function hasResults(): boolean {
-  return results.length > 0;
+  return searched;
 }
 
 const first = (set: Set<number>, fallback = 0): number => [...set][0] ?? fallback;
@@ -193,6 +194,7 @@ function beginnerForm(go: (path: string) => void): HTMLElement {
       brand_filter: [],
     });
     results = shoes;
+    searched = true;
     resultPrefs = {
       mode: 'beginner', terrain: first(st.terrain) === 0 ? '로드' : '트레일', budget: st.budget,
       frequency: FREQ_API[first(st.freq)], pain: painValue(st.pain), width: st.wide ? '넓음' : '보통',
@@ -258,6 +260,7 @@ function comfortForm(go: (path: string) => void): HTMLElement {
       brand_filter: [],
     });
     results = shoes;
+    searched = true;
     resultPrefs = {
       mode: 'comfort', terrain: '로드', budget: st.budget,
       where: WHERE_API[first(st.where)], hours: HOURS_API[first(st.hours)], pain: pain.join(', '), width: st.wide ? '넓음' : '보통',
@@ -320,6 +323,7 @@ function expertForm(go: (path: string) => void): HTMLElement {
       brand_filter: [],
     });
     results = shoes;
+    searched = true;
     resultPrefs = { mode: 'expert', arch, pronation, terrain, cushion, width, weekly_km: st.weeklyKm, budget: st.budget };
     go(PATH.results);
   });
@@ -374,6 +378,11 @@ function resultsView(go: (path: string) => void): HTMLElement {
           h('div', { class: 'cards-grid' }, ...results.slice(3).map((shoe, i) => shoeCard({ shoe, rank: i + 4, prefs: resultPrefs }))),
         ) : null,
       )
-      : h('p', { class: 'empty' }, s.noResults),
+      : h('div', { class: 'empty-state' },
+          h('img', { class: 'sol-e', src: '/logo.svg', alt: '', width: 96, height: 96 }),
+          h('h2', { class: 'empty-title' }, s.noResults),
+          h('p', {}, s.noResultsHint),
+          h('button', { type: 'button', class: 'btn btn-primary', onclick: () => go(PATH[lastForm]) }, s.noResultsAction),
+        ),
   );
 }

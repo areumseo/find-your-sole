@@ -93,8 +93,13 @@ await none.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, content
 await none.goto(BASE);
 await none.locator('.mode-card').nth(2).click();
 await none.click('.btn-primary');
-await none.waitForSelector('.hero');
-ok((await none.locator('.found-row').count()) === 0, 'no celebration when nothing was found (the app stays on a page without results)');
+await none.waitForSelector('.empty-state');
+ok((await none.locator('.found-row').count()) === 0, 'no celebration when nothing was found');
+ok((await none.textContent('.empty-state .empty-title')) === '조건에 맞는 신발이 없어요', 'empty state explains that nothing matched');
+ok(await none.locator('.empty-state .sol-e').evaluate((i) => i.complete && i.naturalWidth > 0), 'empty state shows SOL-E');
+await none.click('.empty-state .btn-primary');
+await none.waitForSelector('.btn-primary');
+ok(none.url().includes('#/search/comfort'), 'the button returns to the form');
 
 // "Compared with your answers": one chip per fact, with color carrying the meaning.
 for (const [scheme, locale, label] of [['light', 'ko-KR', '내 조건과 비교:'], ['dark', 'en-US', 'Compared with your answers:']]) {
