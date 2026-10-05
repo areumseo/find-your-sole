@@ -37,3 +37,16 @@ services:
       - path: /*
         name: X-Content-Type-Options
         value: nosniff
+
+  # Daily official-store price observations. Reuse the existing DB, same region.
+  # API additionally needs CATALOG_PRICES_ENABLED=1 after the first successful run.
+  # If services were created manually, follow docs/catalog-updates.md to add this job.
+  - type: cron
+    name: find-your-sole-catalog-sync
+    runtime: python
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: python -m api.catalog_sync
+    schedule: "0 21 * * *" # 06:00 Asia/Seoul
+    envVars:
+      - key: DATABASE_URL
+        sync: false

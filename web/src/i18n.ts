@@ -232,6 +232,11 @@ const ko = {
   priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
     shoe.price_source === 'estimate' && shoe.price_usd ? `해외 $${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `${shoe.price.toLocaleString('ko-KR')}원` : '국내 가격 확인 필요',
   tag: (t: string) => t,
+  unknownSpec: '미확인',
+  sourceChecked: (date: string) => `공식 제품 정보 · ${date} 확인`,
+  saleObserved: (price: string, date: string) => `공식몰 판매가 ${price} · ${date} 확인 (옵션에 따라 다를 수 있어요)`,
+  soldOutObserved: '최근 확인 시 공식몰 품절 · 판매처를 확인해 주세요',
+  weightBasis: (basis: string) => `무게 측정 기준: ${basis}`,
   cushionName: (c: string) => c,
   widthName: (w: string) => w,
 
@@ -479,8 +484,13 @@ const en: Strings = {
   priceBrief: (shoe: { price: number; price_source?: string | null; price_usd?: number | null }): string =>
     shoe.price_source === 'estimate' && shoe.price_usd ? `US $${shoe.price_usd}` : shoe.price_source === 'kr_list' ? `₩${shoe.price.toLocaleString('en-US')}` : 'Check Korean price',
   tag: (t: string) => TAGS_EN[t] ?? t,
-  cushionName: (c: string) => CUSHION_EN[c] ?? c,
-  widthName: (w: string) => WIDTH_EN[w] ?? w,
+  unknownSpec: 'Not confirmed',
+  sourceChecked: (date: string) => `Official product information · checked ${date}`,
+  saleObserved: (price: string, date: string) => `Official store price ${price} · checked ${date} (may vary by option)`,
+  soldOutObserved: 'Out of stock at last check · check the store',
+  weightBasis: (basis: string) => `Weight measurement basis: ${basis.replace('기준', 'reference size')}`,
+  cushionName: (c: string) => c === '미확인' ? 'Not confirmed' : CUSHION_EN[c] ?? c,
+  widthName: (w: string) => w === '미확인' ? 'Not confirmed' : WIDTH_EN[w] ?? w,
 
   aboutTitle: 'About',
   personaTitle: 'Meet SOL-E',

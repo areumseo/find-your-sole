@@ -37,14 +37,14 @@ interface Fact { text: string; kind: FactKind }
 function matchFacts(shoe: Shoe, prefs: Prefs): Fact[] {
   const s = t();
   const facts: Fact[] = [];
-  if (prefs.mode === 'comfort') facts.push({ text: s.cushionFact(s.cushionName(shoe.cushion)), kind: 'info' });
+  if (prefs.mode === 'comfort' && shoe.cushion !== '미확인') facts.push({ text: s.cushionFact(s.cushionName(shoe.cushion)), kind: 'info' });
   if (shoe.width === prefs.width) facts.push({ text: s.widthMatch, kind: 'match' });
   if (shoe.cushion === prefs.cushion) facts.push({ text: s.cushionMatch, kind: 'match' });
   if (prefs.mode !== 'comfort' && shoe.terrain.includes(String(prefs.terrain))) {
     const terrain = getLocale() === 'en' ? (prefs.terrain === '트레일' ? 'Trail' : 'Road') : String(prefs.terrain);
     facts.push({ text: s.terrainMatch(terrain), kind: 'match' });
   }
-  if (!facts.length) facts.push({ text: s.cushionFact(s.cushionName(shoe.cushion)), kind: 'info' });
+  if (!facts.length && shoe.cushion !== '미확인') facts.push({ text: s.cushionFact(s.cushionName(shoe.cushion)), kind: 'info' });
   // Budget is the fact people care about most, so it always makes the cut.
   if (shoe.price_source === 'kr_list' && shoe.price <= Number(prefs.budget)) {
     return [...facts.slice(0, 2), { text: s.withinBudget, kind: 'good' }];
@@ -147,13 +147,21 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     h('dl', { class: 'specs' },
       ...(
         [
-          [s.weight, `${shoe.weight_g}g`],
-          [s.drop, `${shoe.drop_mm}mm`],
+          [s.weight, shoe.weight_g == null ? s.unknownSpec : `${shoe.weight_g}g`],
+          [s.drop, shoe.drop_mm == null ? s.unknownSpec : `${shoe.drop_mm}mm`],
           [s.cushion, s.cushionName(shoe.cushion)],
           [s.width, s.widthName(shoe.width)],
         ] as const
       ).map(([label, value]) => h('div', { class: 'spec' }, h('dt', {}, label), h('dd', {}, value))),
     ),
+    ...(shoe.weight_note ? [h('p', { class: 'price-note' }, s.weightBasis(shoe.weight_note))] : []),
+    ...(shoe.source_url && shoe.specs_checked_at && safeUrl(shoe.source_url)
+      ? [h('p', { class: 'price-note' }, h('a', { href: safeUrl(shoe.source_url)!, target: '_blank', rel: 'noopener noreferrer' }, s.sourceChecked(shoe.specs_checked_at)))] : []),
+    ...(shoe.sale_checked_at && shoe.sale_source_url && safeUrl(shoe.sale_source_url)
+      ? [h('p', { class: 'price-note' }, h('a', { href: safeUrl(shoe.sale_source_url)!, target: '_blank', rel: 'noopener noreferrer' },
+          shoe.sale_available === false ? s.soldOutObserved : s.saleObserved(
+            `₩${shoe.sale_price?.toLocaleString()}${shoe.sale_price_max && shoe.sale_price_max !== shoe.sale_price ? `–₩${shoe.sale_price_max.toLocaleString()}` : ''}`,
+            shoe.sale_checked_at.slice(0, 10))))] : []),
     explainBox,
   );
   if (naver) {

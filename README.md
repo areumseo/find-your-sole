@@ -91,3 +91,7 @@ On desktop, a feedback button floats on every page. On mobile and tablet layouts
 - **Abuse limits:** 5 notes per IP per 10 minutes and 200 per day overall (`FEEDBACK_PER_CLIENT`, `FEEDBACK_WINDOW_SECONDS`, `FEEDBACK_DAILY_CAP`), a hidden honeypot field, magic-byte checks on the image (the declared type is never trusted) and a 413 over 1.5 MB.
 - **Admin:** open `#/admin` (not linked anywhere) and enter the `ADMIN_TOKEN` set on the API service. Admin endpoints return 404 until that variable exists; repeated wrong tokens are rate limited.
 - **Storage:** set `DATABASE_URL` to a Postgres URL (a free Neon database works; `postgres://` and `postgresql://` are both accepted) and the `feedback` table is created on first use. Without it feedback is kept in memory and is lost on restart, which is only meant for local development. Screenshots are stored as base64 text in the same table; move them to file storage if volume grows.
+
+## Catalogue updates
+
+Walking/daily recommendations include ten source-verified LeMouton models. Unknown specs are shown as unconfirmed. Official-store price observations can be refreshed daily into the existing PostgreSQL database; see [setup and review workflow](docs/catalog-updates.md). Prices are supplementary and do not change the reviewed list-price budget rules.

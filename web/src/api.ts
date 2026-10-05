@@ -139,6 +139,7 @@ export async function explainShoe(shoe: Shoe, prefs: Prefs, locale: string): Pro
       cushion: shoe.cushion,
       drop_mm: shoe.drop_mm,
       weight_g: shoe.weight_g,
+      weight_note: shoe.weight_note,
       width: shoe.width,
       terrain: shoe.terrain,
       use_case: shoe.use_case,

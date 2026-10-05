@@ -20,6 +20,13 @@ for s in shoes:
         errors.append(f"{label}: price_source must be 'kr_list' or 'estimate'")
     if s.get("price_source") == "estimate" and not isinstance(s.get("price_usd"), int):
         errors.append(f"{label}: estimated prices need price_usd (the overseas list price shown to users)")
+    for key in ('weight_g', 'drop_mm'):
+        value = s.get(key)
+        if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+            errors.append(f"{label}: invalid {key}")
+    if s.get('source_product_id'):
+        if not s.get('source_url', '').startswith('https://') or not s.get('specs_checked_at'):
+            errors.append(f"{label}: verified products need source URL and check date")
     if "price_usd" in s and (not isinstance(s["price_usd"], int) or s["price_usd"] <= 0):
         errors.append(f"{label}: invalid price_usd")
     if not str(s.get("url", "")).startswith("https://"):

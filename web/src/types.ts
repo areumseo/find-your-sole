@@ -9,8 +9,8 @@ export interface Shoe {
   price_usd?: number | null;
   /** The brand's official site, linked from the brand name. */
   brand_url?: string | null;
-  weight_g: number;
-  drop_mm: number;
+  weight_g: number | null;
+  drop_mm: number | null;
   cushion: string;
   terrain: string[];
   arch: string[];
@@ -24,6 +24,14 @@ export interface Shoe {
   over_budget?: boolean;
   budget_status?: 'within' | 'unknown' | 'over';
   naver_url: string;
+  source_url?: string | null;
+  specs_checked_at?: string | null;
+  weight_note?: string | null;
+  sale_price?: number | null;
+  sale_price_max?: number | null;
+  sale_available?: boolean | null;
+  sale_checked_at?: string | null;
+  sale_source_url?: string | null;
 }
 
 /** What the backend's /explain endpoint reads from the user's answers. */
@@ -44,7 +52,7 @@ export interface DailyPick {
   price: number;
   price_source?: string | null;
   price_usd?: number | null;
-  weight_g: number;
+  weight_g: number | null;
   cushion: string;
   categories: string[];
   reason: string;

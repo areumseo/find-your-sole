@@ -13,11 +13,12 @@ from pydantic import BaseModel
 
 try:  # started from api/ (`uvicorn main:app`)
     import startup_checks
+    import catalog_prices
     from feedback import router as feedback_router
     from rate_limit import ExplainLimiter
     from shoe_news import router as news_router
 except ModuleNotFoundError:  # started from the repo root (`uvicorn api.main:app`)
-    from api import startup_checks
+    from api import startup_checks, catalog_prices
     from api.feedback import router as feedback_router
     from api.rate_limit import ExplainLimiter
     from api.shoe_news import router as news_router
@@ -132,8 +133,8 @@ class ShoeResult(BaseModel):
     price_source: Optional[str] = None  # "kr_list" or "estimate"
     price_usd: Optional[int] = None  # overseas list price, shown when the KRW price is an estimate
     brand_url: Optional[str] = None  # the brand's official (Korean) site, linked from the brand name
-    weight_g: int
-    drop_mm: int
+    weight_g: Optional[int] = None
+    drop_mm: Optional[int] = None
     cushion: str
     terrain: List[str]
     arch: List[str]
@@ -146,6 +147,14 @@ class ShoeResult(BaseModel):
     over_budget: bool = False  # only confirmed Korean prices can exceed the budget
     budget_status: str = "unknown"  # within / unknown / over
     naver_url: str
+    source_url: Optional[str] = None
+    specs_checked_at: Optional[str] = None
+    weight_note: Optional[str] = None
+    sale_price: Optional[int] = None
+    sale_price_max: Optional[int] = None
+    sale_available: Optional[bool] = None
+    sale_checked_at: Optional[str] = None
+    sale_source_url: Optional[str] = None
 
 
 # ── 점수 계산 ─────────────────────────────────────────────────
@@ -154,12 +163,12 @@ def compute_score(shoe: Dict, prefs: Dict) -> int:
 
     if prefs["arch"] in shoe["arch"]:
         score += 15
-    else:
+    elif shoe["arch"]:
         score -= 20
 
     if prefs["pronation"] in shoe["pronation"]:
         score += 15
-    else:
+    elif shoe["pronation"]:
         score -= 25
 
     use_match = len(set(prefs["use_case"]) & set(shoe["use_case"]))
@@ -184,21 +193,18 @@ def compute_score(shoe: Dict, prefs: Dict) -> int:
     elif prefs["width"] == shoe["width"]:
         score += 5
 
-    cushion_diff = abs(
-        CUSHION_ORDER.get(prefs["cushion"], 2) - CUSHION_ORDER.get(shoe["cushion"], 2)
-    )
-    score -= cushion_diff * 8
+    if shoe["cushion"] in CUSHION_ORDER:
+        cushion_diff = abs(CUSHION_ORDER.get(prefs["cushion"], 2) - CUSHION_ORDER[shoe["cushion"]])
+        score -= cushion_diff * 8
 
     km_map = {"10이상": 10, "20이상": 20, "30이상": 30, "40이상": 40}
-    req_km = km_map.get(shoe["weekly_km"], 10)
-    if prefs["weekly_km"] >= req_km:
-        score += 5
-    else:
-        score -= 10
+    req_km = km_map.get(shoe["weekly_km"])
+    if req_km is not None:
+        score += 5 if prefs["weekly_km"] >= req_km else -10
 
     # 체중 → 쿠션 보정
     weight = prefs.get("weight_kg")
-    if weight is not None:
+    if weight is not None and shoe["cushion"] in CUSHION_ORDER:
         shoe_cushion_val = CUSHION_ORDER.get(shoe["cushion"], 2)
         if weight >= 80 and shoe_cushion_val >= 3:
             score += 10
@@ -290,7 +296,7 @@ def is_running_candidate(shoe: Dict, terrain: str) -> bool:
 
 def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[List[Dict]] = None) -> List[ShoeResult]:
     results = []
-    for shoe in (SHOES if shoes is None else shoes):
+    for shoe in catalog_prices.enrich(SHOES if shoes is None else shoes):
         if brand_filter and shoe["brand"] not in brand_filter:
             continue
         score = compute_score(shoe, prefs)
@@ -333,17 +339,27 @@ def pick_of_the_day(now: Optional[datetime] = None) -> Dict:
     return ordered[(today.toordinal() * 7919) % len(ordered)]
 
 
+
+def metric_fact(value, unit):
+    return f"{value}{unit}" if value is not None else "unknown / 미확인"
+
 CUSHION_EN = {"낮음": "Low", "중간": "Medium", "높음": "High", "최고": "Max"}
 
 
 def pick_reason(shoe: Dict, locale: str) -> str:
     """Plain data-driven sentence; used when the AI comment is unavailable."""
+    if shoe['cushion'] == '미확인' or shoe['weight_g'] is None or shoe['drop_mm'] is None:
+        weight = shoe.get('weight_g')
+        weight_en = f" Published weight: {weight}g at the reference size." if weight is not None else " Weight is not confirmed."
+        weight_ko = f" 무게는 기준 사이즈에서 {weight}g이에요." if weight is not None else " 무게도 미확인이에요."
+        return ("Some specs are not confirmed." + weight_en + " Check the official product information and fit."
+                if locale == 'en' else f"쿠션은 {shoe['cushion']}이에요." + weight_ko + " 공식 제품 정보와 착화감을 확인해 주세요.")
     if locale == "en":
         # Tags are Korean in the data, so the English sentence sticks to numbers and mapped words.
         cushion = CUSHION_EN.get(shoe["cushion"], "")
-        return f"{cushion + ' c' if cushion else 'C'}ushioning at {shoe['weight_g']}g, {shoe['drop_mm']}mm drop."
+        return f"{cushion + ' c' if cushion else 'C'}ushioning at {metric_fact(shoe.get('weight_g'), 'g')}, {metric_fact(shoe.get('drop_mm'), 'mm')} drop."
     tag = shoe["tags"][0] if shoe.get("tags") else ""
-    return f"쿠션은 {shoe['cushion']}, 무게는 {shoe['weight_g']}g" + (f", 특징은 \"{tag}\"이에요." if tag else "이에요.")
+    return f"쿠션은 {shoe['cushion']}, 무게는 {metric_fact(shoe.get('weight_g'), 'g')}" + (f", 특징은 \"{tag}\"이에요." if tag else "이에요.")
 
 
 # SOL-E's daily comment is written by Claude at most once per day per language and
@@ -372,21 +388,21 @@ def pick_comment(shoe: Dict, locale: str, today: str) -> str:
 
 def generate_pick_comment(shoe: Dict, locale: str) -> str:
     facts = (
-        f"{shoe['name']} ({shoe['brand']}); cushion {shoe['cushion']}, weight {shoe['weight_g']}g, "
-        f"drop {shoe['drop_mm']}mm, width {shoe['width']}; features: {', '.join(shoe.get('tags', []))}; "
-        f"uses: {', '.join(shoe.get('use_case', []))}"
+        f"{shoe['name']} ({shoe['brand']}); cushion {shoe['cushion']}, weight {metric_fact(shoe.get('weight_g'), 'g')}, "
+        f"drop {metric_fact(shoe.get('drop_mm'), 'mm')}, width {shoe['width']}; features: {', '.join(shoe.get('tags', []))}; "
+        f"uses: {', '.join(shoe.get('use_case', []))}; weight reference: {shoe.get('weight_note', 'unspecified')}"
     )
     if locale == "en":
         system = (
             "You are SOL-E, a friendly little ghost who helps people pick shoes. "
             "Write ONE or TWO short, warm sentences (max 200 characters) saying who today's pick suits and why. "
-            "Use only the facts given; do not invent specs or prices. Plain text, no markdown, no emoji."
+            "Use only the facts given; do not invent specs or prices. Unknown specs do not establish fit, support or pain relief. Plain text, no markdown, no emoji."
         )
     else:
         system = (
             "당신은 신발 고르는 걸 도와주는 작은 유령 '솔이'입니다. "
             "오늘의 추천 신발이 어떤 사람에게 왜 잘 맞는지 따뜻한 존댓말(~해요)로 한두 문장, 100자 이내로 써 주세요. "
-            "주어진 정보만 쓰고 수치나 가격을 지어내지 마세요. 마크다운과 이모지는 쓰지 마세요."
+            "주어진 정보만 쓰고 수치나 가격을 지어내지 마세요. None과 미확인은 알 수 없는 정보예요. 발볼이나 쿠션이 사용자에게 맞거나 통증을 완화한다고 단정하지 마세요. 마크다운과 이모지는 쓰지 마세요."
         )
     # Short timeout and no retries: this runs while a visitor waits on /pick.
     response = client.with_options(timeout=15.0, max_retries=0).messages.create(
@@ -471,7 +487,7 @@ def build_explain_prompts(shoe: Dict, prefs: Dict, locale: str):
     comfort = mode == "comfort"
     shoe_lines_ko = (
         f"- 이름: {shoe['name']} ({shoe['brand']})\n"
-        f"- 쿠션: {shoe['cushion']}, 드롭: {shoe['drop_mm']}mm, 무게: {shoe['weight_g']}g\n"
+        f"- 쿠션: {shoe['cushion']}, 드롭: {metric_fact(shoe.get('drop_mm'), 'mm')}, 무게: {metric_fact(shoe.get('weight_g'), 'g')}\n"
         f"- 발볼: {shoe['width']}, 지면: {', '.join(shoe.get('terrain', []))}\n"
         f"- 용도: {', '.join(shoe.get('use_case', []))}\n"
         f"- 특징: {', '.join(shoe.get('tags', []))}\n"
@@ -479,17 +495,20 @@ def build_explain_prompts(shoe: Dict, prefs: Dict, locale: str):
     )
     shoe_lines_en = (
         f"- Name: {shoe['name']} ({shoe['brand']})\n"
-        f"- Cushion: {shoe['cushion']}, Drop: {shoe['drop_mm']}mm, Weight: {shoe['weight_g']}g\n"
+        f"- Cushion: {shoe['cushion']}, Drop: {metric_fact(shoe.get('drop_mm'), 'mm')}, Weight: {metric_fact(shoe.get('weight_g'), 'g')}\n"
         f"- Width: {shoe['width']}, Terrain: {', '.join(shoe.get('terrain', []))}\n"
         f"- Use case: {', '.join(shoe.get('use_case', []))}\n"
         f"- Tags: {', '.join(shoe.get('tags', []))}\n"
         f"- Price: {price_fact(shoe, 'en')}"
     )
+    if shoe.get('weight_note'):
+        shoe_lines_ko += f"\n- 무게 측정 기준: {shoe['weight_note']}"
+        shoe_lines_en += f"\n- Weight measurement basis: {shoe['weight_note']}"
     budget = prefs.get("budget", 0)
 
     if en:
         rules = (
-            "Use only the facts given; do not invent specs or claims. "
+            "Use only the facts given; do not invent specs or claims. None and 미확인 mean unknown, not zero or normal. Do not claim unknown cushioning, width or support matches the user or relieves pain. "
             "Mention price or budget only if the price is a known Korean list price; if it says not confirmed or unknown, "
             "do not claim it fits the budget. If the price is above the budget, say so honestly. "
             "Briefly clarify technical terms in parentheses when needed. Do not use markdown syntax (**, #, - etc). Plain text only."
@@ -512,7 +531,7 @@ def build_explain_prompts(shoe: Dict, prefs: Dict, locale: str):
         return system, user
 
     rules = (
-        "주어진 정보에 없는 사실은 지어내지 마세요. "
+        "주어진 정보에 없는 사실은 지어내지 마세요. None과 미확인은 정보가 없다는 뜻이며 정상 발볼이나 중간 쿠션으로 추정하지 마세요. 미확인 특성이 사용자에게 맞거나 통증을 완화한다고 단정하지 마세요. "
         "가격은 '국내 정가'로 확인된 경우에만 예산과 비교해 말하고, '미확인'이나 '정보 없음'이면 예산에 맞는다고 단정하지 마세요. "
         "가격이 예산을 넘으면 솔직하게 말하세요. 전문 용어는 괄호로 간단히 풀어서 설명하세요. "
         "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
