@@ -54,7 +54,7 @@ let h2 = await open(1280, 800);
 const hero = await box(h2, '.hero'), widgets = await h2.locator('.widget').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().left));
 check('데스크톱 홈: 본문 영역 폭(1280-248-64=968px)을 전부 사용', hero.width >= 1280 - 248 - 64 - 2, String(hero.width));
 check('데스크톱 홈: 찾기 카드 3개가 한 줄', (await h2.locator('.hero .mode-card').count()) === 3 && (await h2.locator('.hero .mode-card').evaluateAll((els) => new Set(els.map((e) => Math.round(e.getBoundingClientRect().top))).size)) === 1);
-check('데스크톱 홈: 개인 통계 타일·빈 위젯 없음(마이페이지로 이동)', (await h2.locator('.tile').count()) === 0 && widgets.length === 0, JSON.stringify(widgets));
+check('데스크톱 홈: 개인 통계 타일 없음, 오늘의 픽·상식 위젯 2개(마이페이지로 이동)', (await h2.locator('.tile').count()) === 0 && widgets.length === 2 && (await h2.locator('.col-main').count()) === 1, JSON.stringify(widgets));
 await h2.goto(BASE + '#/more'); await h2.waitForSelector('.page-header');
 check('데스크톱에서 #/more 접근 → 마이페이지로 이동', h2.url().endsWith('#/me'), h2.url());
 await h2.goto(BASE + '#/favorites'); await h2.waitForSelector('.page-header');

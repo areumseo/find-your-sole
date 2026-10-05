@@ -1,4 +1,4 @@
-import type { NewsItem, Prefs, Shoe } from './types';
+import type { DailyPick, NewsItem, NewsResult, Prefs, Shoe } from './types';
 
 const BASE_URL: string =
   (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ||
@@ -43,19 +43,40 @@ async function get<T>(path: string, timeoutMs: number): Promise<T> {
 // since the backend may simply have been asleep.
 const NEWS_REUSE_MS = 10 * 60_000;
 const NEWS_RETRY_MS = 60_000;
-let news: { at: number; items: Promise<NewsItem[]> } | null = null;
+let news: { at: number; result: Promise<NewsResult> } | null = null;
 
-export function fetchNews(): Promise<NewsItem[]> {
-  if (news && Date.now() - news.at < NEWS_REUSE_MS) return news.items;
-  const items = get<NewsItem[]>('/news', 20_000)
-    .then((list) => (Array.isArray(list) ? list : []))
-    .catch(() => [] as NewsItem[]);
-  const entry = { at: Date.now(), items };
+async function loadNews(): Promise<NewsResult> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20_000);
+  try {
+    const res = await fetch(`${BASE_URL}/news`, { signal: controller.signal });
+    if (!res.ok) return { items: [] };
+    const list = (await res.json()) as unknown;
+    return {
+      items: Array.isArray(list) ? (list as NewsItem[]) : [],
+      updatedAt: res.headers.get('X-News-Updated') ?? undefined,
+    };
+  } catch {
+    return { items: [] };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export function fetchNews(): Promise<NewsResult> {
+  if (news && Date.now() - news.at < NEWS_REUSE_MS) return news.result;
+  const result = loadNews();
+  const entry = { at: Date.now(), result };
   news = entry;
-  void items.then((list) => {
-    if (!list.length && news === entry) entry.at = Date.now() - NEWS_REUSE_MS + NEWS_RETRY_MS;
+  void result.then((r) => {
+    if (!r.items.length && news === entry) entry.at = Date.now() - NEWS_REUSE_MS + NEWS_RETRY_MS;
   });
-  return items;
+  return result;
+}
+
+/** Today's pick; like news it is optional, so failure resolves to null. */
+export function fetchPick(locale: string): Promise<DailyPick | null> {
+  return get<DailyPick>(`/pick?locale=${encodeURIComponent(locale)}`, 20_000).catch(() => null);
 }
 
 /**

@@ -115,6 +115,7 @@ class NewsService:
         self._items: Optional[List[NewsItem]] = None
         self._fresh_until = 0.0
         self._stale_until = 0.0
+        self.updated_at: Optional[float] = None  # when the items were last fetched from Naver
         self._lock = asyncio.Lock()
         if not self.enabled:
             log.warning("NAVER_CLIENT_ID / NAVER_CLIENT_SECRET not set; /news will return an empty list")
@@ -150,6 +151,7 @@ class NewsService:
                     self._items = []
                 return self._items
             self._items = items
+            self.updated_at = now
             self._fresh_until = now + self.ttl
             self._stale_until = now + self.stale_ttl
             return items
@@ -191,4 +193,7 @@ async def news(response: Response):
     items = await service.get()
     # An empty list means "disabled or failing"; let clients retry sooner.
     response.headers["Cache-Control"] = "public, max-age=600" if items else "public, max-age=60"
+    if items and service.updated_at:
+        stamp = datetime.fromtimestamp(service.updated_at, timezone.utc)
+        response.headers["X-News-Updated"] = stamp.strftime("%Y-%m-%dT%H:%M:%SZ")
     return items
