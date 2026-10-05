@@ -26,7 +26,9 @@ from pydantic import BaseModel
 
 log = logging.getLogger("shoe_news")
 
-NAVER_NEWS_URL = "https://openapi.naver.com/v1/search/news.json"
+# NAVER API HUB (Naver Cloud Platform). The old developers.naver.com endpoint
+# (openapi.naver.com, X-Naver-Client-*) no longer accepts new keys.
+NAVER_NEWS_URL = "https://naverapihub.apigw.ntruss.com/search/v1/news"
 QUERIES = ["러닝화 신제품", "러닝화 출시", "운동화 신제품 출시", "워킹화 출시"]
 
 SHOE_WORDS = ("신발", "운동화", "러닝화", "런닝화", "스니커즈", "워킹화", "슈즈", "shoe", "sneaker")
@@ -153,7 +155,7 @@ class NewsService:
             return items
 
     async def _fetch(self) -> List[NewsItem]:
-        headers = {"X-Naver-Client-Id": self._id, "X-Naver-Client-Secret": self._secret}
+        headers = {"X-NCP-APIGW-API-KEY-ID": self._id, "X-NCP-APIGW-API-KEY": self._secret}
         async with httpx.AsyncClient(timeout=6.0, transport=self._transport) as client:
             results = await asyncio.gather(
                 *[client.get(NAVER_NEWS_URL, params={"query": q, "display": 30, "sort": "date"}, headers=headers)
