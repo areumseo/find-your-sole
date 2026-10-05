@@ -201,6 +201,13 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   font-size: 22px;
 }
 .icon-btn:hover { background: var(--chip); }
+/* Tooltip for icon-only buttons: the text comes from data-tip (same as the aria-label). */
+.icon-btn[data-tip] { position: relative; }
+.icon-btn[data-tip]:hover::after, .icon-btn[data-tip]:focus-visible::after {
+  content: attr(data-tip); position: absolute; top: calc(100% + 4px); right: 0; z-index: 10;
+  padding: 4px 8px; border-radius: 6px; background: var(--ink); color: var(--page);
+  font-size: 12px; font-weight: 600; line-height: 1.4; white-space: nowrap; pointer-events: none;
+}
 
 .lead { color: var(--muted); font-size: 18px; margin: 22px 0 20px; }
 
@@ -341,6 +348,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
 .card.open .chev { transform: translateY(4px) rotate(-135deg); }
 
 .detail { padding: 0 16px 16px; border-top: 1px solid var(--border); }
+.price-note { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
 .specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 14px 0; text-align: center; }
 .spec dt { font-size: 11px; color: var(--muted); }
 .spec dd { margin: 2px 0 0; font-size: 14px; font-weight: 700; }

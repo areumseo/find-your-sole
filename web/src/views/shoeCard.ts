@@ -45,7 +45,9 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     favBtn.textContent = on ? '♥' : '♡';
     favBtn.style.color = on ? 'var(--primary)' : 'var(--muted)';
     favBtn.setAttribute('aria-pressed', String(on));
-    favBtn.setAttribute('aria-label', on ? s.removeFavorite : s.addFavorite);
+    const label = on ? s.removeFavorite : s.addFavorite;
+    favBtn.setAttribute('aria-label', label);
+    favBtn.dataset.tip = label; // shown as a tooltip on hover/focus
   };
   favBtn.addEventListener('click', () => {
     favorites.toggle(shoe);
@@ -58,6 +60,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     type: 'button',
     class: 'icon-btn',
     'aria-label': s.addToMyShoes,
+    'data-tip': s.addToMyShoes,
     style: 'color:var(--muted)',
     onClick: () =>
       openForm(
@@ -102,6 +105,8 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
 
   const naver = safeUrl(shoe.naver_url);
   detail.append(
+    // The header only has room for the short price; spell out the overseas list price here.
+    ...(shoe.price_source === 'estimate' && shoe.price_usd ? [h('p', { class: 'price-note' }, s.priceLabel(shoe))] : []),
     h('dl', { class: 'specs' },
       ...(
         [
@@ -144,7 +149,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       toggle,
       h('div', { class: 'side' },
         h('div', { class: 'actions' }, favBtn, addBtn),
-        h('div', { class: 'price' }, s.priceLabel(shoe)),
+        h('div', { class: 'price' }, s.priceBrief(shoe)),
         chev,
       ),
     ),
