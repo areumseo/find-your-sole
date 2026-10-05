@@ -283,6 +283,11 @@ def is_comfort_candidate(shoe: Dict) -> bool:
     return bool({"walking", "daily"} & set(shoe.get("categories", [])))
 
 
+def is_running_candidate(shoe: Dict, terrain: str) -> bool:
+    """Fit comes before budget: a running search only sees running shoes made for the chosen terrain."""
+    return "running" in shoe.get("categories", []) and terrain in shoe["terrain"]
+
+
 def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[List[Dict]] = None) -> List[ShoeResult]:
     results = []
     for shoe in (SHOES if shoes is None else shoes):
@@ -418,7 +423,8 @@ def pick(response: Response, locale: str = "ko"):
 @app.post("/recommend/beginner", response_model=List[ShoeResult])
 def recommend_beginner(data: BeginnerPrefs):
     prefs = map_beginner_to_prefs(data)
-    return run_recommendation(prefs, data.brand_filter)
+    candidates = [s for s in SHOES if is_running_candidate(s, prefs["terrain"])]
+    return run_recommendation(prefs, data.brand_filter, candidates)
 
 
 @app.post("/recommend/comfort", response_model=List[ShoeResult])
@@ -441,7 +447,8 @@ def recommend_expert(data: ExpertPrefs):
         "budget": data.budget,
         "weight_kg": data.weight_kg,
     }
-    return run_recommendation(prefs, data.brand_filter)
+    candidates = [s for s in SHOES if is_running_candidate(s, data.terrain)]
+    return run_recommendation(prefs, data.brand_filter, candidates)
 
 
 def price_fact(shoe: Dict, locale: str) -> str:
