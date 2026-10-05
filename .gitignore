@@ -1,6 +1,13 @@
-api/__pycache__/
+__pycache__/
+*.pyc
+.pytest_cache/
 build/
 flutter_app/build/
 flutter_app/.dart_tool/
 flutter_app/.flutter-plugins
 flutter_app/.flutter-plugins-dependencies
+
+# local secrets (API keys); never commit these
+.env
+.env.*
+!.env.example

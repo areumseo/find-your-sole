@@ -8,6 +8,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from shoe_news import router as news_router
+
 # ── 데이터 로드 ─────────────────────────────────────────────
 SHOES = json.loads(
     (Path(__file__).parent.parent / "shoes_data.json").read_text(encoding="utf-8")
@@ -44,6 +46,8 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )
+
+app.include_router(news_router)
 
 
 # ── 요청/응답 모델 ────────────────────────────────────────────

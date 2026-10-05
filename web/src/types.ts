@@ -27,3 +27,12 @@ export interface OwnedShoe {
   purchased_at: string;
   km: number;
 }
+
+export interface NewsItem {
+  title: string;
+  /** Publisher host, e.g. "example.com", or "네이버 뉴스". */
+  source: string;
+  url: string;
+  /** ISO 8601, UTC. */
+  published_at: string;
+}
