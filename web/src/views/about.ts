@@ -24,6 +24,6 @@ export function renderAbout(): HTMLElement {
       h('p', {}, s.licensesBody),
       h('p', {}, h('a', { href: '/licenses/IBMPlexSansKR-OFL.txt', target: '_blank', rel: 'noopener' }, s.licensesLink)),
     ),
-    h('p', { class: 'version' }, 'Find Your Sole'),
+    h('p', { class: 'version' }, s.versionLine(__APP_VERSION__, __DATA_UPDATED__)),
   );
 }
