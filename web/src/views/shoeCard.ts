@@ -187,7 +187,7 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
     },
   }, h('img', { class: 'comment-sol-e', src: '/logo.svg', alt: '', width: 32, height: 32 }));
   commentToggle.append(
-    h('span', { class: 'comment-label' }, h('span', { class: 'comment-title' }, s.aiCommentShow), h('span', { class: 'comment-sub' }, s.aiCommentSub)),
+    h('span', { class: 'comment-title' }, s.aiCommentShow),
     h('span', { class: 'comment-chevron', 'aria-hidden': 'true' }),
   );
   const explainBlock = (): HTMLElement => {
