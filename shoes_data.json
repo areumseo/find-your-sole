@@ -429,50 +429,6 @@
     "image_url": ""
   },
   {
-    "id": 20,
-    "name": "Mizuno Wave Rider 27",
-    "brand": "Mizuno",
-    "categories": ["running"],
-    "price": 159000,
-    "price_source": "estimate",
-    "price_usd": 140,
-    "weight_g": 265,
-    "drop_mm": 12,
-    "cushion": "중간",
-    "terrain": ["로드"],
-    "arch": ["normal", "high"],
-    "pronation": ["neutral"],
-    "use_case": ["데일리", "입문"],
-    "weekly_km": "10이상",
-    "width": "보통",
-    "tags": ["웨이브 플레이트", "반응성", "데일리"],
-    "score_base": 78,
-    "url": "https://jp.mizuno.com/kr",
-    "image_url": ""
-  },
-  {
-    "id": 21,
-    "name": "Mizuno Wave Inspire 20",
-    "brand": "Mizuno",
-    "categories": ["running"],
-    "price": 169000,
-    "price_source": "estimate",
-    "price_usd": 140,
-    "weight_g": 285,
-    "drop_mm": 12,
-    "cushion": "중간",
-    "terrain": ["로드"],
-    "arch": ["flat", "normal"],
-    "pronation": ["overpronation", "mild_overpronation"],
-    "use_case": ["데일리", "장거리"],
-    "weekly_km": "20이상",
-    "width": "넓음",
-    "tags": ["안정성", "오버프로네이션", "발볼 넓음"],
-    "score_base": 80,
-    "url": "https://jp.mizuno.com/kr",
-    "image_url": ""
-  },
-  {
     "id": 22,
     "name": "Puma Deviate Nitro 2",
     "brand": "Puma",
@@ -1720,5 +1676,76 @@
     "weight_note": "230mm 기준",
     "source_product_id": "cafe24_lemouton_1_318",
     "source_product_name": "르무통 이지 발 편한 메리노울 로퍼 운동화"
+  },
+  {
+    "id": 80,
+    "name": "Mizuno Wave Rider 30",
+    "brand": "Mizuno",
+    "categories": [
+      "running"
+    ],
+    "price": 179000,
+    "price_source": "kr_list",
+    "weight_g": null,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "웨이브 플레이트",
+      "데일리 트레이너"
+    ],
+    "score_base": 80,
+    "url": "https://kor.mizuno.com",
+    "image_url": "",
+    "source_url": "https://kor.mizuno.com/product/detail.html?product_no=12074",
+    "specs_checked_at": "2026-10-06"
+  },
+  {
+    "id": 81,
+    "name": "Mizuno Wave Inspire 22",
+    "brand": "Mizuno",
+    "categories": [
+      "running"
+    ],
+    "price": 169000,
+    "price_source": "kr_list",
+    "weight_g": null,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [
+      "flat"
+    ],
+    "pronation": [
+      "overpronation",
+      "mild_overpronation"
+    ],
+    "use_case": [
+      "데일리",
+      "부상방지"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "안정성",
+      "평발",
+      "과회내"
+    ],
+    "score_base": 80,
+    "url": "https://kor.mizuno.com",
+    "image_url": "",
+    "source_url": "https://kor.mizuno.com/product/detail.html?product_no=12155",
+    "specs_checked_at": "2026-10-06"
   }
 ]
