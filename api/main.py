@@ -512,7 +512,8 @@ def build_explain_prompts(shoe: Dict, prefs: Dict, locale: str):
             "Use only the facts given; do not invent specs or claims. None and 미확인 mean unknown, not zero or normal. Do not claim unknown cushioning, width or support matches the user or relieves pain. "
             "Mention price or budget only if the price is a known Korean list price; if it says not confirmed or unknown, "
             "do not claim it fits the budget. If the price is above the budget, say so honestly. "
-            "Briefly clarify technical terms in parentheses when needed. Do not use markdown syntax (**, #, - etc). Plain text only."
+            "Briefly clarify technical terms in parentheses when needed. Do not use markdown syntax (**, #, - etc). Plain text only. "
+            "Start with a one-line plain-words summary (under 60 characters, no jargon, e.g. why it feels good for this person), then a blank line, then the 3-4 sentence explanation."
         )
         if comfort:
             system = ("You are a walking and everyday shoe expert. In 3-4 friendly sentences, explain why this specific shoe suits "
@@ -535,7 +536,8 @@ def build_explain_prompts(shoe: Dict, prefs: Dict, locale: str):
         "주어진 정보에 없는 사실은 지어내지 마세요. None과 미확인은 정보가 없다는 뜻이며 정상 발볼이나 중간 쿠션으로 추정하지 마세요. 미확인 특성이 사용자에게 맞거나 통증을 완화한다고 단정하지 마세요. "
         "가격은 '국내 정가'로 확인된 경우에만 예산과 비교해 말하고, '미확인'이나 '정보 없음'이면 예산에 맞는다고 단정하지 마세요. "
         "가격이 예산을 넘으면 솔직하게 말하세요. 전문 용어는 괄호로 간단히 풀어서 설명하세요. "
-        "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요."
+        "마크다운 문법(**, #, - 등)은 절대 사용하지 마세요. 일반 텍스트로만 작성하세요. "
+        "맨 앞에 전문 용어 없이 쉬운 말로 한 줄(40자 이내) 요약을 쓰고, 한 줄을 띄운 뒤 3~4문장 설명을 이어 쓰세요."
     )
     if comfort:
         system = ("당신은 편하게 걷고 서 있는 신발 전문가입니다. 사용자가 이 신발을 어디서 신는지, 하루에 얼마나 걷거나 서 있는지, "

@@ -55,3 +55,12 @@ def test_english_prompts_follow_the_same_rules():
     assert "not confirmed in Korea (US list price $150)" in user
     system, user = main.build_explain_prompts({**SHOE, "price_source": "kr_list", "price": 189000}, EXPERT, "en")
     assert system.startswith("You are a running shoe expert") and "₩189,000 (Korean list price)" in user
+
+
+def test_explanation_opens_with_a_plain_one_line_summary():
+    shoe = {"name": "X", "brand": "Y", "cushion": "높음", "drop_mm": 8, "weight_g": 250, "width": "보통",
+            "terrain": ["로드"], "use_case": ["데일리"], "tags": [], "price": 100000, "price_source": "kr_list"}
+    for locale in ("ko", "en"):
+        for prefs in ({"mode": "beginner", "budget": 150000}, {"mode": "comfort", "budget": 150000}):
+            system, _ = main.build_explain_prompts(shoe, prefs, locale)
+            assert "한 줄" in system or "one-line" in system
