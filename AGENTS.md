@@ -42,7 +42,7 @@ Always run the tests that cover what you changed before pushing, and say honestl
 2. **Before editing, tell the owner the scope** in a short note: what will change, what will not, and the **main files** you expect to touch.
 3. **Check for overlap**: list the open PRs (`gh`/GitHub) and compare their changed files with yours. If another open PR touches the same
    files or the same behaviour, do **not** work in parallel: wait for it to be merged, or ask the owner which goes first. Overlapping work is done in sequence.
-4. Open the PR against `main`. Do not merge it; the owner merges.
+4. Open the PR against `main`. Do not merge it on your own; the owner merges, or tells you to (see below).
 5. Re-check the open PR list when you finish and mention any PR that now conflicts with yours.
 
 ## Git and PR rules (important)
@@ -51,7 +51,7 @@ Always run the tests that cover what you changed before pushing, and say honestl
   Agent-prefixed names are fine when two agents work at once (`claude/...`, `codex/...`).
 - **Every PR targets `main`.** Never stack a PR on another PR's branch (it once merged into the base branch and never reached `main`).
   If you need another change first, wait for it to be merged, then start from the new `origin/main`.
-- **Never merge PRs and never push to `main`.** The owner reviews and merges.
+- **Never push to `main`, and never merge a PR on your own initiative.** The owner reviews and merges. Only when the owner explicitly asks you to merge a specific PR (for example from their phone) may you merge it, and only after its checks pass; that request covers that PR only.
 - PR titles and bodies are in **English**. Use sections: Problem/Why, Changes, Verification, Notes.
   Commit messages are English too.
 - One concern per PR. Small PRs get merged fast.
