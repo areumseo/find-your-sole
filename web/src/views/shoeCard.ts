@@ -43,6 +43,25 @@ function splitSummary(text: string): { summary: string | null; detail: string } 
   return detail && first.length <= 80 ? { summary: first.trim(), detail } : { summary: null, detail: text };
 }
 
+const MAX_HIGHLIGHTS = 3;
+
+/** The AI wraps its key phrases in [[ ]]; show the first few highlighted and drop every marker. */
+function highlighted(text: string): (string | HTMLElement)[] {
+  const out: (string | HTMLElement)[] = [];
+  let used = 0;
+  text.split(/\[\[(.+?)\]\]/s).forEach((part, i) => {
+    if (i % 2 === 0) {
+      if (part) out.push(part.replace(/\[\[|\]\]/g, ''));
+    } else if (used < MAX_HIGHLIGHTS) {
+      used += 1;
+      out.push(h('mark', { class: 'hl' }, part));
+    } else {
+      out.push(part);
+    }
+  });
+  return out;
+}
+
 let disclosureId = 0;
 
 interface CardOptions {
@@ -159,8 +178,8 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   const explainBlock = (): HTMLElement => {
     const { summary, detail } = errorText && !explanation ? { summary: null, detail: errorText } : splitSummary(explanation ?? '');
     return h('div', { class: 'explain', role: errorText && !explanation ? 'status' : undefined },
-      summary ? h('p', { class: 'explain-summary' }, summary) : null,
-      h('p', {}, detail),
+      summary ? h('p', { class: 'explain-summary' }, summary.replace(/\[\[|\]\]/g, '')) : null,
+      h('p', {}, ...highlighted(detail)),
     );
   };
   const renderExplain = () => {

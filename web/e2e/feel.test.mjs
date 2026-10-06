@@ -16,7 +16,7 @@ for (const [locale, re] of [['ko-KR', /푹신|단단|탄탄|가벼/], ['en-US', 
 }
 {
   const page = await (await b.newContext({ viewport: { width: 390, height: 844 }, locale: 'ko-KR' })).newPage();
-  await page.route('**/explain', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ explanation: '발이 편한 푹신한 신발이에요\n\n쿠션이 높아서 오래 걸어도 부담이 적어요.' }) }));
+  await page.route('**/explain', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ explanation: '발이 편한 푹신한 신발이에요\n\n[[쿠션이 높아서]] 오래 걸어도 [[부담이 적어요]]. [[셋]] [[넷]] [[다섯]]' }) }));
   await page.goto(BASE);
   await page.locator('.mode-card').nth(2).click();
   await page.click('.btn-primary');
@@ -27,6 +27,8 @@ for (const [locale, re] of [['ko-KR', /푹신|단단|탄탄|가벼/], ['en-US', 
   const [a, c] = await Promise.all([page.locator('.explain-summary').boundingBox(), page.locator('.explain p').nth(1).boundingBox()]);
   ok(c.y > a.y + a.height - 1, 'the detail sits below the summary, not beside it');
   ok((await page.locator('.explain p').count()) === 2, 'the detail follows as its own paragraph');
+  ok((await page.locator('.explain .hl').count()) === 3, 'at most three phrases are highlighted');
+  ok(!(await page.textContent('.explain')).includes('[['), 'no bracket markers reach the screen');
 }
 await b.close();
 process.exit(fail ? 1 : 0);
