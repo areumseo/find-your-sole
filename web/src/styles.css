@@ -680,8 +680,13 @@ noscript p { padding: 24px 16px; text-align: center; }
 /* One compact shopping action; AI comments are a separate disclosure row. */
 .card-shopping { width: min(100%, 340px); margin: 14px auto; padding: 10px 14px; gap: 8px; flex-wrap: nowrap; text-align: center; border: 0; background: color-mix(in srgb, var(--naver) 8%, var(--card)); color: var(--ink); font-weight: 400; }
 .naver-name { color: var(--naver-text); font-weight: 700; text-decoration: none; }
-.comment-section { margin-top: 20px; border-top: 1px solid var(--border); }
-.comment-toggle { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 48px; padding: 12px 0; border: 0; background: transparent; color: var(--title-sky); font-size: 13px; font-weight: 700; text-align: left; }
+.comment-section { margin: 12px 0 16px; }
+.comment-toggle { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 10px 14px; border: 0; border-radius: 12px; background: color-mix(in srgb, var(--primary) 12%, var(--card)); color: var(--title-sky); text-align: left; }
+.comment-toggle:hover { background: color-mix(in srgb, var(--primary) 18%, var(--card)); }
+.comment-sol-e { width: 32px; height: 32px; flex: none; }
+.comment-label { display: flex; flex-direction: column; min-width: 0; }
+.comment-title { font-size: 15px; font-weight: 700; }
+.comment-sub { font-size: 12px; font-weight: 400; color: var(--muted); }
 .comment-chevron { width: 8px; height: 8px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); margin: 0 4px 4px auto; }
 .comment-toggle[aria-expanded='true'] .comment-chevron { transform: rotate(-135deg); margin-bottom: 0; }
 .comment-body .explain { margin: 8px 0 0; }

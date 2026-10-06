@@ -169,12 +169,13 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
       commentOpen = !commentOpen;
       explainBox.hidden = !commentOpen;
       commentToggle.setAttribute('aria-expanded', String(commentOpen));
-      commentLabel.textContent = commentOpen ? s.aiComment : s.aiCommentShow;
       if (commentOpen) void loadExplanation();
     },
-  }, h('span', { 'aria-hidden': 'true' }, '🤖'));
-  const commentLabel = h('span', {}, s.aiCommentShow);
-  commentToggle.append(commentLabel, h('span', { class: 'comment-chevron', 'aria-hidden': 'true' }));
+  }, h('img', { class: 'comment-sol-e', src: '/logo.svg', alt: '', width: 32, height: 32 }));
+  commentToggle.append(
+    h('span', { class: 'comment-label' }, h('span', { class: 'comment-title' }, s.aiCommentShow), h('span', { class: 'comment-sub' }, s.aiCommentSub)),
+    h('span', { class: 'comment-chevron', 'aria-hidden': 'true' }),
+  );
   const explainBlock = (): HTMLElement => {
     const { summary, detail } = errorText && !explanation ? { summary: null, detail: errorText } : splitSummary(explanation ?? '');
     return h('div', { class: 'explain', role: errorText && !explanation ? 'status' : undefined },
@@ -210,6 +211,8 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
   }
 
   const naver = safeUrl(shoe.naver_url);
+  // SOL-E's comment comes first in the detail, right under the price, so it is not missed.
+  if (prefs) detail.append(h('div', { class: 'comment-section' }, commentToggle, explainBox));
   detail.append(
     h('dl', { class: 'specs' },
       ...(
@@ -237,8 +240,6 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
         h('span', { class: 'shopping-label' }, h('span', { class: 'naver-name' }, s.naverName), s.naverAction)),
     );
   }
-
-  if (prefs) detail.append(h('div', { class: 'comment-section' }, commentToggle, explainBox));
 
   const helpId = `shoe-price-help-${disclosureId}`;
   const priceHelp = h('p', { id: helpId, class: 'price-help', hidden: true }, s.overseasPriceInfo);
