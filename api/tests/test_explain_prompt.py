@@ -64,3 +64,11 @@ def test_explanation_opens_with_a_plain_one_line_summary():
         for prefs in ({"mode": "beginner", "budget": 150000}, {"mode": "comfort", "budget": 150000}):
             system, _ = main.build_explain_prompts(shoe, prefs, locale)
             assert "한 줄" in system or "one-line" in system
+
+
+def test_explanation_prompt_asks_for_bracketed_highlights():
+    shoe = {"name": "X", "brand": "Y", "cushion": "높음", "drop_mm": 8, "weight_g": 250, "width": "보통",
+            "terrain": ["로드"], "use_case": ["데일리"], "tags": [], "price": 100000, "price_source": "kr_list"}
+    for locale in ("ko", "en"):
+        system, _ = main.build_explain_prompts(shoe, {"mode": "comfort", "budget": 150000}, locale)
+        assert "[[" in system

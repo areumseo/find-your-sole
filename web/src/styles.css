@@ -13,6 +13,7 @@
   --ink: #111;
   --muted: rgba(0, 0, 0, 0.58);
   --explain: #fff3ee;
+  --hl: #ffe3a3;
   --chip: #eef1f3;
   --radius: 16px;
   color-scheme: light dark;
@@ -29,6 +30,7 @@
     --ink: #f2f2f2;
     --muted: rgba(255, 255, 255, 0.62);
     --explain: #1a2a33;
+    --hl: #3b5566;
     --chip: #2a2a2a;
     --title-sky: #6cc0ec;
     --naver-text: #65df98;
@@ -44,6 +46,7 @@
   --ink: #f2f2f2;
   --muted: rgba(255, 255, 255, 0.62);
   --explain: #1a2a33;
+  --hl: #3b5566;
   --chip: #2a2a2a;
   --title-sky: #6cc0ec;
   --good: #5fd08a;
@@ -719,3 +722,4 @@ noscript p { padding: 24px 16px; text-align: center; }
 .feel { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
 .explain:has(.explain-summary) { display: block; }
 .explain-summary { font-weight: 700; margin-bottom: 8px !important; }
+.explain .hl { background: var(--hl); color: inherit; font-weight: 600; padding: 0 3px; border-radius: 4px; }
