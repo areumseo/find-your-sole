@@ -42,28 +42,6 @@
     "image_url": ""
   },
   {
-    "id": 2,
-    "name": "Nike Vaporfly 3",
-    "brand": "Nike",
-    "categories": ["running"],
-    "price": 280000,
-    "price_source": "estimate",
-    "price_usd": 260,
-    "weight_g": 194,
-    "drop_mm": 8,
-    "cushion": "높음",
-    "terrain": ["로드"],
-    "arch": ["normal", "high", "flat"],
-    "pronation": ["neutral"],
-    "use_case": ["레이스", "스피드"],
-    "weekly_km": "40이상",
-    "width": "좁음",
-    "tags": ["카본 플레이트", "레이스용", "경량"],
-    "score_base": 90,
-    "url": "https://www.nike.com/kr",
-    "image_url": ""
-  },
-  {
     "id": 3,
     "name": "Nike Invincible 3",
     "brand": "Nike",
@@ -296,28 +274,6 @@
     "tags": ["트레일 강자", "그립력", "비브람 아웃솔"],
     "score_base": 88,
     "url": "https://www.hoka.com/ko-kr",
-    "image_url": ""
-  },
-  {
-    "id": 14,
-    "name": "Brooks Ghost 15",
-    "brand": "Brooks",
-    "categories": ["running"],
-    "price": 160000,
-    "price_source": "estimate",
-    "price_usd": 140,
-    "weight_g": 278,
-    "drop_mm": 12,
-    "cushion": "중간",
-    "terrain": ["로드"],
-    "arch": ["normal", "high"],
-    "pronation": ["neutral"],
-    "use_case": ["데일리", "입문"],
-    "weekly_km": "10이상",
-    "width": "보통",
-    "tags": ["입문자 추천", "범용성", "데일리"],
-    "score_base": 80,
-    "url": "https://www.brooksrunning.com/ko-kr",
     "image_url": ""
   },
   {
@@ -964,28 +920,6 @@
     "tags": ["에너지 폼", "발볼 넓음", "장거리 쿠션"],
     "score_base": 81,
     "url": "https://jp.mizuno.com/kr",
-    "image_url": ""
-  },
-  {
-    "id": 46,
-    "name": "Brooks Cascadia 17",
-    "brand": "Brooks",
-    "categories": ["running"],
-    "price": 180000,
-    "price_source": "estimate",
-    "price_usd": 140,
-    "weight_g": 320,
-    "drop_mm": 8,
-    "cushion": "중간",
-    "terrain": ["트레일"],
-    "arch": ["normal", "flat", "high"],
-    "pronation": ["neutral", "mild_overpronation"],
-    "use_case": ["트레일", "산악"],
-    "weekly_km": "20이상",
-    "width": "보통",
-    "tags": ["트레일 입문", "다용도 트레일", "그립력"],
-    "score_base": 81,
-    "url": "https://www.brooksrunning.com/ko-kr",
     "image_url": ""
   },
   {
@@ -1720,5 +1654,107 @@
     "weight_note": "230mm 기준",
     "source_product_id": "cafe24_lemouton_1_318",
     "source_product_name": "르무통 이지 발 편한 메리노울 로퍼 운동화"
+  },
+  {
+    "id": 77,
+    "name": "Nike Vaporfly 4",
+    "brand": "Nike",
+    "categories": [
+      "running"
+    ],
+    "price": 319000,
+    "price_source": "kr_list",
+    "weight_g": 190,
+    "drop_mm": 6,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "레이스"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "카본 플레이트",
+      "줌X 폼",
+      "레이스용"
+    ],
+    "score_base": 88,
+    "url": "https://www.nike.com/kr",
+    "image_url": "",
+    "source_url": "https://www.nike.com/kr/t/%EB%82%98%EC%9D%B4%ED%82%A4-%EB%B2%A0%EC%9D%B4%ED%8D%BC%ED%94%8C%EB%9D%BC%EC%9D%B4-4-%EB%82%A8%EC%84%B1-%EB%A1%9C%EB%93%9C-%EB%A0%88%EC%9D%B4%EC%8B%B1%ED%99%94-q7ZtUIuq/IM8203-400",
+    "specs_checked_at": "2026-10-06",
+    "weight_note": "280mm 기준"
+  },
+  {
+    "id": 78,
+    "name": "Brooks Ghost 18",
+    "brand": "Brooks",
+    "categories": [
+      "running"
+    ],
+    "price": 169000,
+    "price_source": "kr_list",
+    "weight_g": 289,
+    "drop_mm": 10,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [
+      "neutral"
+    ],
+    "use_case": [
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "뉴트럴",
+      "데일리 트레이너",
+      "와이드 옵션"
+    ],
+    "score_base": 80,
+    "url": "https://www.brooksrunning.co.kr",
+    "image_url": "",
+    "source_url": "https://www.brooksrunning.co.kr/product/%EB%82%A8%EC%84%B1-%EA%B3%A0%EC%8A%A4%ED%8A%B8-18-%EB%B8%94%EB%9E%99-medium/852/",
+    "specs_checked_at": "2026-10-06",
+    "weight_note": "US 9 기준"
+  },
+  {
+    "id": 79,
+    "name": "Brooks Cascadia 20",
+    "brand": "Brooks",
+    "categories": [
+      "running"
+    ],
+    "price": 199000,
+    "price_source": "kr_list",
+    "weight_g": null,
+    "drop_mm": null,
+    "cushion": "미확인",
+    "terrain": [
+      "트레일"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "트레일"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "트레일",
+      "와이드 옵션"
+    ],
+    "score_base": 78,
+    "url": "https://www.brooksrunning.co.kr",
+    "image_url": "",
+    "source_url": "https://www.brooksrunning.co.kr/product/1007%EC%88%98-launch%EB%82%A8%EC%84%B1-%EC%BA%90%EC%8A%A4%EC%BA%90%EB%94%94%EC%95%84-20%EB%82%98%EC%9D%B4%ED%8A%B8%EB%9D%BC%EC%9D%B4%ED%94%84-wide/976/",
+    "specs_checked_at": "2026-10-06"
   }
 ]
