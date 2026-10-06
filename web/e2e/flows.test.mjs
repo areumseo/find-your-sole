@@ -38,7 +38,7 @@ await page.waitForSelector('.mode-card');
 // ── 초기 상태 ──
 check('한국어 UI (navigator.language=ko)', (await page.textContent('.hero h1')).includes('딱 맞는 한 켤레'));
 check('title', (await page.title()).includes('Find Your Sole'));
-check('모바일 하단 탭: 홈/저장/더보기 (3개 보임, 검색 메뉴 없음)', (await page.locator('.tabs a:visible').count()) === 3 && (await page.locator('.tabs a:has-text("검색")').count()) === 0);
+check('모바일 하단 탭: 홈/저장/비교/마이페이지/앱 정보 (5개 보임, 검색·더보기 없음)', (await page.locator('.tabs a:visible').count()) === 5 && (await page.locator('.tabs a:has-text("더보기")').count()) === 0 && (await page.locator('.tabs a:has-text("검색")').count()) === 0);
 check('비교 메뉴는 데스크톱 사이드바에 준비됨', (await page.locator('.tabs a[href="#/compare"]').count()) === 1);
 check('홈: 찾기 카드 3개(초심자/경험자/편한 신발), 개인 통계는 없음', (await page.locator('.hero .mode-card').count()) === 3 && (await page.locator('.tile').count()) === 0);
 check('홈: 빈 위젯 없음(저장한 신발이 있을 때만 표시)', (await page.locator('.widget-empty').count()) === 0);
@@ -121,13 +121,10 @@ check('저장 카드 펼쳐도 설명 박스 없음', (await page.locator('.expl
 check('저장 카드 펼쳐도 /explain 호출 안 함', explainCalls === callsBefore, `${callsBefore} -> ${explainCalls}`);
 
 // ── 내 신발 탭 ──
-await page.click('.tabs a:has-text("더보기")');
-await page.waitForSelector('.menu-row');
-check('더보기: 비교/마이페이지/앱 정보/피드백 + 언어 선택', (await page.locator('.menu-row').count()) === 4 && (await page.locator('main .chips .chip').count()) === 2);
-check('더보기 탭 활성 표시', (await page.getAttribute('.tabs a:has-text("더보기")', 'aria-current')) === 'page');
-await page.click('.menu-row:has-text("마이페이지")');
+await page.click('.tabs a:has-text("마이페이지")');
 await page.waitForSelector('.owned');
-check('마이페이지에서도 더보기 탭 활성', (await page.getAttribute('.tabs a:has-text("더보기")', 'aria-current')) === 'page');
+check('마이페이지 탭 활성 표시', (await page.getAttribute('.tabs a:has-text("마이페이지")', 'aria-current')) === 'page');
+check('모바일: 피드백 버튼이 떠 있음', await page.locator('.fab').isVisible());
 check('마이페이지: 기기 저장 안내', (await page.textContent('.notice-card')).includes('이 기기의 브라우저'));
 check('마이페이지 내 신발 목록에 표시', (await page.textContent('.owned .shoe-name')) === favName);
 await page.click('.link-btn:has-text("거리 업데이트")');
@@ -169,8 +166,7 @@ try { await page.waitForSelector('dialog', { state: 'detached', timeout: 2000 })
 check('닫힌 다이얼로그는 DOM 에서 정리됨', cleaned);
 
 // ── 정보 탭: 폰트 라이선스(OFL) 고지 ──
-await page.click('.tabs a:has-text("더보기")');
-await page.click('.menu-row:has-text("앱 정보")');
+await page.click('.tabs a:has-text("앱 정보")');
 await page.waitForSelector('.about-card');
 const aboutText = await page.textContent('main');
 check('정보 탭에 IBM Plex Sans KR + OFL 고지', aboutText.includes('IBM Plex Sans KR') && aboutText.includes('SIL Open Font License') && aboutText.includes('IBM Corp.'));

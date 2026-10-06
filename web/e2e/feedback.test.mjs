@@ -46,11 +46,10 @@ const box = await desktop.locator('.fab').boundingBox();
 ok(box.x + box.width > 1200 && box.y + box.height > 700, 'desktop: bottom-right corner', JSON.stringify(box));
 
 const mobile = await open(390);
-ok(!(await mobile.locator('.fab').isVisible()), 'mobile: no floating button covers the content');
-await mobile.goto(BASE + '#/more');
-await mobile.click('.feedback-entry');
+ok(await mobile.locator('.fab').isVisible(), 'mobile: the floating feedback button is shown');
+await mobile.click('.fab');
 await mobile.waitForSelector('dialog[open] textarea');
-ok(await mobile.locator('dialog textarea').isVisible(), 'mobile feedback is available from More');
+ok(await mobile.locator('dialog textarea').isVisible(), 'mobile feedback opens from the floating button');
 await mobile.keyboard.press('Escape');
 
 // ── Sending ──

@@ -12,11 +12,10 @@ import { renderAbout } from './views/about';
 import { renderAdmin } from './views/admin';
 import { renderHome } from './views/home';
 import { renderMe } from './views/me';
-import { renderMore } from './views/more';
 import { hasResults, renderRecommend, type Step } from './views/recommend';
 import { renderSaved } from './views/saved';
 
-type Page = 'home' | 'search' | 'saved' | 'me' | 'about' | 'more' | 'admin' | 'compare';
+type Page = 'home' | 'search' | 'saved' | 'me' | 'about' | 'admin' | 'compare';
 
 interface Route {
   page: Page;
@@ -24,7 +23,6 @@ interface Route {
 }
 
 /** Same breakpoint as the sidebar layout in styles.css. */
-const isWide = (): boolean => window.matchMedia('(min-width: 900px)').matches;
 
 // Addresses from before the dashboard redesign. Redirect rather than 404 so
 // links that were already shared keep working.
@@ -62,13 +60,9 @@ function parseRoute(): Route {
     case 'about':
     case 'admin': // no menu item and no link: reached only by typing #/admin
       return { page, step: 'mode' };
-    case 'more':
-      // "More" is a phone menu; on wide screens its entries are in the sidebar.
-      if (isWide()) {
-        history.replaceState(null, '', '#/me');
-        return { page: 'me', step: 'mode' };
-      }
-      return { page: 'more', step: 'mode' };
+    case 'more': // the old phone menu: its entries are tabs now
+      history.replaceState(null, '', '#/about');
+      return { page: 'about', step: 'mode' };
     default:
       return { page: 'home', step: 'mode' };
   }
@@ -85,17 +79,14 @@ interface NavItem {
   label: () => string;
   /** Pages for which this item is highlighted. */
   pages: Page[];
-  /** Which layout shows it: the sidebar, the bottom bar, or both. */
-  show: 'all' | 'wide' | 'narrow';
 }
 
 const NAV: NavItem[] = [
-  { href: '#/', icon: '🏠', label: () => t().navHome, pages: ['home', 'search'], show: 'all' },
-  { href: '#/saved', icon: '♡', label: () => t().navSaved, pages: ['saved'], show: 'all' },
-  { href: '#/compare', icon: '↔', label: () => t().navCompare, pages: ['compare'], show: 'wide' },
-  { href: '#/me', icon: '👤', label: () => t().navMe, pages: ['me'], show: 'wide' },
-  { href: '#/about', icon: 'ℹ︎', label: () => t().navAbout, pages: ['about'], show: 'wide' },
-  { href: '#/more', icon: '⋯', label: () => t().navMore, pages: ['more', 'me', 'about', 'compare'], show: 'narrow' },
+  { href: '#/', icon: '🏠', label: () => t().navHome, pages: ['home', 'search'] },
+  { href: '#/saved', icon: '♡', label: () => t().navSaved, pages: ['saved'] },
+  { href: '#/compare', icon: '↔', label: () => t().navCompareTab, pages: ['compare'] },
+  { href: '#/me', icon: '👤', label: () => t().navMe, pages: ['me'] },
+  { href: '#/about', icon: 'ℹ︎', label: () => t().navAbout, pages: ['about'] },
 ];
 
 const topbar = h('header', { class: 'topbar' });
@@ -106,6 +97,8 @@ const main = h('main', { id: 'content' });
 function render(): void {
   const route = parseRoute();
   paintComparisonBar(route.page);
+  // On phones the floating button would sit over a form's submit button.
+  document.body.classList.toggle('on-form', route.page === 'search' && route.step !== 'results');
   trackPage(route.page === 'admin' ? '/admin' : route.page === 'home' ? '/' : route.page === 'search' ? `/search/${route.step}` : `/${route.page}`);
   const s = t();
 
@@ -124,10 +117,9 @@ function render(): void {
     ),
   );
 
-  mount(tabs, ...NAV.map(({ href, icon, label, pages, show }) =>
+  mount(tabs, ...NAV.map(({ href, icon, label, pages }) =>
     h('a', {
       href,
-      class: show === 'wide' ? 'wide-only' : show === 'narrow' ? 'narrow-only' : undefined,
       'aria-current': pages.includes(route.page) ? 'page' : undefined,
     },
       h('span', { class: 'ico', 'aria-hidden': 'true' }, icon),
@@ -141,7 +133,6 @@ function render(): void {
     case 'saved': mount(main, renderSaved(render)); break;
     case 'me': mount(main, renderMe(render)); break;
     case 'about': mount(main, renderAbout()); break;
-    case 'more': mount(main, renderMore()); break;
     case 'admin': mount(main, renderAdmin()); break;
     default: mount(main, renderHome(go));
   }
