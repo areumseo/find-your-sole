@@ -373,7 +373,10 @@ function resultsView(go: (path: string) => void): HTMLElement {
         h('p', { class: 'bubble' }, s.foundBubble),
       )
       : null,
-    results.some((r) => r.over_budget || r.price_source !== 'kr_list') ? h('p', { class: 'notice-card', role: 'note' }, s.overBudgetNote) : null,
+    // When no result is confirmed within budget, say so plainly instead of only explaining the order.
+    results.length && !results.some((r) => r.price_source === 'kr_list' && !r.over_budget)
+      ? h('p', { class: 'notice-card', role: 'note' }, s.noneInBudgetNote)
+      : results.some((r) => r.over_budget || r.price_source !== 'kr_list') ? h('p', { class: 'notice-card', role: 'note' }, s.overBudgetNote) : null,
     results.length
       ? h('div', {},
         h('div', { class: 'cards-grid' }, ...results.slice(0, 3).map((shoe, i) => shoeCard({ shoe, rank: i + 1, prefs: resultPrefs }))),
