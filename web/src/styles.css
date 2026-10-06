@@ -83,14 +83,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
    switch. The markup is the same; only the layout changes. */
 .sidebar { display: contents; }
 
+/* The top bar stays pinned on phones. It spans the full width so content never
+   shows beside it, and pads its row in to the 720px content column. */
 .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 14px 16px 6px;
+  background: var(--page);
+  border-bottom: 1px solid var(--border);
+  padding: calc(10px + env(safe-area-inset-top)) max(16px, calc((100% - 688px) / 2)) 8px;
 }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand-logo { width: 40px; height: 40px; flex: none; }

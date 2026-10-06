@@ -122,6 +122,8 @@ function render(): void {
     h('a', {
       href,
       'aria-current': pages.includes(route.page) ? 'page' : undefined,
+      // Tapping the tab you are already on does not change the hash, so scroll up here.
+      onClick: () => { if ((location.hash || '#/') === href) window.scrollTo(0, 0); },
     },
       icon(iconName),
       label(),
@@ -173,12 +175,18 @@ function boot(): void {
   document.getElementById('app')!.replaceChildren(sidebar, main);
   document.body.append(compareBar);
 
+  // The browser would put a reopened or reloaded app back where the last page was
+  // scrolled, which leaves the home page opening with its top cut off.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('pageshow', (event) => { if (event.persisted) window.scrollTo(0, 0); });
+
   window.addEventListener('hashchange', () => {
     render();
     window.scrollTo(0, 0);
   });
   onLocaleChange(render);
   render();
+  window.scrollTo(0, 0);
   mountFeedbackButton();
   onLocaleChange(mountFeedbackButton);
 
