@@ -140,7 +140,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
   font-size: 12px;
   font-weight: 700;
 }
-.tabs a .ico { font-size: 20px; line-height: 1; }
+.tabs a .ico { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .tabs a[aria-current='page'] { color: var(--primary); }
 
 @media (min-width: 900px) {
@@ -184,7 +184,6 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 24px; }
     border-radius: 12px;
     font-size: 15px;
   }
-  .tabs a .ico { width: 24px; text-align: center; }
   .tabs a:hover { background: var(--chip); }
   .tabs a[aria-current='page'] {
     background: color-mix(in srgb, var(--primary) 14%, transparent);

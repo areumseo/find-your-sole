@@ -7,6 +7,7 @@ for (const [n,vp] of [['desktop',{width:1280,height:800}],['mobile',{width:390,h
   const labels = await p.locator('.tabs a:visible').allTextContents();
   console.log(n, labels.join(' | '));
   ok(!labels.some(l=>l.includes('검색')), `${n} no search item`);
+  ok((await p.locator('.tabs a:visible svg.ico').count()) === 5, `${n} menu icons are line icons (svg), one per entry`);
   await p.goto(BASE + '#/search'); await p.waitForSelector('.mode-card');
   ok(new URL(p.url()).hash==='#/', `${n} #/search redirects home`);
   await p.locator('.mode-card').first().click(); await p.waitForSelector('.form-grid');

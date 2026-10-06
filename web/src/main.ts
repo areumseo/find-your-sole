@@ -6,6 +6,7 @@ import './styles.css';
 import { warmUp } from './api';
 import { feedbackButton } from './feedback';
 import { h, mount } from './dom';
+import { icon, type IconName } from './icons';
 import { getLocale, onLocaleChange, setLocale, t } from './i18n';
 import { themeToggle } from './theme';
 import { renderAbout } from './views/about';
@@ -75,18 +76,18 @@ const go = (path: string): void => {
 
 interface NavItem {
   href: string;
-  icon: string;
+  icon: IconName;
   label: () => string;
   /** Pages for which this item is highlighted. */
   pages: Page[];
 }
 
 const NAV: NavItem[] = [
-  { href: '#/', icon: '🏠', label: () => t().navHome, pages: ['home', 'search'] },
-  { href: '#/saved', icon: '♡', label: () => t().navSaved, pages: ['saved'] },
-  { href: '#/compare', icon: '↔', label: () => t().navCompareTab, pages: ['compare'] },
-  { href: '#/me', icon: '👤', label: () => t().navMe, pages: ['me'] },
-  { href: '#/about', icon: 'ℹ︎', label: () => t().navAbout, pages: ['about'] },
+  { href: '#/', icon: 'home', label: () => t().navHome, pages: ['home', 'search'] },
+  { href: '#/saved', icon: 'saved', label: () => t().navSaved, pages: ['saved'] },
+  { href: '#/compare', icon: 'compare', label: () => t().navCompareTab, pages: ['compare'] },
+  { href: '#/me', icon: 'me', label: () => t().navMe, pages: ['me'] },
+  { href: '#/about', icon: 'about', label: () => t().navAbout, pages: ['about'] },
 ];
 
 const topbar = h('header', { class: 'topbar' });
@@ -117,12 +118,12 @@ function render(): void {
     ),
   );
 
-  mount(tabs, ...NAV.map(({ href, icon, label, pages }) =>
+  mount(tabs, ...NAV.map(({ href, icon: iconName, label, pages }) =>
     h('a', {
       href,
       'aria-current': pages.includes(route.page) ? 'page' : undefined,
     },
-      h('span', { class: 'ico', 'aria-hidden': 'true' }, icon),
+      icon(iconName),
       label(),
     ),
   ));
