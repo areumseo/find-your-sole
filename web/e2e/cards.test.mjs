@@ -65,7 +65,7 @@ await over.locator('.mode-card').nth(2).click();
 await over.click('.btn-primary');
 await over.waitForSelector('article.card');
 ok((await over.locator('.over-budget').count()) === 1 && (await over.locator('article.card').nth(1).locator('.over-budget').count()) === 1, 'only the over-budget card carries the badge');
-ok((await over.textContent('.notice-card')).includes('조건에 맞는 순서'), 'a note explains the order');
+ok((await over.textContent('.notice-card')).includes('예산 안의 제품을 먼저'), 'a note explains the order');
 await over.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify([shoe(1, 'Only Shoe')]) }));
 await over.goBack();
 await over.click('.btn-primary');
