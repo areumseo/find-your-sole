@@ -24,6 +24,18 @@ function tagChips(useCase: string[]): HTMLElement {
   );
 }
 
+/** How the shoe feels, in plain words, from the catalogue's cushion, support tags and weight. */
+function feelLine(shoe: Shoe): string | null {
+  const s = t();
+  const parts: string[] = [];
+  const cushion = s.feelCushion[shoe.cushion];
+  if (cushion) parts.push(cushion);
+  const supportive = shoe.tags.includes('안정성') || shoe.pronation.some((p) => p.includes('overpronation'));
+  if (supportive) parts.push(s.feelSupport);
+  else if (shoe.weight_g != null && shoe.weight_g <= 230) parts.push(s.feelLight);
+  return parts.length ? parts.join(' · ') : null;
+}
+
 let disclosureId = 0;
 
 interface CardOptions {
@@ -222,7 +234,8 @@ export function shoeCard({ shoe, rank, prefs, onFavoriteChange }: CardOptions): 
         'aria-label': s.officialSite(shoe.brand), title: s.officialSite(shoe.brand),
       }, `${shoe.brand} ↗`)
     : h('div', { class: 'shoe-brand' }, shoe.brand);
-  const main = h('div', { class: 'main' }, toggle, brandEl, tagChips(shoe.use_case));
+  const feel = feelLine(shoe);
+  const main = h('div', { class: 'main' }, toggle, brandEl, feel ? h('p', { class: 'feel' }, feel) : null, tagChips(shoe.use_case));
 
   card.append(
     h('div', { class: 'card-head' },
