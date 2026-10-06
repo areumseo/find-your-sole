@@ -30,6 +30,7 @@ try {
         assert(Math.abs(third.width - grid.width) < 2, 'third entry fills the tablet row');
       }
       await page.locator('.mode-card').nth(2).click();
+      await page.waitForSelector('.form-actions button');
       if (width < 900) assert.equal(await page.locator('.fab').isVisible(), false, 'feedback cannot cover submit');
       await page.locator('.form-actions button').click();
       await page.waitForSelector('article.card');
@@ -62,8 +63,7 @@ try {
         await page.screenshot({ path: `review-${width}-${locale}-dark.png`, fullPage: true });
       }
       if (width < 900) {
-        await page.locator('a[href="#/more"]').click();
-        await page.locator('.feedback-entry').click();
+        await page.locator('.fab').click();
         assert(await page.locator('dialog[open] textarea').isVisible());
         await page.keyboard.press('Escape');
       }
