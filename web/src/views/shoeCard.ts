@@ -24,16 +24,30 @@ function tagChips(useCase: string[]): HTMLElement {
   );
 }
 
-/** How the shoe feels, in plain words, from the catalogue's cushion, support tags and weight. */
+const FEEL_USES = ['레이스', '스피드', '회복런', '트레일', '장거리', '입문'] as const;
+
+/** How the shoe feels, in plain words: the two most distinctive catalogue traits, so cards
+ *  with the same cushion grade do not all read alike. Unconfirmed values are skipped. */
 function feelLine(shoe: Shoe): string | null {
   const s = t();
-  const parts: string[] = [];
-  const cushion = s.feelCushion[shoe.cushion];
-  if (cushion) parts.push(cushion);
-  const supportive = shoe.tags.includes('안정성') || shoe.pronation.some((p) => p.includes('overpronation'));
-  if (supportive) parts.push(s.feelSupport);
-  else if (shoe.weight_g != null && shoe.weight_g <= 230) parts.push(s.feelLight);
-  return parts.length ? parts.join(' · ') : null;
+  const traits: [weight: number, text: string][] = [];
+  const add = (weight: number, text: string | undefined) => { if (text) traits.push([weight, text]); };
+  if (shoe.tags.includes('카본 플레이트')) add(3, s.feelCarbon);
+  else if (shoe.tags.some((tag) => tag.includes('플레이트') || tag.includes('준카본'))) add(2, s.feelPlate);
+  if (shoe.tags.includes('안정성') || shoe.pronation.some((p) => p.includes('overpronation'))) add(3, s.feelSupport);
+  add({ 최고: 3, 낮음: 3, 높음: 1, 중간: 0 }[shoe.cushion] ?? -1, s.feelCushion[shoe.cushion]);
+  // Women's-size weights (230 mm) look lighter than men's, so they make no lightness claim.
+  if (shoe.weight_g != null && !shoe.weight_note?.includes('230')) {
+    if (shoe.weight_g <= 220) add(3, s.feelVeryLight);
+    else if (shoe.weight_g <= 250) add(2, s.feelLight);
+  }
+  if (shoe.drop_mm != null && shoe.drop_mm <= 5) add(2, s.feelLowDrop);
+  else if (shoe.drop_mm != null && shoe.drop_mm >= 12) add(2, s.feelHighDrop);
+  const use = FEEL_USES.find((u) => shoe.use_case.includes(u));
+  add(use ? 1 : 0, use ? s.feelUse[use] : s.feelEveryday);
+  // Highest weight first; ties keep the order above. Array.prototype.sort is stable.
+  const picked = traits.filter(([w]) => w >= 0).sort((a, b) => b[0] - a[0]).slice(0, 2);
+  return picked.length ? picked.map(([, text]) => text).join(' · ') : null;
 }
 
 /** The AI answer starts with a one-line summary, then a blank line, then the detail. */
