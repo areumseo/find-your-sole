@@ -24,6 +24,8 @@ for (const [locale, re] of [['ko-KR', /푹신|단단|탄탄|가벼/], ['en-US', 
   await page.locator('.comment-toggle').first().click();
   await page.waitForSelector('.explain');
   ok((await page.textContent('.explain-summary')) === '발이 편한 푹신한 신발이에요', 'the AI answer opens with a highlighted one-line summary');
+  const [a, c] = await Promise.all([page.locator('.explain-summary').boundingBox(), page.locator('.explain p').nth(1).boundingBox()]);
+  ok(c.y > a.y + a.height - 1, 'the detail sits below the summary, not beside it');
   ok((await page.locator('.explain p').count()) === 2, 'the detail follows as its own paragraph');
 }
 await b.close();
