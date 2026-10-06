@@ -309,12 +309,11 @@ def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[Lis
                                     "over_budget": over, "budget_status": status,
                                     "brand_url": shoe.get("url")}))
 
-    # Rank fit across confirmed-affordable and unpriced candidates together.
-    # An unknown local price is neither an affordability claim nor a reason to
-    # bury a substantially better fit. Confirmed over-budget shoes remain last.
-    # At equal scores prefer the confirmed-affordable option, then stable ID.
-    results.sort(key=lambda x: (x.over_budget, -x.score,
-                                x.budget_status != "within", x.id))
+    # Users are in Korea, so shoes with a confirmed Korean list price come first:
+    # within budget, then over budget, then shoes known only by an overseas
+    # price. Best fit first in each group, then stable ID.
+    order = {"within": 0, "over": 1, "unknown": 2}
+    results.sort(key=lambda x: (order[x.budget_status], -x.score, x.id))
     return results[:10]
 
 
