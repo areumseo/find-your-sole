@@ -10,7 +10,7 @@ This file is read by every coding agent (Claude Code, Codex). `CLAUDE.md` points
 |---|---|
 | `web/` | Vite + TypeScript web app, no framework (tiny `h()` DOM helper). Deployed as a Render Static Site. |
 | `api/` | FastAPI backend (Render web service). Rule-based scoring, Claude Haiku explanations, news, feedback. |
-| `shoes_data.json` | The shoe catalogue (74 shoes). Single source of truth, read by `api/main.py`. |
+| `shoes_data.json` | The shoe catalogue (76 shoes). Single source of truth, read by `api/main.py`. |
 | `flutter_app/` | The iOS app. Do not touch unless asked. |
 | `web/e2e/` | Playwright browser tests. `tools/validate_shoes.py` validates the catalogue. |
 
