@@ -71,6 +71,12 @@ await over.goBack();
 await over.click('.btn-primary');
 await over.waitForSelector('article.card');
 ok((await over.locator('.notice-card').count()) === 0, 'no note when everything is within budget');
+await over.route('**/recommend/comfort', (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' },
+  body: JSON.stringify([shoe(1, 'Pricey Shoe', { price: 219000, over_budget: true }), shoe(2, 'Unpriced Shoe', { price_source: 'estimate', price_usd: 150 })]) }));
+await over.goBack();
+await over.click('.btn-primary');
+await over.waitForSelector('article.card');
+ok((await over.locator('.notice-card').count()) === 1 && (await over.textContent('.notice-card')).includes('예산 안에 드는 신발을 찾지 못했어요'), 'says plainly when nothing is confirmed within budget');
 
 // SOL-E celebrates on the results page, but only when there are results.
 for (const [width, locale, scheme, line] of [[390, 'ko-KR', 'light', '딱 맞는 신발 발견!'], [1280, 'en-US', 'dark', 'Found your perfect pair!']]) {
