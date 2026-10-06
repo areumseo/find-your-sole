@@ -1720,5 +1720,75 @@
     "weight_note": "230mm 기준",
     "source_product_id": "cafe24_lemouton_1_318",
     "source_product_name": "르무통 이지 발 편한 메리노울 로퍼 운동화"
+  },
+  {
+    "id": 75,
+    "name": "Nike Revolution 8",
+    "brand": "Nike",
+    "categories": [
+      "running"
+    ],
+    "price": 89000,
+    "price_source": "kr_list",
+    "weight_g": 292,
+    "drop_mm": 10,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "입문",
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "입문용",
+      "가성비",
+      "로커 형태 중창"
+    ],
+    "score_base": 72,
+    "url": "https://www.nike.com/kr",
+    "image_url": "",
+    "source_url": "https://www.nike.com/kr/t/%EB%82%98%EC%9D%B4%ED%82%A4-%EB%A0%88%EB%B3%BC%EB%A3%A8%EC%85%98-8-%EB%82%A8%EC%84%B1-%EB%A1%9C%EB%93%9C-%EB%9F%AC%EB%8B%9D%ED%99%94-Dqzv22Cs/HJ9198-002",
+    "specs_checked_at": "2026-10-06",
+    "weight_note": "280mm 기준"
+  },
+  {
+    "id": 76,
+    "name": "Nike Downshifter 14",
+    "brand": "Nike",
+    "categories": [
+      "running"
+    ],
+    "price": 99000,
+    "price_source": "kr_list",
+    "weight_g": 358,
+    "drop_mm": 10,
+    "cushion": "미확인",
+    "terrain": [
+      "로드"
+    ],
+    "arch": [],
+    "pronation": [],
+    "use_case": [
+      "입문",
+      "데일리"
+    ],
+    "weekly_km": "미확인",
+    "width": "미확인",
+    "tags": [
+      "입문용",
+      "가성비",
+      "통기성 메쉬"
+    ],
+    "score_base": 72,
+    "url": "https://www.nike.com/kr",
+    "image_url": "",
+    "source_url": "https://www.nike.com/kr/t/%EB%82%98%EC%9D%B4%ED%82%A4-%EB%8B%A4%EC%9A%B4%EC%8B%9C%ED%94%84%ED%84%B0-14-%EB%82%A8%EC%84%B1-%EB%A1%9C%EB%93%9C-%EB%9F%AC%EB%8B%9D%ED%99%94-96nR4eLJ/IB1895-101",
+    "specs_checked_at": "2026-10-06",
+    "weight_note": "280mm 기준"
   }
 ]
