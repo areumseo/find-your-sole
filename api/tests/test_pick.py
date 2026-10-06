@@ -124,7 +124,7 @@ def test_english_fallback_sentence_has_no_korean():
     for shoe in main.SHOES:
         text = main.pick_reason(shoe, "en")
         assert not re.search(r"[가-힣]", text), text
-        assert str(shoe["weight_g"]) in text
+        assert str(shoe["weight_g"]) in text if shoe["weight_g"] is not None else "Weight is not confirmed" in text
     assert main.pick_reason(main.SHOES[0], "en").startswith(("Low", "Medium", "High", "Max"))
 
 
