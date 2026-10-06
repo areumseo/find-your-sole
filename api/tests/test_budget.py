@@ -13,10 +13,11 @@ def run(budget, shoes=None):
     return main.run_recommendation(prefs, [], shoes)
 
 
-def test_fit_first_with_confirmed_over_budget_last():
+def test_korean_prices_first_within_then_over_then_unknown():
     results = run(150_000)
-    assert [(r.over_budget, -r.score, r.budget_status != "within", r.id) for r in results] == sorted(
-        (r.over_budget, -r.score, r.budget_status != "within", r.id) for r in results)
+    order = {"within": 0, "over": 1, "unknown": 2}
+    assert [(order[r.budget_status], -r.score, r.id) for r in results] == sorted(
+        (order[r.budget_status], -r.score, r.id) for r in results)
     assert all(r.price_source == "kr_list" and r.price <= 150_000
                for r in results if r.budget_status == "within")
     assert all(r.price_source == "kr_list" and r.price > 150_000
@@ -51,10 +52,10 @@ def test_estimates_do_not_claim_affordability_or_affect_price_score():
     known = {**base, "id": 904, "price_source": "kr_list", "price": 150000}
     over = {**base, "id": 905, "price_source": "kr_list", "price": 150001}
     results = run(150000, [over, cheap, costly, unknown, known])
-    assert results[0].id == 904 and results[-1].id == 905
-    middle = results[1:4]
-    assert all(r.budget_status == "unknown" and not r.over_budget for r in middle)
-    assert len({r.score for r in middle}) == 1
+    assert results[0].id == 904 and results[1].id == 905
+    unpriced = results[2:]
+    assert all(r.budget_status == "unknown" and not r.over_budget for r in unpriced)
+    assert len({r.score for r in unpriced}) == 1
 
 
 def test_results_carry_the_brands_official_site():
@@ -64,19 +65,19 @@ def test_results_carry_the_brands_official_site():
     assert all(r.brand_url == by_id[r.id]["url"] for r in results)
 
 
-def test_better_fit_with_unknown_price_beats_confirmed_affordable_model():
+def test_overseas_priced_model_comes_after_korean_priced_ones_even_with_better_fit():
     base = dict(main.SHOES[0])
     known = {**base, "id": 910, "price_source": "kr_list", "price": 120000, "score_base": 60}
     unknown = {**base, "id": 911, "price_source": "estimate", "price": 999999, "score_base": 90}
     over = {**base, "id": 912, "price_source": "kr_list", "price": 160000, "score_base": 100}
     results = run(150000, [known, over, unknown])
-    assert [r.id for r in results] == [911, 910, 912]
-    assert results[0].budget_status == "unknown" and not results[0].over_budget
-    assert results[1].budget_status == "within"
-    assert results[2].over_budget
+    assert [r.id for r in results] == [910, 912, 911]
+    assert results[0].budget_status == "within"
+    assert results[1].over_budget
+    assert results[2].budget_status == "unknown" and not results[2].over_budget
 
 
-def test_equal_scores_prefer_confirmed_price_then_stable_id():
+def test_equal_scores_in_a_group_keep_stable_id_order():
     base = dict(main.SHOES[0])
     known = {**base, "id": 920, "price_source": "kr_list", "price": 120000, "score_base": 60}
     unknown = {**base, "id": 921, "price_source": "estimate", "score_base": 65}
@@ -86,10 +87,10 @@ def test_equal_scores_prefer_confirmed_price_then_stable_id():
     assert [r.id for r in results] == [920, 921, 922]
 
 
-def test_fifteen_man_budget_does_not_bury_better_fit_in_both_running_modes():
+def test_fifteen_man_budget_opens_with_confirmed_affordable_shoes_in_both_running_modes():
     beginner = main.recommend_beginner(main.BeginnerPrefs(frequency="이제 막 시작했어요", terrain="공원 / 도로", pain="없음", wide_foot=False, budget=150000))
     expert = main.recommend_expert(main.ExpertPrefs(arch="normal", pronation="neutral", terrain="로드", use_case=["데일리"], cushion="중간", width="보통", weekly_km=30, budget=150000))
     for results in [beginner, expert]:
-        assert results[0].name != "Saucony Kinvara 14"
-        assert all(r.score >= 125 for r in results[:3])
-        assert results[0].budget_status == "unknown"
+        assert results[0].budget_status == "within"
+        statuses = [r.budget_status for r in results]
+        assert statuses == sorted(statuses, key={"within": 0, "over": 1, "unknown": 2}.get)
