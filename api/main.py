@@ -309,10 +309,10 @@ def run_recommendation(prefs: Dict, brand_filter: List[str], shoes: Optional[Lis
                                     "over_budget": over, "budget_status": status,
                                     "brand_url": shoe.get("url")}))
 
-    # The budget is the person's most direct condition: confirmed-affordable
-    # shoes come first, then shoes whose Korean price is unknown, then
-    # confirmed over-budget ones. Best fit first in each group, then stable ID.
-    order = {"within": 0, "unknown": 1, "over": 2}
+    # Users are in Korea, so shoes with a confirmed Korean list price come first:
+    # within budget, then over budget, then shoes known only by an overseas
+    # price. Best fit first in each group, then stable ID.
+    order = {"within": 0, "over": 1, "unknown": 2}
     results.sort(key=lambda x: (order[x.budget_status], -x.score, x.id))
     return results[:10]
 
