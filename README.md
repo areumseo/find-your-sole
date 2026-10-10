@@ -18,7 +18,7 @@ A personalized shoe recommendation service for running shoes and everyday walkin
 - **iOS app**: Flutter (`flutter_app/`)
 - **Web app**: Vite + TypeScript, no framework (`web/`) — responsive, works on desktop and mobile browsers
 - **Backend**: FastAPI (hosted on Render)
-- **AI**: Anthropic Claude (`claude-haiku-4-5`)
+- **AI**: Anthropic Claude (`claude-haiku-5-5`)
 - **Local storage**: SQLite (sqflite) + shared_preferences
 
 ## Backend
