@@ -32,6 +32,10 @@ CUSHION_ORDER = {"낮음": 1, "중간": 2, "높음": 3, "최고": 4}
 
 # ── Claude 클라이언트 ─────────────────────────────────────────
 client = anthropic.Anthropic()  # ANTHROPIC_API_KEY 환경변수 필요
+# Short copy only: no thinking and low effort keep tokens (and cost) down, and
+# leave the whole max_tokens budget for the visible answer.
+AI_MODEL = "claude-haiku-5-5"
+AI_LIGHT_SETTINGS = {"thinking": {"type": "disabled"}, "output_config": {"effort": "low"}}
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -406,8 +410,9 @@ def generate_pick_comment(shoe: Dict, locale: str) -> str:
         )
     # Short timeout and no retries: this runs while a visitor waits on /pick.
     response = client.with_options(timeout=15.0, max_retries=0).messages.create(
-        model="claude-haiku-4-5",
+        model=AI_MODEL,
         max_tokens=200,
+        **AI_LIGHT_SETTINGS,
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": facts}],
     )
@@ -577,8 +582,9 @@ def explain_shoe(req: ExplainRequest, request: Request):
 
     try:
         response = client.messages.create(
-            model="claude-haiku-4-5",
+            model=AI_MODEL,
             max_tokens=500,
+            **AI_LIGHT_SETTINGS,
             system=[
                 {
                     "type": "text",
