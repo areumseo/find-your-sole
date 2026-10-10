@@ -10,7 +10,7 @@ await p.goto(BASE);
 await p.waitForSelector('.col-side .widget');
 await p.waitForSelector('.pick');
 
-ok((await p.locator('.col-side .widget h2').allTextContents()).join('|') === '솔이의 데일리 픽|솔이의 한 입 상식', 'side column: pick then tip');
+ok((await p.locator('.col-side .widget h2').allTextContents()).join('|') === '솔이의 데일리 픽|솔이가 알려주는 신발 상식', 'side column: pick then tip');
 ok((await p.locator('.pick-name').textContent()).length > 3, 'pick has a shoe name');
 const brandLink = p.locator('.pick .brand-link');
 ok((await brandLink.getAttribute('href')).startsWith('https://') && (await brandLink.getAttribute('rel')).includes('noopener') && (await brandLink.getAttribute('target')) === '_blank', 'pick brand links to the official site safely');
