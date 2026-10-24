@@ -12,6 +12,7 @@ This file is read by every coding agent (Claude Code, Codex). `CLAUDE.md` points
 | `api/` | FastAPI backend (Render web service). Rule-based scoring, Claude Haiku explanations, news, feedback. |
 | `shoes_data.json` | The shoe catalogue (76 shoes). Single source of truth, read by `api/main.py`. |
 | `flutter_app/` | The iOS app. Do not touch unless asked. |
+| `deploy/macmini/` | Scripts and launchd jobs to run the API on a Mac mini instead of Render (`docs/mac-mini-hosting.md`). |
 | `web/e2e/` | Playwright browser tests. `tools/validate_shoes.py` validates the catalogue. |
 
 Production: web at `https://findyoursole.app`, API at `https://find-your-sole.onrender.com`. Both deploy from `main`.
