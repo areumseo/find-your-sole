@@ -11,3 +11,6 @@ flutter_app/.flutter-plugins-dependencies
 .env
 .env.*
 !.env.example
+
+# Mac mini hosting: Python virtualenv created by deploy/macmini/install.sh
+.venv/

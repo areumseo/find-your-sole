@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template filled in by install.sh. Runs daily at 06:00 in the Mac's time zone
+     (Korea), like the Render cron "0 21 * * *" UTC. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>app.findyoursole.catalog-sync</string>
+  <key>UserName</key>
+  <string>__USER__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>__HOME__</string>
+  </dict>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__REPO__/deploy/macmini/run-catalog-sync.sh</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>6</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>__HOME__/Library/Logs/find-your-sole/catalog-sync.log</string>
+  <key>StandardErrorPath</key>
+  <string>__HOME__/Library/Logs/find-your-sole/catalog-sync.log</string>
+</dict>
+</plist>
