@@ -2,7 +2,7 @@
   "name": "find-your-sole-web",
   "private": true,
   "version": "1.0.0",
-  "dataUpdated": "2026-10",
+  "dataUpdated": "2026-11",
   "type": "module",
   "scripts": {
     "dev": "vite",
